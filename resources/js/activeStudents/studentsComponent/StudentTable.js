@@ -220,11 +220,11 @@ export default function StudentTable(props) {
 
     const [id, setId] = React.useState("");
     const [studentId, setStudentId] = React.useState("");
+    const [schoolId, setSchoolId] = React.useState("");
     const [image, setImage] = React.useState("");
     const [studentName, setStudentName] = React.useState("");
     const [gender, setGender] = React.useState("");
     const [classType, setClassType] = React.useState("");
-    const [schoolPlacement, setSchoolPlacement] = React.useState("");
     const [parentName, setParentName] = React.useState("");
     const [contact, setContact] = React.useState("");
     const [balance, setBalance] = React.useState("");
@@ -234,12 +234,12 @@ export default function StudentTable(props) {
 
         let data = {
             id: id,
-            student_id : "STD"+student[0].id+1,
+            student_id : studentId,
+            school_id: schoolId,
             image: image,
             fullName: studentName,
             gender: gender,
             classType: classType,
-            schoolPlacement: schoolPlacement,
             parentName: parentName,
             contact: contact,
             balance: balance,
@@ -271,18 +271,18 @@ export default function StudentTable(props) {
 
     const handleOpenAddDialog = () => {
         setBalance(0)
-        setStudentId(parseInt(student[0].id)+1)
+        setStudentId(parseInt("STD"+student[0].id+1))
         console.log(studentId)
         setOpenAddDialog(true);
     };
     const handleCloseAddDialog = () => {
         setId("");
         setStudentId("");
+        setSchoolId("");
         setImage("");
         setStudentName("");
         setGender("");
         setClassType("");
-        setSchoolPlacement("");
         setParentName("");
         setContact("");
         setBalance(0);
@@ -291,11 +291,11 @@ export default function StudentTable(props) {
     const handleOpenEditDialog = (data) => {
         setId(data.id);
         setStudentId(data.student_id);
+        setSchoolId(data.school_id);
         setImage(data.image);
         setStudentName(data.fullName);
         setGender(data.gender);
         setClassType(data.classType);
-        setSchoolPlacement(data.schoolPlacement);
         setParentName(data.parentName);
         setContact(data.contact);
         setBalance(data.balance);
@@ -304,11 +304,11 @@ export default function StudentTable(props) {
     const handleCloseEditDialog = () => {
         setId("");
         setStudentId("");
+        setSchoolId("");
         setImage("");
         setStudentName("");
         setGender("");
         setClassType("");
-        setSchoolPlacement("");
         setParentName("");
         setContact("");
         setBalance("");
@@ -329,11 +329,11 @@ export default function StudentTable(props) {
         let data = {
             id: id,
             student_id : studentId,
+            school_id: schoolId,
             image: image,
             fullName: studentName,
             gender: gender,
             classType: classType,
-            schoolPlacement: schoolPlacement,
             parentName: parentName,
             contact: contact,
             balance: balance,
@@ -530,7 +530,7 @@ export default function StudentTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.schoolPlacement}
+                                            {data.school_id}
                                         </StyledTableCell>
                                         {/* <StyledTableCell
                                             component="th"
@@ -690,6 +690,9 @@ export default function StudentTable(props) {
                                                                 Student ID : {data.student_id}
                                                             </Typography>
                                                             <Typography>
+                                                                School ID : {data.school_id}
+                                                            </Typography>
+                                                            <Typography>
                                                                 Name : {data.fullName}
                                                             </Typography>
                                                             <Typography>
@@ -697,9 +700,6 @@ export default function StudentTable(props) {
                                                             </Typography>
                                                             <Typography>
                                                                 Class Type : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Placement : {data.schoolPlacement}
                                                             </Typography>
                                                             <Typography>
                                                                 Parent : {data.parentName}
@@ -747,23 +747,23 @@ export default function StudentTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={id}
-                                onChange={(event) => {
-                                    setId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
                                 label="Student ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={studentId}
                                 onChange={(event) => {
                                     setStudentId(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="School Placement"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -808,17 +808,6 @@ export default function StudentTable(props) {
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="School Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={schoolPlacement}
-                                onChange={(event) => {
-                                    setSchoolPlacement(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -891,23 +880,23 @@ export default function StudentTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={id}
-                                onChange={(event) => {
-                                    setId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
                                 label="Student ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={studentId}
                                 onChange={(event) => {
                                     setStudentId(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="School Placement"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -952,17 +941,6 @@ export default function StudentTable(props) {
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="School Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={schoolPlacement}
-                                onChange={(event) => {
-                                    setSchoolPlacement(event.target.value);
                                 }}
                             />
                         </Grid>

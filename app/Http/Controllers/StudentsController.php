@@ -43,35 +43,35 @@ class StudentsController extends Controller
 
     public function addStudent(Request $request)
     {
-
+        
         $id = $request->id;
         $student_id = $request->student_id;
+        $school_id = $request->school_id;
         $image = $request -> image;
         $fullName = $request->fullName;
         $gender = $request->gender;
         $classType = $request->classType;
-        $schoolPlacement = $request->schoolPlacement;
         $parentName = $request->parentName;
         $contact = $request->contact;
         $balance = $request->balance;
 
-        DB::insert('insert into active_student (id, student_id, image, fullName, gender, classType, schoolPlacement, parentName, contact, balance) values (?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $image, $fullName, $gender, $classType, $schoolPlacement, $parentName, $contact, $balance]);
+        DB::insert('insert into active_student (id, student_id, school_id, image, fullName, gender, classType, parentName, contact, balance) values (?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $school_id, $image, $fullName, $gender, $classType, $parentName, $contact, $balance]);
     }
 
     public function editStudent(Request $request)
     {
         $id = $request->id;
         $student_id = $request->student_id;
+        $school_id = $request->school_id;
         $image = $request -> image;
         $fullName = $request->fullName;
         $gender = $request->gender;
         $classType = $request->classType;
-        $schoolPlacement = $request->schoolPlacement;
         $parentName = $request->parentName;
         $contact = $request->contact;
         $balance = $request->balance;
 
-        DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'image' => $image, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'schoolPlacement' => $schoolPlacement, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+        DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'image' => $image, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
     }
 
     public function deleteStudent(Request $request)

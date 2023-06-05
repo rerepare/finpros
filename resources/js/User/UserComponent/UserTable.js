@@ -203,8 +203,12 @@ export default function UserTable(props) {
     const [openRegistDialog, setOpenRegistDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-    const [fullName, setFullName] = React.useState("");
+    const [isSuperAdmin, setIsSuperAdmin] = React.useState(true);
+
+    const [id, setId] = React.useState("");
     const [userId, setUserId] = React.useState("");
+    const [image, setImage] = React.useState("");
+    const [name, setName] = React.useState("");
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
 
@@ -212,9 +216,13 @@ export default function UserTable(props) {
         event.preventDefault();
 
         let data = {
-            fullName: fullName,
+            id: id,
+            user_id: userId,
+            image: image,
+            name: name,
             userName: userName,
             password: password,
+            isSuperAdmin: isSuperAdmin,
         };
 
         axios.post("/registration", data).then(() => {
@@ -232,45 +240,56 @@ export default function UserTable(props) {
 
     const handleOpenRegisDialog = () => {
         setOpenRegistDialog(true);
+        setUserId(parseInt("USER"+user[0].id+1));
     };
     const handleCloseRegistDialog = () => {
-        setFullName("");
+        setId("");
+        setUserId("");
+        setImage("");
+        setName("");
         setUserName("");
         setPassword("");
-        setUserId("");
         setOpenRegistDialog(false);
     };
     const handleOpenEditDialog = (data) => {
-        setUserId(data.id);
-        setFullName(data.name);
+        setId(data.id);
+        setUserId(data.user_id);
+        setImage(data.image);
+        setName(data.name);
         setUserName(data.userName);
+        setPassword(data.password);
 
         setOpenEditDialog(true);
     };
     const handleCloseEditDialog = () => {
-        setFullName("");
+        setId("");
+        setUserId("");
+        setImage("");
+        setName("");
         setUserName("");
         setPassword("");
-        setUserId("");
         setOpenEditDialog(false);
     };
     const handleOpenDeleteDialog = (data) => {
-        setUserId(data.id);
+        setId(data.id);
 
         setOpenDeleteDialog(true);
     };
     const handleCloseDeleteDialog = () => {
-        setUserId("");
+        setId("");
         setOpenDeleteDialog(false);
     };
     const editUser = (e) => {
         e.preventDefault();
 
         let data = {
-            id: userId,
-            name: fullName,
+            id: id,
+            user_id: userId,
+            image: image,
+            name: name,
             userName: userName,
             password: password,
+            isSuperAdmin: isSuperAdmin,
         };
         axios.post("/editUser", data).then(() => {
             handleCloseEditDialog();
@@ -282,7 +301,7 @@ export default function UserTable(props) {
         e.preventDefault();
 
         let data = {
-            id: userId,
+            id: id,
         };
         axios.post("/deleteUser", data).then(() => {
             handleCloseEditDialog();
@@ -321,16 +340,8 @@ export default function UserTable(props) {
                                     ADD
                                 </Button>
                             </div>
-                            <div>
-                                <input />
-                            </div>
                         </Subheader>
                     </Grid>
-                    {/* <Grid item xs = {12}>
-                    <Typography variant = 'h5'>
-                        User 
-                    </Typography>                    
-                </Grid> */}
                     <Grid item xs={12}>
                         <TextField
                             variant="outlined"
@@ -358,7 +369,13 @@ export default function UserTable(props) {
                                         align="center"
                                         style={{ borderTopLeftRadius: "1vw" }}
                                     >
-                                        id
+                                        User ID
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
+                                        Image
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
@@ -370,7 +387,19 @@ export default function UserTable(props) {
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
+                                        Username
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
                                         Password
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
+                                        Level
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
@@ -408,7 +437,14 @@ export default function UserTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.id}
+                                            {data.user_id}
+                                        </StyledTableCell>
+                                        <StyledTableCell
+                                            component="th"
+                                            align="center"
+                                            scope="row"
+                                        >
+                                            {data.image}
                                         </StyledTableCell>
                                         <StyledTableCell
                                             component="th"
@@ -417,14 +453,24 @@ export default function UserTable(props) {
                                         >
                                             {data.name}
                                         </StyledTableCell>
-
+                                        <StyledTableCell
+                                            style={{ width: 160 }}
+                                            align="center"
+                                        >
+                                            {data.userName}
+                                        </StyledTableCell>
                                         <StyledTableCell
                                             style={{ width: 160 }}
                                             align="center"
                                         >
                                             {data.password}
                                         </StyledTableCell>
-
+                                        <StyledTableCell
+                                            style={{ width: 160 }}
+                                            align="center"
+                                        >
+                                            {data.isSuperAdmin}
+                                        </StyledTableCell>
                                         <StyledTableCell
                                             style={{ width: 160 }}
                                             align="center"
@@ -439,7 +485,6 @@ export default function UserTable(props) {
                                                     handleOpenEditDialog(data);
                                                 }}
                                             >
-                                                EDIT
                                             </Button>
                                             <Button
                                                 variant="contained"
@@ -451,7 +496,6 @@ export default function UserTable(props) {
                                                     );
                                                 }}
                                             >
-                                                DELETE
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -459,7 +503,7 @@ export default function UserTable(props) {
 
                                 {emptyRows > 0 && (
                                     <TableRow
-                                        style={{ height: 53 * emptyRows }}
+                                        style={{ height: 33 * emptyRows }}
                                     >
                                         <TableCell colSpan={6} />
                                     </TableRow>
@@ -517,12 +561,34 @@ export default function UserTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="Full Name"
+                                label="User ID"
                                 fullWidth="true"
                                 variant="outlined"
-                                value={fullName}
+                                value={userId}
                                 onChange={(event) => {
-                                    setFullName(event.target.value);
+                                    setUserId(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Image"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={image}
+                                onChange={(event) => {
+                                    setImage(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Name"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={name}
+                                onChange={(event) => {
+                                    setName(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -546,6 +612,18 @@ export default function UserTable(props) {
                                 type="password"
                                 onChange={(event) => {
                                     setPassword(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="isSuperAdmin"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={isSuperAdmin}
+                                type="password"
+                                onChange={(event) => {
+                                    setIsSuperAdmin(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -584,12 +662,34 @@ export default function UserTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="Full Name"
+                                label="User ID"
                                 fullWidth="true"
                                 variant="outlined"
-                                value={fullName}
+                                value={userId}
                                 onChange={(event) => {
-                                    setFullName(event.target.value);
+                                    setUserId(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Image"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={image}
+                                onChange={(event) => {
+                                    setImage(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Name"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={name}
+                                onChange={(event) => {
+                                    setName(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -613,6 +713,18 @@ export default function UserTable(props) {
                                 type="password"
                                 onChange={(event) => {
                                     setPassword(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="isSuperAdmin"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={isSuperAdmin}
+                                type="password"
+                                onChange={(event) => {
+                                    setIsSuperAdmin(event.target.value);
                                 }}
                             />
                         </Grid>

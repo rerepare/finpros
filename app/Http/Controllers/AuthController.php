@@ -41,29 +41,32 @@ class AuthController extends Controller{
 
     public function login_check(Request $request){       
         $request->validate([
-            'username' => 'required',
+            'userName' => 'required',
             'password' => 'required'
         ]);
         
-        $username = $request -> username;
+        $userName = $request -> userName;
         $password = md5($request -> password);
 
-        $cekUser = DB::table('user')->where('userName' , $username)->where('password' , $password)->first();
+        $cekUser = DB::table('user')->where('userName' , $userName)->where('password' , $password)->first();
 
         if($cekUser){
             Session::flush();
-            Session::put('username' , $cekUser->userName);
+            Session::put('userName' , $cekUser->userName);
             Session::put('name' , $cekUser->name);            
             Session::put('login' , TRUE);
           }       
     }
     public function editUser(Request $request){       
         $id = $request -> id;
+        $user_id = $request -> user_id;
+        $image = $request -> image;
         $name = $request -> name;
         $userName = $request -> userName;
         $password = md5($request -> password);
+        $isSuperAdmin = $request -> isSuperAdmin;
 
-        DB::table('user')->where('id', $id)->update(['name' => $name, 'userName' => $userName, 'password' => $password]);
+        DB::table('user')->where('id', $id)->update(['user_id' => $user_id, 'image' => $image, 'name' => $name, 'userName' => $userName, 'password' => $password, 'isSuperAdmin' => $isSuperAdmin]);
     }
 
     public function deleteUser(Request $request){       
@@ -99,11 +102,16 @@ class AuthController extends Controller{
 
     public function registration(Request $request){
        
-        $fullName = $request -> fullName;
+
+        $id = $request -> id;
+        $user_id = $request -> user_id;
+        $image = $request -> image;
+        $name = $request -> name;
         $userName = $request -> userName;
         $password = md5($request -> password);
+        $isSuperAdmin = $request -> isSuperAdmin;
 
-        DB::insert('insert into user (name, userName, password, isSuperAdmin) values (?,?,?,?)', [$fullName, $userName, $password, true]);
+        DB::insert('insert into user (id, user_id, image, name, userName, password, isSuperAdmin) values (?,?,?,?,?,?,?)', [$id, $user_id, $image, $name, $userName, $password, $isSuperAdmin]);
         
     }
 

@@ -248,7 +248,8 @@ export default function StudentTable(props) {
             payer: payer,
             method: method,
             balance: balance,
-            studentId: studentId
+            studentId: studentId,
+            userId: userId
 
         };
 

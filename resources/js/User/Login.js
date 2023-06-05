@@ -32,7 +32,7 @@ export default function Login() {
         );
 
         let data = {
-            username: userName,
+            userName: userName,
             password: password,
         };
 
