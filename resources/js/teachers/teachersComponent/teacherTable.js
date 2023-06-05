@@ -203,12 +203,13 @@ export default function TeacherTable(props) {
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+
     const [id, setId] = React.useState("");
     const [teacherId, setTeacherId] = React.useState("");
+    const [schoolId, setSchoolId] = React.useState("");
     const [image, setImage] = React.useState("");
     const [teacherName, setTeacherName] = React.useState("");
     const [gender, setGender] = React.useState("");
-    const [placement, setPlacement] = React.useState("");
     const [classType, setClassType] = React.useState("");
     const [contact, setContact] = React.useState("");
 
@@ -217,11 +218,11 @@ export default function TeacherTable(props) {
 
         let data = {
             id: id,
-            teacher_id: "TCH"+teacher[0].id+1,
+            teacher_id: teacherId,
+            school_id: schoolId,
             image: image,
             name: teacherName,
             gender: gender,
-            placement: placement,
             classType: classType,
             contact: contact,
         };
@@ -240,16 +241,16 @@ export default function TeacherTable(props) {
     };
 
     const handleOpenAddDialog = () => {
-        setTeacherId(teacher[0].id+1)
+        setTeacherId(parseInt("TCH"+teacher[0].id+1))
         setOpenAddDialog(true);
     };
     const handleCloseAddDialog = () => {
         setId("");
         setTeacherId("");
+        setSchoolId("");
         setImage("");
         setTeacherName("");
         setGender("");
-        setPlacement("");
         setClassType("");
         setContact("");
         setOpenAddDialog(false);
@@ -257,10 +258,10 @@ export default function TeacherTable(props) {
     const handleOpenEditDialog = (data) => {
         setId(data.id);
         setTeacherId(data.teacher_id);
+        setSchoolId(data.school_id);
         setImage(data.image);
         setTeacherName(data.name);
         setGender(data.gender);
-        setPlacement(data.placement);
         setClassType(data.classType);
         setContact(data.contact);
         setOpenEditDialog(true);
@@ -268,10 +269,10 @@ export default function TeacherTable(props) {
     const handleCloseEditDialog = () => {
         setId("");
         setTeacherId("");
+        setSchoolId("");
         setImage("");
         setTeacherName("");
         setGender("");
-        setPlacement("");
         setClassType("");
         setContact("");
         setOpenEditDialog(false);
@@ -291,10 +292,10 @@ export default function TeacherTable(props) {
         let data = {
             id: id,
             teacher_id: teacherId,
+            school_id: schoolId,
             image: image,
             name: teacherName,
             gender: gender,
-            placement: placement,
             classType: classType,
             contact: contact,
         };
@@ -369,13 +370,13 @@ export default function TeacherTable(props) {
                                         align="center"
                                         style={{ borderTopLeftRadius: "1vw" }}
                                     >
-                                        ID
+                                        Teacher ID
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
-                                        style={{ borderTopLeftRadius: "1vw" }}
+                                        style={{ wordBreak: "break-word" }}
                                     >
-                                        Teacher ID
+                                        Placement
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
@@ -395,12 +396,7 @@ export default function TeacherTable(props) {
                                     >
                                         Gender
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Placement
-                                    </StyledTableCell>
+                                    
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
@@ -444,19 +440,19 @@ export default function TeacherTable(props) {
                                     : teacher
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.id}
-                                        </StyledTableCell>
+                                        
                                         <StyledTableCell
                                             component="th"
                                             align="center"
                                             scope="row"
                                         >
                                             {data.teacher_id}
+                                        </StyledTableCell>
+                                        <StyledTableCell
+                                            style={{ width: 160 }}
+                                            align="center"
+                                        >
+                                            {data.school_id}
                                         </StyledTableCell>
                                         <StyledTableCell
                                             component="th"
@@ -479,13 +475,6 @@ export default function TeacherTable(props) {
                                         >
                                             {data.gender}
                                         </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
-                                            align="center"
-                                        >
-                                            {data.placement}
-                                        </StyledTableCell>
-
                                         <StyledTableCell
                                             style={{ width: 160 }}
                                             align="center"
@@ -583,17 +572,7 @@ export default function TeacherTable(props) {
                         justifyContent="center"
                         spacing={1}
                     >
-                        <Grid item xs={12}>
-                            <TextField
-                                label="ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={id}
-                                onChange={(event) => {
-                                    setId(event.target.value);
-                                }}
-                            />
-                        </Grid>
+                        
                         <Grid item xs={12}>
                             <TextField
                                 label="Teacher ID"
@@ -602,6 +581,17 @@ export default function TeacherTable(props) {
                                 value={teacherId}
                                 onChange={(event) => {
                                     setTeacherId(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Placement"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -638,17 +628,7 @@ export default function TeacherTable(props) {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={placement}
-                                onChange={(event) => {
-                                    setPlacement(event.target.value);
-                                }}
-                            />
-                        </Grid>
+                        
                         <Grid item xs={12}>
                             <TextField
                                 label="Class Type"
@@ -704,20 +684,21 @@ export default function TeacherTable(props) {
                         justifyContent="center"
                         spacing={1}
                     >
+                        
                         <Grid item xs={12}>
                             <TextField
-                                label="ID"
+                                label="Teacher ID"
                                 fullWidth="true"
                                 variant="outlined"
-                                value={id}
+                                value={teacherId}
                                 onChange={(event) => {
-                                    setId(event.target.value);
+                                    setTeacherId(event.target.value);
                                 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Teacher ID"
+                                label="Placement"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={teacherId}
@@ -759,17 +740,7 @@ export default function TeacherTable(props) {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={placement}
-                                onChange={(event) => {
-                                    setPlacement(event.target.value);
-                                }}
-                            />
-                        </Grid>
+                        
                         <Grid item xs={12}>
                             <TextField
                                 label="Class Type"

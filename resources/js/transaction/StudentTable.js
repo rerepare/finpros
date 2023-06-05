@@ -209,14 +209,16 @@ export default function StudentTable(props) {
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState(""); 
-    amount, details, payer, method
-    const [amount, setAmount] = React.useState("")
-    const [details, setDetails] = React.useState("")
-    const [payer, setPayer] = React.useState("")
-    const [method, setMethod] = React.useState("")
-    const [type, setType] = React.useState("") 
-    const [balance, setBalance] = React.useState(0)
+  
+    const [id, setId] = React.useState("")
     const [studentId, setStudentId] = React.useState("")
+    const [userId, setUserId] = React.useState("")
+    const [amount, setAmount] = React.useState("")
+    const [payMethod, setPayMethod] = React.useState("")
+    const [actor, setActor] = React.useState("")
+    const [transType, setTransType] = React.useState("") 
+    const [description, setDescription] = React.useState("")
+    const [balance, setBalance] = React.useState(0)
     const [openDialog, setOpenDialog] = React.useState(false)
 
     const handleChangePage = (event, newPage) => {
@@ -243,13 +245,15 @@ export default function StudentTable(props) {
         event.preventDefault();
 
         let data = {
+            id: id,
+            student_id: studentId,
+            user_id: userId,
             amount: amount,
-            transactionType: type,
-            payer: payer,
-            method: method,
+            payMethod: payMethod,
+            actor: actor,
+            transType: transType,
+            description: description,
             balance: balance,
-            studentId: studentId,
-            userId: userId
 
         };
 
@@ -298,48 +302,48 @@ export default function StudentTable(props) {
                                     >
                                         Student ID
                                     </StyledTableCell>
-                                    <StyledTableCell
+                                    {/* <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Image
-                                    </StyledTableCell>
+                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Name
                                     </StyledTableCell>
-                                    <StyledTableCell
+                                    {/* <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Gender
-                                    </StyledTableCell>
-                                    <StyledTableCell
+                                    </StyledTableCell> */}
+                                    {/* <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Class
-                                    </StyledTableCell>
+                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Placement
                                     </StyledTableCell>
-                                    <StyledTableCell
+                                    {/* <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Parent Name
-                                    </StyledTableCell>
-                                    <StyledTableCell
+                                    </StyledTableCell> */}
+                                    {/* <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         Contact
-                                    </StyledTableCell>
+                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}

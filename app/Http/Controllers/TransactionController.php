@@ -59,11 +59,16 @@ class TransactionController extends Controller{
     public function addTransaction(Request $request)
     {
 
+        $id = $request -> id;
+        $student_id = $request -> student_id;
+        $user_id = $request -> user_id;
         $amount = $request -> amount;
-        $transactionType = $request -> transactionType;
-        $payer = $request -> payer;
-        $method = $request -> method;
+        $payMethod = $request -> payMethod;
+        $actor = $request -> actor;
+        $transType = $request -> transType;
+        $description = $request -> descrption;
+        $balance = $request -> balance;
 
-        DB::insert('insert into transaction (id, student_id, image, fullName, gender, classType, schoolPlacement, parentName, contact, balance) values (?,?,?,?)', [$amount, $transactionType, $payer, $method]);
+        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description) values (?,?,?,?)', [$amount, $transactionType, $payer, $method]);
     }
 }
