@@ -31,29 +31,8 @@ class TransactionController extends Controller{
 
     public function transaction(){
         $year = Date('Y');
-        $student = DB::table('active_student')->get();
-        $transaction = DB::table(('transaction'))->get();
+        $student = DB::table('active_student')->orderBy('created_at', 'desc')->get();
         return view('Transaction.transaction', compact('year', 'student'));
-    }
-
-    public function history(){
-        $year = Date('Y');
-        return view('Transaction.history', compact('year'));
-    }
-
-    public function payment_h(){
-        $year = Date('Y');
-        return view('Transaction.history', compact('year'));
-    }
-
-    public function saving_h(){
-        $year = Date('Y');
-        return view('Transaction.history', compact('year'));
-    }
-
-    public function dataSavings(){
-        $year = Date('Y');
-        return view('Transaction.dataSavings', compact('year'));
     }
 
     public function addTransaction(Request $request)
@@ -69,6 +48,16 @@ class TransactionController extends Controller{
         $description = $request -> descrption;
         $balance = $request -> balance;
 
-        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description) values (?,?,?,?)', [$amount, $transactionType, $payer, $method]);
+        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description, balance) values (?,?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description, $balance]);
+    }
+
+    public function payment_h(){
+        $year = Date('Y');
+        return view('Transaction.history', compact('year'));
+    }
+
+    public function saving_h(){
+        $year = Date('Y');
+        return view('Transaction.history', compact('year'));
     }
 }

@@ -82,10 +82,6 @@ export default function Login() {
         }
     `;
 
-    // const Label = styled.label`
-    //     font-weight: 500;
-    // `
-
     const Test = styled.div`
         display: flex;
         background-color: #ff6d28;
@@ -172,14 +168,6 @@ export default function Login() {
                     >
                         <Card>
                             <CardContent>
-                                {/* <Grid item xs = {12}>
-                    <Typography align='center'>
-                      Hi, here's a little present for the second most beautiful person in the whole world that i love so much, hope this little present could help you out, once again, ilysb.
-                    </Typography>
-                    <Typography align='center'>
-                      ini bisa dipake untuk sambutan nama aplikasi yaa sayaangg
-                    </Typography>
-                  </Grid> */}
                                 <Grid>
                                     <Typography variant="h6" className="pb-2">
                                         Log In
@@ -204,6 +192,7 @@ export default function Login() {
                                         fullWidth={true}
                                         size="small"
                                         value={password}
+                                        type="password"
                                         onChange={(event) => {
                                             setPassword(event.target.value);
                                         }}

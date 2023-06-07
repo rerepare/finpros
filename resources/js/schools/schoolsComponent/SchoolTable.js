@@ -1,23 +1,14 @@
 import React from "react";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
+import PropTypes from "prop-types";
+import ReactDOM from "react-dom";
+import styled from "styled-components";
 
+//MATERIAL UI
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Table, TableHead, TableBody, TableCell, TableRow, TablePagination, TableFooter } from "@material-ui/core";
+import { Paper, Grid, TextField, Typography } from "@material-ui/core";
+import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
@@ -25,9 +16,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import EditIcon from "@material-ui/icons/Edit";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import DeleteIcon from "@material-ui/icons/Delete";
-import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
-import styled from "styled-components";
+
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -193,8 +182,8 @@ function TablePaginationActions(props) {
 
 export default function SchoolTable(props) {
     const { school } = props;
-    const classes = useStyles();
 
+    const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, school.length - page * rowsPerPage);
@@ -203,27 +192,14 @@ export default function SchoolTable(props) {
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-    
+
+    //GET DATABASE
     const [id, setId] = React.useState("");
     const [schoolId, setSchoolId] = React.useState("");
     const [schoolName, setSchoolName] = React.useState("");
     const [location, setLocation] = React.useState("");
 
-    const addSchool = (event) => {
-        event.preventDefault();
-
-        let data = {
-            id: id,
-            school_id: "SCH"+school[0].id+1,
-            name: schoolName,
-            location: location,
-        };
-
-        axios.post("/addSchool", data).then(() => {
-            window.location.href = "/schools";
-        });
-    };
-
+    //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -232,8 +208,23 @@ export default function SchoolTable(props) {
         setPage(0);
     };
 
+    //FUNCTION ADD
+    const addSchool = (event) => {
+        event.preventDefault();
+
+        let data = {
+            id: id,
+            school_id: "SCH"+(school[0].id),
+            name: schoolName,
+            location: location,
+        };
+
+        axios.post("/addSchool", data).then(() => {
+            window.location.href = "/schools";
+        });
+    };
     const handleOpenAddDialog = () => {
-        setSchoolId(school[0].id+1)
+        setSchoolId("SCH"+(school[0].id));
         setOpenAddDialog(true);
     };
     const handleCloseAddDialog = () => {
@@ -242,6 +233,22 @@ export default function SchoolTable(props) {
         setSchoolName("");
         setLocation("");
         setOpenAddDialog(false);
+    };
+
+    //FUNCTION EDIT
+    const editSchool = (e) => {
+        e.preventDefault();
+
+        let data = {
+            id: id,
+            school_id: schoolId,
+            name: schoolName,
+            location: location,
+        };
+        axios.post("/editSchool", data).then(() => {
+            handleCloseEditDialog();
+            window.location.href = "/schools";
+        });
     };
     const handleOpenEditDialog = (data) => {
         setId(data.id);
@@ -258,30 +265,8 @@ export default function SchoolTable(props) {
         setLocation("");
         setOpenEditDialog(false);
     };
-    const handleOpenDeleteDialog = (data) => {
-        setId(data.id);
 
-        setOpenDeleteDialog(true);
-    };
-    const handleCloseDeleteDialog = () => {
-        setId("");
-        setOpenDeleteDialog(false);
-    };
-    const editSchool = (e) => {
-        e.preventDefault();
-
-        let data = {
-            id: id,
-            school_id: schoolId,
-            name: schoolName,
-            location: location,
-        };
-        axios.post("/editSchool", data).then(() => {
-            handleCloseEditDialog();
-            window.location.href = "/schools";
-        });
-    };
-
+    //FUNCTION DELETE
     const deleteSchool = (e) => {
         e.preventDefault();
 
@@ -293,7 +278,17 @@ export default function SchoolTable(props) {
             window.location.href = "/schools";
         });
     };
+    const handleOpenDeleteDialog = (data) => {
+        setId(data.id);
 
+        setOpenDeleteDialog(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setId("");
+        setOpenDeleteDialog(false);
+    };
+
+    //OTHERS
     const Subheader = styled.div`
         display: flex;
         flex-direction: row;
@@ -349,12 +344,6 @@ export default function SchoolTable(props) {
                                         align="center"
                                         style={{ borderTopLeftRadius: "1vw" }}
                                     >
-                                        ID
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
                                         School ID
                                     </StyledTableCell>
                                     <StyledTableCell
@@ -405,13 +394,6 @@ export default function SchoolTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.id}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
                                             {data.school_id}
                                         </StyledTableCell>
                                         <StyledTableCell
@@ -421,9 +403,8 @@ export default function SchoolTable(props) {
                                         >
                                             {data.name}
                                         </StyledTableCell>
-
                                         <StyledTableCell
-                                            style={{ width: 160 }}
+                                            style={{ width: 350 }}
                                             align="center"
                                         >
                                             {data.location}
@@ -507,6 +488,8 @@ export default function SchoolTable(props) {
                     </Grid>
                 </Grid>
             </Paper>
+
+            {/* ================================= ADD SCHOOL DIALOG ===============================  */}
             <Dialog onClose={handleCloseAddDialog} open={openAddDialog}>
                 <DialogTitle>ADD  SCHOOL</DialogTitle>
                 <DialogContent dividers>
@@ -519,17 +502,7 @@ export default function SchoolTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={id}
-                                onChange={(event) => {
-                                    setId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
+                                disabled
                                 label="School ID"
                                 fullWidth="true"
                                 variant="outlined"
@@ -583,6 +556,7 @@ export default function SchoolTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            
             {/* =================================== EDIT SCHOOL DIALOG =================================  */}
             <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
                 <DialogTitle>EDIT SCHOOL</DialogTitle>
@@ -596,17 +570,7 @@ export default function SchoolTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
-                                label="ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={id}
-                                onChange={(event) => {
-                                    setId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
+                                disabled
                                 label="School ID"
                                 fullWidth="true"
                                 variant="outlined"
@@ -660,6 +624,7 @@ export default function SchoolTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* =================================== DELETE SCHOOL DIALOG =================================  */}
             <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
                 <DialogTitle>DELETE SCHOOL</DialogTitle>

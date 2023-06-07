@@ -34,36 +34,35 @@ class TeachersController extends Controller{
             return redirect('/login')->with('alert', 'You must login first');
         }else{
             $year = Date('Y');
-            $teacher = DB::table('teacher')->get();
+            $teacher = DB::table('teacher')->orderBy('created_at', 'desc')->get();
             return view('Teachers.teachers', compact('year','teacher'));
         }
     }
 
     public function addTeacher(Request $request){
-       
         $id = $request -> id;
         $teacher_id = $request -> teacher_id;
+        $school_id = $request -> school_id;
         $image = $request -> image;
-        $name = $request -> name;
+        $fullName = $request -> fullName;
         $gender = $request -> gender;
-        $placement = $request -> placement;
         $classType = $request -> classType;
         $contact = $request -> contact;
 
-        DB::insert('insert into teacher (id, teacher_id, image, name, gender, placement, classType, contact) values (?,?,?,?,?,?,?,?)', [$id, $teacher_id, $image, $name, $gender, $placement, $classType, $contact]); 
+        DB::insert('insert into teacher (id, teacher_id, school_id, image, fullName, gender, classType, contact) values (?,?,?,?,?,?,?,?)', [$id, $teacher_id, $school_id, $image, $fullName, $gender, $classType, $contact]); 
     }
 
     public function editTeacher(Request $request){       
         $id = $request -> id;
         $teacher_id = $request -> teacher_id;
+        $school_id = $request -> school_id;
         $image = $request -> image;
-        $name = $request -> name;
+        $fullName = $request -> fullName;
         $gender = $request -> gender;
-        $placement = $request -> placement;
         $classType = $request -> classType;
         $contact = $request -> contact;
 
-        DB::table('teacher')->where('id', $id)->update(['teacher_id' => $teacher_id, 'image' => $image, 'name' => $name, 'gender' => $gender, 'placement' => $placement, 'classType' => $classType, 'contact' => $contact,]);
+        DB::table('teacher')->where('id', $id)->update(['teacher_id' => $teacher_id, 'image' => $image, 'school_id' => $school_id,  'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'contact' => $contact,]);
     }
 
     public function deleteTeacher(Request $request){       

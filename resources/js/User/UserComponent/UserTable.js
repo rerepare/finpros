@@ -1,33 +1,23 @@
 import React from "react";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-
-import AddIcon from "@material-ui/icons/Add";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import EditIcon from "@material-ui/icons/Edit";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+
+//MATERIAL UI
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Table, TableHead, TableBody, TableCell, TableRow, TablePagination, TableFooter } from "@material-ui/core";
+import { Paper, Grid, TextField, Typography } from "@material-ui/core";
+import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import EditIcon from "@material-ui/icons/Edit";
+import LastPageIcon from "@material-ui/icons/LastPage";
+import DeleteIcon from "@material-ui/icons/Delete";
+import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -191,29 +181,84 @@ function TablePaginationActions(props) {
     );
 }
 
+var datas = [];
+
 export default function UserTable(props) {
     const { user } = props;
-    const classes = useStyles();
 
+    const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, user.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
+    const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [openRegistDialog, setOpenRegistDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-    const [isSuperAdmin, setIsSuperAdmin] = React.useState(true);
 
+    //GET DATABASE
     const [id, setId] = React.useState("");
     const [userId, setUserId] = React.useState("");
     const [image, setImage] = React.useState("");
     const [name, setName] = React.useState("");
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [isSuperAdmin, setIsSuperAdmin] = React.useState(true);
 
+    //FUNCTION OPERATIONAL
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+    const handleOpenDetailsDialog = (data) => {
+        datas = user.filter(x => x.id == data.id)
+        console.log(datas[0])
+        setOpenDetailsDialog(true);
+    };
+    const handleCloseDetailsDialog = () => {
+        datas = user
+        setOpenDetailsDialog(false);
+    };
+
+    //FUNCTION REGIST
     const register = (event) => {
         event.preventDefault();
+
+        let data = {
+            id: id,
+            user_id: "USER"+(user[0].id),
+            image: image,
+            name: name,
+            userName: userName,
+            password: password,
+            isSuperAdmin: isSuperAdmin,
+        };
+        console.log(userId)
+        axios.post("/registration", data).then(() => {
+            window.location.href = "/user";
+        });
+    };
+    const handleOpenRegistDialog = () => {
+        setUserId("USER"+(user[0].id));
+        setOpenRegistDialog(true);
+    };
+    const handleCloseRegistDialog = () => {
+        setId("");
+        setUserId("");
+        setImage("");
+        setName("");
+        setUserName("");
+        setPassword("");
+        setOpenRegistDialog(false);
+    };
+
+    //FUNCTION EDIT
+    const editUser = (e) => {
+        e.preventDefault();
 
         let data = {
             id: id,
@@ -224,32 +269,10 @@ export default function UserTable(props) {
             password: password,
             isSuperAdmin: isSuperAdmin,
         };
-
-        axios.post("/registration", data).then(() => {
+        axios.post("/editUser", data).then(() => {
+            handleCloseEditDialog();
             window.location.href = "/user";
         });
-    };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleOpenRegisDialog = () => {
-        setOpenRegistDialog(true);
-        setUserId(parseInt("USER"+user[0].id+1));
-    };
-    const handleCloseRegistDialog = () => {
-        setId("");
-        setUserId("");
-        setImage("");
-        setName("");
-        setUserName("");
-        setPassword("");
-        setOpenRegistDialog(false);
     };
     const handleOpenEditDialog = (data) => {
         setId(data.id);
@@ -270,33 +293,8 @@ export default function UserTable(props) {
         setPassword("");
         setOpenEditDialog(false);
     };
-    const handleOpenDeleteDialog = (data) => {
-        setId(data.id);
 
-        setOpenDeleteDialog(true);
-    };
-    const handleCloseDeleteDialog = () => {
-        setId("");
-        setOpenDeleteDialog(false);
-    };
-    const editUser = (e) => {
-        e.preventDefault();
-
-        let data = {
-            id: id,
-            user_id: userId,
-            image: image,
-            name: name,
-            userName: userName,
-            password: password,
-            isSuperAdmin: isSuperAdmin,
-        };
-        axios.post("/editUser", data).then(() => {
-            handleCloseEditDialog();
-            window.location.href = "/user";
-        });
-    };
-
+    //FUNCTION DELETE
     const deleteUser = (e) => {
         e.preventDefault();
 
@@ -308,7 +306,17 @@ export default function UserTable(props) {
             window.location.href = "/user";
         });
     };
+    const handleOpenDeleteDialog = (data) => {
+        setId(data.id);
 
+        setOpenDeleteDialog(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setId("");
+        setOpenDeleteDialog(false);
+    };
+    
+    //OTHERS
     const Subheader = styled.div`
         display: flex;
         flex-direction: row;
@@ -316,33 +324,15 @@ export default function UserTable(props) {
 
     return (
         <div>
-            <Paper elevation={4} style={{ padding: "5px" }}>
+            <Typography variant="h4">User Data</Typography>
+            <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
                     direction="row"
                     alignItems="center"
                     justifyContent="center"
-                    spacing={1}
-                >
-                    <Grid item xs={12}>
-                        <Subheader>
-                            <div className="m">
-                                <Typography variant="h6">User</Typography>
-                            </div>
-                            <div className="mr-auto">
-                                <Button
-                                    variant="contained"
-                                    onClick={handleOpenRegisDialog}
-                                    startIcon={<AddIcon />}
-                                    color="primary"
-                                    style={{ float: "right" }}
-                                >
-                                    ADD
-                                </Button>
-                            </div>
-                        </Subheader>
-                    </Grid>
-                    <Grid item xs={12}>
+                    spacing={2}>
+                    <Grid item xs={6}>
                         <TextField
                             variant="outlined"
                             onChange={(event) => {
@@ -353,6 +343,20 @@ export default function UserTable(props) {
                             fullWidth={true}
                         />
                     </Grid>
+
+                    <Grid item xs={6}>
+                        <div className="mr-auto">
+                            <Button
+                                variant="contained"
+                                onClick={handleOpenRegistDialog}
+                                startIcon={<AddIcon />}
+                                color="primary"
+                                style={{ float: "right" }}>
+                                REGIST HERE
+                            </Button>
+                        </div>
+                    </Grid>
+
                     <Grid item xs={12}>
                         <Table
                             className={classes.table}
@@ -375,25 +379,7 @@ export default function UserTable(props) {
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Image
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Name
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Username
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Password
+                                        Full Name
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
@@ -444,58 +430,74 @@ export default function UserTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.image}
+                                            {data.name}
                                         </StyledTableCell>
                                         <StyledTableCell
                                             component="th"
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.name}
+                                            {(()=>{
+                                                if(data.isSuperAdmin == 1)
+                                                {
+                                                    return(
+                                                        <Typography>
+                                                            Super Admin
+                                                        </Typography>
+                                                    )
+                                                }
+                                                else{
+                                                    return(
+                                                        <Typography>
+                                                            Admin
+                                                        </Typography>
+                                                    )
+                                                }
+                                            })()}
                                         </StyledTableCell>
                                         <StyledTableCell
-                                            style={{ width: 160 }}
+                                            component="th"
                                             align="center"
-                                        >
-                                            {data.userName}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
-                                            align="center"
-                                        >
-                                            {data.password}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
-                                            align="center"
-                                        >
-                                            {data.isSuperAdmin}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
-                                            align="center"
+                                            scope="row"
                                         >
                                             <Button
-                                                variant="contained"
-                                                startIcon={<EditIcon />}
+                                                variant="contained"                                                
+                                                style={{
+                                                    backgroundColor: "#FFD93D",
+                                                    marginBottom:'5px',
+                                                    height:"5vh",
+                                                    width:"2vw",                                                    
+                                                }}
+                                                onClick={() => {
+                                                    handleOpenDetailsDialog(data);
+                                                }}
+                                            >
+                                                <UnfoldMoreIcon />
+                                            </Button>
+                                            <Button
+                                                variant="contained"                                                
                                                 style={{
                                                     backgroundColor: "#6EFF33",
+                                                    marginBottom:'5px',
+                                                    height:"5vh",
+                                                    width:"2vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenEditDialog(data);
                                                 }}
                                             >
+                                                <EditIcon />
                                             </Button>
                                             <Button
                                                 variant="contained"
-                                                color="secondary"
-                                                startIcon={<DeleteIcon />}
+                                                color="secondary"                                               
+                                                style={{marginBottom:'5px',height:"5vh",
+                                                width:"2vw"}}
                                                 onClick={() => {
-                                                    handleOpenDeleteDialog(
-                                                        data
-                                                    );
+                                                    handleOpenDeleteDialog(data);
                                                 }}
                                             >
+                                                <DeleteIcon />
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -549,6 +551,93 @@ export default function UserTable(props) {
                     </Grid>
                 </Grid>
             </Paper>
+
+            {/* ================================= DETAILS USER DIALOG ===============================  */}
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+                <DialogTitle className={classes.dialogTitle }>
+                    DETAILS USER
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Grid container spacing ={1}>
+                        <Grid item xs = {12}>
+                            <div>
+                            <Accordion expanded = {true} style = {{width: '100%'}}>
+                                <AccordionDetails>
+                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                        <Grid item = {6}>
+                                            <Card>
+                                                <CardContent>
+                                                misalnya ini foto
+                                                {
+                                                    datas.map((data, key) => (
+                                                        <image></image>
+                                                    ))
+                                                }
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item = {6}>
+                                            <Card>
+                                                <CardContent>
+                                                {
+                                                    datas.map((data, key) => (
+                                                        <div>
+                                                            <Typography>
+                                                                User ID : {data.user_id}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Full Name : {data.name}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Username : {data.userName}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Password : {data.password}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Level : {(()=>{
+                                                                    if(data.isSuperAdmin == 1)
+                                                                    {
+                                                                        return(
+                                                                            <Typography>
+                                                                                Super Admin
+                                                                            </Typography>
+                                                                        )
+                                                                    }
+                                                                    else{
+                                                                        return(
+                                                                            <Typography>
+                                                                                Admin
+                                                                            </Typography>
+                                                                        )
+                                                                    }
+                                                                })()}
+                                                            </Typography>
+                                                        </div>
+                                                    ))
+                                                }
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    </Grid>                                
+                                </AccordionDetails>
+                            </Accordion>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleCloseDetailsDialog}
+                    >
+                        CLOSE
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* ================================= REGIST USER DIALOG ===============================  */}
             <Dialog onClose={handleCloseRegistDialog} open={openRegistDialog}>
                 <DialogTitle>REGISTER USER</DialogTitle>
                 <DialogContent dividers>
@@ -561,6 +650,7 @@ export default function UserTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="User ID"
                                 fullWidth="true"
                                 variant="outlined"
@@ -572,23 +662,23 @@ export default function UserTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                label="Full Name"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={name}
+                                onChange={(event) => {
+                                    setName(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
                                 label="Image"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={image}
                                 onChange={(event) => {
                                     setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={name}
-                                onChange={(event) => {
-                                    setName(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -617,7 +707,7 @@ export default function UserTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="isSuperAdmin"
+                                label="Level"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={isSuperAdmin}
@@ -649,6 +739,7 @@ export default function UserTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* =================================== EDIT USER DIALOG =================================  */}
             <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
                 <DialogTitle>EDIT USER</DialogTitle>
@@ -662,6 +753,7 @@ export default function UserTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="User ID"
                                 fullWidth="true"
                                 variant="outlined"
@@ -673,23 +765,23 @@ export default function UserTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
                                 label="Name"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={name}
                                 onChange={(event) => {
                                     setName(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Image"
+                                fullWidth="true"
+                                variant="outlined"
+                                value={image}
+                                onChange={(event) => {
+                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -750,6 +842,7 @@ export default function UserTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* =================================== DELETE USER DIALOG =================================  */}
             <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
                 <DialogTitle>DELETE USER</DialogTitle>

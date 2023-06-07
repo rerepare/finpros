@@ -34,7 +34,7 @@ class SchoolsController extends Controller{
             return redirect('/login')->with('alert', 'You must login first');
         }else{
             $year = Date('Y');
-            $school = DB::table('school')->get();
+            $school = DB::table('school')->orderBy('created_at', 'desc')->get();
             return view('Schools.schools', compact('year','school'));
         }
     }

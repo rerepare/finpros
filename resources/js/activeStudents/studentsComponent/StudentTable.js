@@ -1,41 +1,76 @@
 import React, {useEffect} from "react";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Card,
-    CardContent,
-  } from '@material-ui/core'
-
-import AddIcon from "@material-ui/icons/Add";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import EditIcon from "@material-ui/icons/Edit";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+
+//MATERIAL UI
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Table, TableHead, TableBody, TableCell, TableRow, TablePagination, TableFooter } from "@material-ui/core";
+import { Paper, Grid, TextField, Typography } from "@material-ui/core";
+import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
+import LastPageIcon from '@material-ui/icons/LastPage';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import AddIcon from '@material-ui/icons/Add';
+import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+
+const placements = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'PUSAT',
+        label: 'Pusat',
+    },
+    {
+        value: 'VILLA PERMATA',
+        label: 'Villa Permata',
+    },
+    {
+        value: 'VILLA 2',
+        label: 'Villa 2',
+    },
+];
+
+const genders = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'LAKI-LAKI',
+        label: 'L',
+    },
+    {
+        value: 'PEREMPUAN',
+        label: 'P',
+    },
+];
+
+const classTypes = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'PLAY GROUP',
+        label: 'Play Group',
+    },
+    {
+        value: 'TK A',
+        label: 'TK A',
+    },
+    {
+        value: 'TK B',
+        label: 'TK B',
+    },
+];
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -57,6 +92,7 @@ const StyledTableCell = withStyles((theme) => ({
         wordBreak: "break-word",
     },
 }))(TableCell);
+
 const StyledTableRow = withStyles((theme) => ({
     root: {
         "&:nth-of-type(odd)": {
@@ -206,8 +242,8 @@ var datas = [];
 
 export default function StudentTable(props) {
     const { student } = props;
-    const classes = useStyles();
 
+    const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
@@ -218,6 +254,7 @@ export default function StudentTable(props) {
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
+    //GET DATABASE
     const [id, setId] = React.useState("");
     const [studentId, setStudentId] = React.useState("");
     const [schoolId, setSchoolId] = React.useState("");
@@ -229,12 +266,31 @@ export default function StudentTable(props) {
     const [contact, setContact] = React.useState("");
     const [balance, setBalance] = React.useState("");
 
+    //FUNCTION OPERATIONAL
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+    const handleOpenDetailsDialog = (data) => {
+        datas = student.filter(x => x.id == data.id)
+        console.log(datas[0])
+        setOpenDetailsDialog(true);
+    };
+    const handleCloseDetailsDialog = () => {
+        datas = student
+        setOpenDetailsDialog(false);
+    };
+
+    //FUNCTION ADD
     const addStudent = (event) => {
         event.preventDefault();
 
         let data = {
             id: id,
-            student_id : studentId,
+            student_id:"STD"+(student[0].id),
             school_id: schoolId,
             image: image,
             fullName: studentName,
@@ -249,30 +305,9 @@ export default function StudentTable(props) {
             window.location.href = "/activeStudents";
         });
     };
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
-
-    const handleOpenDetailsDialog = (data) => {
-        datas = student.filter(x => x.id == data.id)
-        console.log(datas[0])
-        setOpenDetailsDialog(true);
-    };
-
-    const handleCloseDetailsDialog = () => {
-        datas = student
-        setOpenDetailsDialog(false);
-    };
-
     const handleOpenAddDialog = () => {
-        setBalance(0)
-        setStudentId(parseInt("STD"+student[0].id+1))
-        console.log(studentId)
+        setStudentId("STD"+(student[0].id));
+        setBalance(0);
         setOpenAddDialog(true);
     };
     const handleCloseAddDialog = () => {
@@ -285,8 +320,30 @@ export default function StudentTable(props) {
         setClassType("");
         setParentName("");
         setContact("");
-        setBalance(0);
+        setBalance("");
         setOpenAddDialog(false);
+    };
+
+    //FUNCTION EDIT
+    const editStudent = (e) => {
+        e.preventDefault();
+
+        let data = {
+            id: id,
+            student_id : studentId,
+            school_id: schoolId,
+            image: image,
+            fullName: studentName,
+            gender: gender,
+            classType: classType,
+            parentName: parentName,
+            contact: contact,
+            balance: balance,
+        };
+        axios.post("/editStudent", data).then(() => {
+            handleCloseEditDialog();
+            window.location.href = "/activeStudents";
+        });
     };
     const handleOpenEditDialog = (data) => {
         setId(data.id);
@@ -314,36 +371,8 @@ export default function StudentTable(props) {
         setBalance("");
         setOpenEditDialog(false);
     };
-    const handleOpenDeleteDialog = (data) => {
-        setId(data.id);
 
-        setOpenDeleteDialog(true);
-    };
-    const handleCloseDeleteDialog = () => {
-        setId("");
-        setOpenDeleteDialog(false);
-    };
-    const editStudent = (e) => {
-        e.preventDefault();
-
-        let data = {
-            id: id,
-            student_id : studentId,
-            school_id: schoolId,
-            image: image,
-            fullName: studentName,
-            gender: gender,
-            classType: classType,
-            parentName: parentName,
-            contact: contact,
-            balance: balance,
-        };
-        axios.post("/editStudent", data).then(() => {
-            handleCloseEditDialog();
-            window.location.href = "/activeStudents";
-        });
-    };
-
+     //FUNCTION DELETE
     const deleteStudent = (e) => {
         e.preventDefault();
 
@@ -355,7 +384,17 @@ export default function StudentTable(props) {
             window.location.href = "/activeStudents";
         });
     };
+    const handleOpenDeleteDialog = (data) => {
+        setId(data.id);
 
+        setOpenDeleteDialog(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setId("");
+        setOpenDeleteDialog(false);
+    };
+
+    //OTHERS
     const Subheader = styled.div`
         display: flex;
         flex-direction: row;
@@ -382,6 +421,7 @@ export default function StudentTable(props) {
                             fullWidth={true}
                         />
                     </Grid>
+
                     <Grid item xs={6}>
                         <div className="mr-auto">
                             <Button
@@ -394,6 +434,7 @@ export default function StudentTable(props) {
                             </Button>
                         </div>
                     </Grid>
+
                     <Grid item xs={12}>
                         <Table
                             className={classes.table}
@@ -411,48 +452,18 @@ export default function StudentTable(props) {
                                     >
                                         Student ID
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Image
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
-                                        style={{ wordBreak: "break-word" }}
+                                        style={{ wordBreak: "break-word", width: 350}}
                                     >
                                         Full Name
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Gender
-                                    </StyledTableCell> */}
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Class Type
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
                                         School Placement
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Parent Name
-                                    </StyledTableCell> */}
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Contact
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
@@ -497,13 +508,6 @@ export default function StudentTable(props) {
                                         >
                                             {data.student_id}
                                         </StyledTableCell>
-                                        {/* <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.image}
-                                        </StyledTableCell> */}
                                         <StyledTableCell
                                             component="th"
                                             align="center"
@@ -511,20 +515,6 @@ export default function StudentTable(props) {
                                         >
                                             {data.fullName}
                                         </StyledTableCell>
-                                        {/* <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.gender}
-                                        </StyledTableCell> */}
-                                        {/* <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.classType}
-                                        </StyledTableCell> */}
                                         <StyledTableCell
                                             component="th"
                                             align="center"
@@ -532,21 +522,6 @@ export default function StudentTable(props) {
                                         >
                                             {data.school_id}
                                         </StyledTableCell>
-                                        {/* <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.parentName}
-                                        </StyledTableCell>
-
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.contact}
-                                        </StyledTableCell> */}
                                         <StyledTableCell
                                             component="th"
                                             align="center"
@@ -562,7 +537,7 @@ export default function StudentTable(props) {
                                             <Button
                                                 variant="contained"                                                
                                                 style={{
-                                                    backgroundColor: "#6EFF33",
+                                                    backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
                                                     width:"2vw",                                                    
@@ -571,7 +546,7 @@ export default function StudentTable(props) {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <EditIcon />
+                                                <UnfoldMoreIcon />
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -604,7 +579,7 @@ export default function StudentTable(props) {
 
                                 {emptyRows > 0 && (
                                     <TableRow
-                                        style={{ height: 33 * emptyRows }}
+                                        style= {{height: 33 * emptyRows}}
                                     >
                                         <TableCell colSpan={6} />
                                     </TableRow>
@@ -650,22 +625,17 @@ export default function StudentTable(props) {
                     </Grid>
                 </Grid>
             </Paper>
+
             {/* ================================= DETAILS STUDENT DIALOG ===============================  */}
             <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
-                <DialogTitle 
-                className={classes.dialogTitle }
-                >
-                    DETAILS STUDENT</DialogTitle>
+                <DialogTitle className={classes.dialogTitle }>
+                    DETAILS STUDENT
+                </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing ={1}>
                         <Grid item xs = {12}>
                             <div>
                             <Accordion expanded = {true} style = {{width: '100%'}}>
-                                {/* <AccordionSummary
-                                classes={{ content: classes.content }}
-                                >
-                                STUDENT PROFILE
-                                </AccordionSummary> */}
                                 <AccordionDetails>
                                     <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
                                         <Grid item = {6}>
@@ -722,7 +692,6 @@ export default function StudentTable(props) {
                             </div>
                         </Grid>
                     </Grid>
-                    
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -734,6 +703,7 @@ export default function StudentTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* ================================= ADD STUDENT DIALOG ===============================  */}
             <Dialog onClose={handleCloseAddDialog} open={openAddDialog}>
                 <DialogTitle>ADD  STUDENT</DialogTitle>
@@ -747,34 +717,13 @@ export default function StudentTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="Student ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={studentId}
                                 onChange={(event) => {
                                     setStudentId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="School Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -791,25 +740,80 @@ export default function StudentTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Gender"
+                                label="Image"
                                 fullWidth="true"
                                 variant="outlined"
-                                value={gender}
+                                value={image}
                                 onChange={(event) => {
-                                    setGender(event.target.value);
+                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Class Type"
+                                select
+                                label="School Placement"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
+                                }}
+                                helperText="Please select student placement"
+                                SelectProps={{
+                                    native: true,
+                                  }}
                                 fullWidth="true"
                                 variant="outlined"
+                            >
+                                {placements.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Gender"
+                                value={gender}
+                                onChange={(event) => {
+                                    setGender(event.target.value);
+                                }}
+                                helperText="Please select student gender"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {genders.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Class Type"
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
                                 }}
-                            />
+                                helperText="Please select student class type"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {classTypes.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -846,7 +850,6 @@ export default function StudentTable(props) {
                         </Grid>
                     </Grid>
                 </DialogContent>
-
                 <DialogActions>
                     <form method="post" onSubmit={addStudent}>
                         <Button
@@ -867,6 +870,7 @@ export default function StudentTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* ================================== EDIT STUDENT DIALOG =================================  */}
             <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
                 <DialogTitle>EDIT STUDENT</DialogTitle>
@@ -880,34 +884,13 @@ export default function StudentTable(props) {
                     >
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="Student ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={studentId}
                                 onChange={(event) => {
                                     setStudentId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="School Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -924,25 +907,80 @@ export default function StudentTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="gender"
+                                label="image"
                                 fullWidth="true"
                                 variant="outlined"
-                                value={gender}
+                                value={image}
                                 onChange={(event) => {
-                                    setGender(event.target.value);
+                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Class Type"
+                                select
+                                label="School Placement"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
+                                }}
+                                helperText="Please select student placement"
+                                SelectProps={{
+                                    native: true,
+                                  }}
                                 fullWidth="true"
                                 variant="outlined"
+                            >
+                                {placements.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Gender"
+                                value={gender}
+                                onChange={(event) => {
+                                    setGender(event.target.value);
+                                }}
+                                helperText="Please select student gender"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {genders.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Class Type"
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
                                 }}
-                            />
+                                helperText="Please select student class type"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {classTypes.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -999,6 +1037,7 @@ export default function StudentTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* ================================= DELETE STUDENT DIALOG ================================  */}
             <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
                 <DialogTitle>DELETE STUDENT</DialogTitle>

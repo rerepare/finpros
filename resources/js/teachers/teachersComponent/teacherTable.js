@@ -1,33 +1,76 @@
 import React from "react";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-
-import AddIcon from "@material-ui/icons/Add";
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import EditIcon from "@material-ui/icons/Edit";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+
+//MATERIAL UI
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Table, TableHead, TableBody, TableCell, TableRow, TablePagination, TableFooter } from "@material-ui/core";
+import { Paper, Grid, TextField, Typography } from "@material-ui/core";
+import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
+import LastPageIcon from '@material-ui/icons/LastPage';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import AddIcon from '@material-ui/icons/Add';
+import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+
+const placements = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'PUSAT',
+        label: 'Pusat',
+    },
+    {
+        value: 'VILLA PERMATA',
+        label: 'Villa Permata',
+    },
+    {
+        value: 'VILLA 2',
+        label: 'Villa 2',
+    },
+];
+
+const genders = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'LAKI-LAKI',
+        label: 'L',
+    },
+    {
+        value: 'PEREMPUAN',
+        label: 'P',
+    },
+];
+
+const classTypes = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'PLAY GROUP',
+        label: 'Play Group',
+    },
+    {
+        value: 'TK A',
+        label: 'TK A',
+    },
+    {
+        value: 'TK B',
+        label: 'TK B',
+    },
+];
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -191,19 +234,23 @@ function TablePaginationActions(props) {
     );
 }
 
+var datas = [];
+
 export default function TeacherTable(props) {
     const { teacher } = props;
-    const classes = useStyles();
 
+    const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, teacher.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
+    const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
+    //GET DATABASE
     const [id, setId] = React.useState("");
     const [teacherId, setTeacherId] = React.useState("");
     const [schoolId, setSchoolId] = React.useState("");
@@ -213,25 +260,7 @@ export default function TeacherTable(props) {
     const [classType, setClassType] = React.useState("");
     const [contact, setContact] = React.useState("");
 
-    const addTeacher = (event) => {
-        event.preventDefault();
-
-        let data = {
-            id: id,
-            teacher_id: teacherId,
-            school_id: schoolId,
-            image: image,
-            name: teacherName,
-            gender: gender,
-            classType: classType,
-            contact: contact,
-        };
-
-        axios.post("/addTeacher", data).then(() => {
-            window.location.href = "/teachers";
-        });
-    };
-
+    //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -239,9 +268,37 @@ export default function TeacherTable(props) {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+    const handleOpenDetailsDialog = (data) => {
+        datas = teacher.filter(x => x.id == data.id)
+        console.log(datas[0])
+        setOpenDetailsDialog(true);
+    };
+    const handleCloseDetailsDialog = () => {
+        datas = teacher
+        setOpenDetailsDialog(false);
+    };
 
+    //FUNCTION ADD
+    const addTeacher = (event) => {
+        event.preventDefault();
+
+        let data = {
+            id: id,
+            teacher_id: "TCH"+(teacher[0].id),
+            school_id: schoolId,
+            image: image,
+            fullName: teacherName,
+            gender: gender,
+            classType: classType,
+            contact: contact,
+        };
+        console.log(teacherId)
+        axios.post("/addTeacher", data).then(() => {
+            window.location.href = "/teachers";
+        });
+    };
     const handleOpenAddDialog = () => {
-        setTeacherId(parseInt("TCH"+teacher[0].id+1))
+        setTeacherId("TCH"+teacher[0].id)
         setOpenAddDialog(true);
     };
     const handleCloseAddDialog = () => {
@@ -255,12 +312,32 @@ export default function TeacherTable(props) {
         setContact("");
         setOpenAddDialog(false);
     };
+
+    //FUNCTION EDIT
+    const editTeacher = (e) => {
+        e.preventDefault();
+
+        let data = {
+            id: id,
+            teacher_id: teacherId,
+            school_id: schoolId,
+            image: image,
+            fullName: teacherName,
+            gender: gender,
+            classType: classType,
+            contact: contact,
+        };
+        axios.post("/editTeacher", data).then(() => {
+            handleCloseEditDialog();
+            window.location.href = "/teachers";
+        });
+    };
     const handleOpenEditDialog = (data) => {
         setId(data.id);
         setTeacherId(data.teacher_id);
         setSchoolId(data.school_id);
         setImage(data.image);
-        setTeacherName(data.name);
+        setTeacherName(data.fullName);
         setGender(data.gender);
         setClassType(data.classType);
         setContact(data.contact);
@@ -277,34 +354,8 @@ export default function TeacherTable(props) {
         setContact("");
         setOpenEditDialog(false);
     };
-    const handleOpenDeleteDialog = (data) => {
-        setId(data.id);
 
-        setOpenDeleteDialog(true);
-    };
-    const handleCloseDeleteDialog = () => {
-        setId("");
-        setOpenDeleteDialog(false);
-    };
-    const editTeacher = (e) => {
-        e.preventDefault();
-
-        let data = {
-            id: id,
-            teacher_id: teacherId,
-            school_id: schoolId,
-            image: image,
-            name: teacherName,
-            gender: gender,
-            classType: classType,
-            contact: contact,
-        };
-        axios.post("/editTeacher", data).then(() => {
-            handleCloseEditDialog();
-            window.location.href = "/teachers";
-        });
-    };
-
+    //FUNCTION DELETE
     const deleteTeacher = (e) => {
         e.preventDefault();
 
@@ -316,7 +367,17 @@ export default function TeacherTable(props) {
             window.location.href = "/teachers";
         });
     };
+    const handleOpenDeleteDialog = (data) => {
+        setId(data.id);
 
+        setOpenDeleteDialog(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setId("");
+        setOpenDeleteDialog(false);
+    };
+
+    //OTHERS
     const Subheader = styled.div`
         display: flex;
         flex-direction: row;
@@ -325,7 +386,7 @@ export default function TeacherTable(props) {
     return (
         <div>
             <Typography variant="h4">TEACHER DATA</Typography>
-            <Paper elevation={4} style={{ padding: "25px", height:"80vh" }}>
+            <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
                     direction="row"
@@ -343,6 +404,7 @@ export default function TeacherTable(props) {
                             fullWidth={true}
                         />
                     </Grid>
+
                     <Grid item xs={6}>
                         <div className="mr-auto">
                             <Button
@@ -355,6 +417,7 @@ export default function TeacherTable(props) {
                             </Button>
                         </div>
                     </Grid>
+
                     <Grid item xs={12}>
                         <Table
                             className={classes.table}
@@ -376,38 +439,19 @@ export default function TeacherTable(props) {
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
+                                        Full Name
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        align="center"
+                                        style={{ wordBreak: "break-word" }}
+                                    >
                                         Placement
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Image
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Name
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Gender
-                                    </StyledTableCell>
-                                    
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
                                         Class Type
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Contact
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
@@ -424,7 +468,7 @@ export default function TeacherTable(props) {
                                               if (searchName == "") {
                                                   return data;
                                               } else if (
-                                                  data.name
+                                                  data.fullName
                                                       .toLowerCase()
                                                       .includes(
                                                           searchName.toLowerCase()
@@ -440,7 +484,6 @@ export default function TeacherTable(props) {
                                     : teacher
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>
-                                        
                                         <StyledTableCell
                                             component="th"
                                             align="center"
@@ -449,8 +492,16 @@ export default function TeacherTable(props) {
                                             {data.teacher_id}
                                         </StyledTableCell>
                                         <StyledTableCell
-                                            style={{ width: 160 }}
+                                            component="th"
                                             align="center"
+                                            scope="row"
+                                        >
+                                            {data.fullName}
+                                        </StyledTableCell>
+                                        <StyledTableCell
+                                            component="th"
+                                            align="center"
+                                            scope="row"
                                         >
                                             {data.school_id}
                                         </StyledTableCell>
@@ -459,56 +510,50 @@ export default function TeacherTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.image}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.name}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.gender}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
-                                            align="center"
-                                        >
                                             {data.classType}
                                         </StyledTableCell>
                                         <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.contact}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{ width: 160 }}
+                                            style={{ width: 250 }}
                                             align="center"
                                         >
                                             <Button
-                                                variant="contained"
-                                                startIcon={<EditIcon />}
+                                                variant="contained"                                                
+                                                style={{
+                                                    backgroundColor: "#FFD93D",
+                                                    marginBottom:'5px',
+                                                    height:"5vh",
+                                                    width:"2vw",                                                    
+                                                }}
+                                                onClick={() => {
+                                                    handleOpenDetailsDialog(data);
+                                                }}
+                                            >
+                                                <UnfoldMoreIcon />
+                                            </Button>
+                                            <Button
+                                                variant="contained"                                                
                                                 style={{
                                                     backgroundColor: "#6EFF33",
+                                                    marginBottom:'5px',
+                                                    height:"5vh",
+                                                    width:"2vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenEditDialog(data);
-                                                }}>
+                                                }}
+                                            >
+                                                <EditIcon />
                                             </Button>
                                             <Button
                                                 variant="contained"
-                                                color="secondary"
-                                                startIcon={<DeleteIcon />}
+                                                color="secondary"                                               
+                                                style={{marginBottom:'5px',height:"5vh",
+                                                width:"2vw"}}
                                                 onClick={() => {
                                                     handleOpenDeleteDialog(data);
-                                                }}>
+                                                }}
+                                            >
+                                                <DeleteIcon />
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -562,6 +607,80 @@ export default function TeacherTable(props) {
                     </Grid>
                 </Grid>
             </Paper>
+
+            {/* ================================= DETAILS TEACHER DIALOG ===============================  */}
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+                <DialogTitle className={classes.dialogTitle }>
+                    DETAILS TEACHER
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Grid container spacing ={1}>
+                        <Grid item xs = {12}>
+                            <div>
+                            <Accordion expanded = {true} style = {{width: '100%'}}>
+                                <AccordionDetails>
+                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                        <Grid item = {6}>
+                                            <Card>
+                                                <CardContent>
+                                                misalnya ini foto
+                                                {
+                                                    datas.map((data, key) => (
+                                                        <image></image>
+                                                    ))
+                                                }
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                        <Grid item = {6}>
+                                            <Card>
+                                                <CardContent>
+                                                {
+                                                    datas.map((data, key) => (
+                                                        <div>
+                                                            <Typography>
+                                                                Teacher ID : {data.teacher_id}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Placement : {data.school_id}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Name : {data.fullName}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Gender : {data.gender}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Class Type : {data.classType}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Contact : {data.contact}
+                                                            </Typography>
+                                                        </div>
+                                                    ))
+                                                }
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    </Grid>                                
+                                </AccordionDetails>
+                            </Accordion>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleCloseDetailsDialog}
+                    >
+                        CLOSE
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* ================================= ADD TEACHER DIALOG ===============================  */}
             <Dialog onClose={handleCloseAddDialog} open={openAddDialog}>
                 <DialogTitle>ADD  TEACHER</DialogTitle>
                 <DialogContent dividers>
@@ -575,34 +694,13 @@ export default function TeacherTable(props) {
                         
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="Teacher ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={teacherId}
                                 onChange={(event) => {
                                     setTeacherId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -619,26 +717,80 @@ export default function TeacherTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Gender"
+                                label="Image"
                                 fullWidth="true"
                                 variant="outlined"
+                                value={image}
+                                onChange={(event) => {
+                                    setImage(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="School Placement"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
+                                }}
+                                helperText="Please select student placement"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {placements.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Gender"
                                 value={gender}
                                 onChange={(event) => {
                                     setGender(event.target.value);
                                 }}
-                            />
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Class Type"
+                                helperText="Please select student gender"
+                                SelectProps={{
+                                    native: true,
+                                  }}
                                 fullWidth="true"
                                 variant="outlined"
+                            >
+                                {genders.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Class Type"
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
                                 }}
-                            />
+                                helperText="Please select student class type"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {classTypes.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -673,6 +825,7 @@ export default function TeacherTable(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             {/* =================================== EDIT TEACHER DIALOG =================================  */}
             <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
                 <DialogTitle>EDIT TEACHER</DialogTitle>
@@ -684,37 +837,15 @@ export default function TeacherTable(props) {
                         justifyContent="center"
                         spacing={1}
                     >
-                        
                         <Grid item xs={12}>
                             <TextField
+                                disabled
                                 label="Teacher ID"
                                 fullWidth="true"
                                 variant="outlined"
                                 value={teacherId}
                                 onChange={(event) => {
                                     setTeacherId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Placement"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={teacherId}
-                                onChange={(event) => {
-                                    setTeacherId(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
                                 }}
                             />
                         </Grid>
@@ -731,26 +862,80 @@ export default function TeacherTable(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Gender"
+                                label="Image"
                                 fullWidth="true"
                                 variant="outlined"
+                                value={image}
+                                onChange={(event) => {
+                                    setImage(event.target.value);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="School Placement"
+                                value={schoolId}
+                                onChange={(event) => {
+                                    setSchoolId(event.target.value);
+                                }}
+                                helperText="Please select student placement"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {placements.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Gender"
                                 value={gender}
                                 onChange={(event) => {
                                     setGender(event.target.value);
                                 }}
-                            />
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Class Type"
+                                helperText="Please select student gender"
+                                SelectProps={{
+                                    native: true,
+                                  }}
                                 fullWidth="true"
                                 variant="outlined"
+                            >
+                                {genders.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                label="Class Type"
                                 value={classType}
                                 onChange={(event) => {
                                     setClassType(event.target.value);
                                 }}
-                            />
+                                helperText="Please select student class type"
+                                SelectProps={{
+                                    native: true,
+                                  }}
+                                fullWidth="true"
+                                variant="outlined"
+                            >
+                                {classTypes.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -781,6 +966,7 @@ export default function TeacherTable(props) {
                     >CLOSE</Button>
                 </DialogActions>
             </Dialog>
+
             {/* =================================== DELETE TEACHER DIALOG =================================  */}
             <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
                 <DialogTitle>DELETE TEACHER</DialogTitle>

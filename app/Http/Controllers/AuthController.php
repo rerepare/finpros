@@ -57,6 +57,54 @@ class AuthController extends Controller{
             Session::put('login' , TRUE);
           }       
     }
+
+    public function logout(){
+        Session::flush();
+    }
+
+    public function dashboard(){
+       
+        if(!Session::get('login')){
+            return redirect('/login')->with('alert', 'You must login first');
+        }else{
+            $year = Date('Y');
+            return view('User.dashboard',  compact('year') );
+        }
+    }
+
+    public function userPage(){
+        if(!Session::get('login')){
+            return redirect('/login')->with('alert', 'You must login first');
+        }else{
+            $year = Date('Y');
+            $user = DB::table('user')->orderBy('created_at', 'desc')->get();
+        return view('User.user',  compact('year','user') );
+        }
+    }
+
+    public function register(){
+        if(!Session::get('login')){
+            return redirect('/login')->with('alert', 'You must login first');
+        }else{
+            $year = Date('Y');
+            $user = DB::table('user')->orderBy('created_at', 'desc')->get();
+        return view('User.register',  compact('year', 'user') );
+        }
+    }
+
+    public function registration(Request $request){
+        $id = $request -> id;
+        $user_id = $request -> user_id;
+        $image = $request -> image;
+        $name = $request -> name;
+        $userName = $request -> userName;
+        $password = md5($request -> password);
+        $isSuperAdmin = $request -> isSuperAdmin;
+
+        DB::insert('insert into user (id, user_id, image, name, userName, password, isSuperAdmin) values (?,?,?,?,?,?,?)', [$id, $user_id, $image, $name, $userName, $password, $isSuperAdmin]);
+        
+    }
+
     public function editUser(Request $request){       
         $id = $request -> id;
         $user_id = $request -> user_id;
@@ -74,55 +122,4 @@ class AuthController extends Controller{
 
         DB::table('user')->where('id', $id)->delete();
     }
-
-    public function logout(){
-        Session::flush();
-    }
-
-    public function dashboard(){
-       
-        if(!Session::get('login')){
-            return redirect('/login')->with('alert', 'You must login first');
-        }else{
-            $year = Date('Y');
-            return view('User.dashboard',  compact('year') );
-        }
-        }
-        
-    
-
-    public function register(){
-        if(!Session::get('login')){
-            return redirect('/login')->with('alert', 'You must login first');
-        }else{
-            $year = Date('Y');
-        return view('User.register',  compact('year') );
-        }
-    }
-
-    public function registration(Request $request){
-       
-
-        $id = $request -> id;
-        $user_id = $request -> user_id;
-        $image = $request -> image;
-        $name = $request -> name;
-        $userName = $request -> userName;
-        $password = md5($request -> password);
-        $isSuperAdmin = $request -> isSuperAdmin;
-
-        DB::insert('insert into user (id, user_id, image, name, userName, password, isSuperAdmin) values (?,?,?,?,?,?,?)', [$id, $user_id, $image, $name, $userName, $password, $isSuperAdmin]);
-        
-    }
-
-    public function userPage(){
-        if(!Session::get('login')){
-            return redirect('/login')->with('alert', 'You must login first');
-        }else{
-            $year = Date('Y');
-            $user = DB::table('user')->get();
-        return view('User.user',  compact('year','user') );
-        }
-    }
 }
-

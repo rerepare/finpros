@@ -1,41 +1,30 @@
 import React from "react";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Card,
-    CardContent,
-  } from '@material-ui/core'
-
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from '@material-ui/icons/Close';
-import FirstPageIcon from "@material-ui/icons/FirstPage";
-import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import EditIcon from "@material-ui/icons/Edit";
-import LastPageIcon from "@material-ui/icons/LastPage";
-import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+import clsx from 'clsx';
+
+//MATERIAL UI
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { Table, TableHead, TableBody, TableCell, TableRow, TablePagination, TableFooter } from "@material-ui/core";
+import { Paper, Grid, TextField, Typography } from "@material-ui/core";
+import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
+import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from '@material-ui/icons/Close';
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import EditIcon from "@material-ui/icons/Edit";
+import LastPageIcon from "@material-ui/icons/LastPage";
+import DeleteIcon from "@material-ui/icons/Delete";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+
+import FilledInput from '@material-ui/core/FilledInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -202,14 +191,18 @@ var datas = [];
 
 export default function StudentTable(props) {
     const { student } = props;
-    const classes = useStyles();
 
+    const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState(""); 
+    const [values, setValues] = React.useState({
+        amount: '',
+      });
   
+    //GET DATABASE
     const [id, setId] = React.useState("")
     const [studentId, setStudentId] = React.useState("")
     const [userId, setUserId] = React.useState("")
@@ -221,6 +214,7 @@ export default function StudentTable(props) {
     const [balance, setBalance] = React.useState(0)
     const [openDialog, setOpenDialog] = React.useState(false)
 
+    //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -240,7 +234,11 @@ export default function StudentTable(props) {
         console.log(datas[0])
         setOpenDialog(true)
     }
+    const handleChange = (prop) => (event) => {
+        setValues({ ...values, [prop]: event.target.value });
+      };
 
+    //FUNCTION ADD TRANSACTION
     const addTransaction = (event) => {
         event.preventDefault();
 
@@ -262,11 +260,16 @@ export default function StudentTable(props) {
         });
     };
     
+     //OTHERS
+     const Subheader = styled.div`
+        display: flex;
+        flex-direction: row;
+     `;
 
     return (
         <div>
             <Typography variant="h4">TRANSACTION</Typography>
-            <Paper elevation={4} style={{ padding: "25px", height:"80vh" }}>
+            <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
                     direction="row"
@@ -284,6 +287,9 @@ export default function StudentTable(props) {
                             fullWidth={true}
                         />
                     </Grid>
+
+                    {/* ADD TRANSACTION HERE */}
+
                     <Grid item xs={12}>
                         <Table
                             className={classes.table}
@@ -302,48 +308,18 @@ export default function StudentTable(props) {
                                     >
                                         Student ID
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Image
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Name
+                                        Full Name
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Gender
-                                    </StyledTableCell> */}
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Class
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Placement
+                                        School Placement
                                     </StyledTableCell>
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Parent Name
-                                    </StyledTableCell> */}
-                                    {/* <StyledTableCell
-                                        align="center"
-                                        style={{ wordBreak: "break-word" }}
-                                    >
-                                        Contact
-                                    </StyledTableCell> */}
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
@@ -393,14 +369,6 @@ export default function StudentTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.image}
-                                        </StyledTableCell>
-                                        
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
                                             {data.fullName}
                                         </StyledTableCell>
                                         <StyledTableCell
@@ -408,35 +376,7 @@ export default function StudentTable(props) {
                                             align="center"
                                             scope="row"
                                         >
-                                            {data.gender}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.classType}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.placement}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.parentName}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            component="th"
-                                            align="center"
-                                            scope="row"
-                                        >
-                                            {data.contact}
+                                            {data.school_id}
                                         </StyledTableCell>
                                         <StyledTableCell
                                             component="th"
@@ -504,8 +444,9 @@ export default function StudentTable(props) {
                         </Table>
                     </Grid>
                 </Grid>
-            </Paper>    
+            </Paper>
 
+            {/* ================================ ADD TRANSACTION DIALOG ==============================  */}
              <Dialog onClose={handleCloseDialog} open={openDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>
                     ADD  TRANSACTION
@@ -518,37 +459,58 @@ export default function StudentTable(props) {
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
+
                 <DialogContent dividers>
                     <div>
                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={2}>
                             {/* ======================== STUDENT PROFILE ======================== */}
                             <Grid item xs = {12} sm = {12} lg ={4}>
-                            <Accordion expanded = {true}>
-                                <AccordionSummary>
-                                STUDENT PROFILE
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                <Card style = {{height:'40vh'}}>
-                                    <CardContent>
-                                    misalnya ini foto
-                                    </CardContent>
-                                </Card>
-                                {
-                                    datas.map((data, key) => (
-                                        <div>
-                                            <Typography>
-                                                Name : {data.fullName}
-                                            </Typography>
-                                            <br />
-                                            <Typography>
-                                                Class : {data.classType}
-                                            </Typography>
-                                        </div>
-                                    ))
-                                }
-                                </AccordionDetails>
-                            </Accordion>
+                                <Accordion expanded = {true}>
+                                    <AccordionSummary>
+                                    STUDENT PROFILE
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Card style = {{height:'40vh'}}>
+                                            <CardContent>
+                                            misalnya ini foto
+                                            </CardContent>
+                                        </Card>
+                                        <Typography>
+                                            {
+                                                datas.map((data, key) => (
+                                                    <div>
+                                                            <Typography>
+                                                                Student ID : {data.student_id}
+                                                            </Typography>
+                                                            <Typography>
+                                                                School ID : {data.school_id}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Name : {data.fullName}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Gender : {data.gender}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Class Type : {data.classType}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Parent : {data.parentName}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Contact : {data.contact}
+                                                            </Typography>
+                                                            <Typography>
+                                                                Balance : {data.balance}
+                                                            </Typography>
+                                                        </div>
+                                                ))
+                                            }
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
                             </Grid>
+
                             {/* ======================== FORM ========================== */}
                             <Grid item xs = {12} sm = {12} lg ={8}>
                                 <Accordion expanded = {true}>
@@ -557,32 +519,59 @@ export default function StudentTable(props) {
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1}>
+                                            {/* AMOUNT */}
                                             <Grid item xs = {12}>
-                                                <TextField value = {amount} onChange = {(event) => {setAmount(event.target.value)}} fullWidth = {true} variant='outlined' label = 'Amount'
-                                            />               
+                                                <FormControl fullWidth className={classes.margin} variant="filled">
+                                                    <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+                                                    <FilledInput
+                                                        id="filled-adornment-amount"
+                                                        value={values.amount}
+                                                        onChange={handleChange('amount')}
+                                                        startAdornment={<InputAdornment position="start">Rp </InputAdornment>}
+                                                    />
+                                                </FormControl>              
                                             </Grid>
-                                            <Grid item xs = {12}>
-                                                <TextField value = {details} onChange = {(event) => {setDetails(event.target.value)}} fullWidth = {true} variant='outlined' label = 'Details' />               
-                                            </Grid>
+
+                                            {/* DESCRIPTION */}
                                             <Grid item xs = {6}>
-                                                <TextField value = {payer} onChange={(event) => {setPayer(event.target.value)}} fullWidth = {true} variant='outlined' label = 'Payer' />               
+                                                <TextField
+                                                    label="Description"
+                                                    variant="outlined"
+                                                    fullWidth="true"
+                                                />               
+                                            </Grid>
+
+                                            {/* ACTOR */}
+                                            <Grid item xs = {6}>
+                                                <TextField
+                                                    label="Payer"
+                                                    variant="outlined"
+                                                    fullWidth="true"
+                                                />            
                                             </Grid>  
+
+                                            {/* PAYMENT METHOD */}
                                             <Grid item xs = {6}>
-                                                <TextField value = {method} onChange = {(event) => {setMethod(event.target.value)}} fullWidth = {true} variant='outlined' label = 'Method' />               
+                                                <TextField
+                                                    label="Payment Method"
+                                                    variant="outlined"
+                                                    fullWidth="true"
+                                                />             
                                             </Grid>
+
+                                            {/* ACTIONS */}
                                             <Grid item xs = {6}>
                                                 <form method="post" onSubmit={addTransaction}>
                                                     <Button variant='contained' color='secondary' style = {{float:'center', marginLeft:'10vw'}} onClick = {()=>{setType("Payment")}}>
                                                         PAYMENT
                                                     </Button> 
-                                                </form>               
-                                            </Grid>  
-                                            <Grid item xs = {6}>
+                                                </form> 
+                                                <br/>   
                                                 <form method="post" onSubmit={addTransaction}>
                                                     <Button variant='contained' color='primary' style = {{float:"center", marginLeft:'10vw'}} onClick = {() => {setType("Saving")}}>
                                                         SAVING
                                                     </Button>
-                                                </form>
+                                                </form>           
                                             </Grid>
                                         </Grid>                      
                                     </AccordionDetails>
