@@ -34,6 +34,7 @@
         "moment": "^2.29.4",
         "react-apexcharts": "^1.4.0",
         "react-router-dom": "^5.2.0",
+        "react-to-print": "^2.14.13",
         "styled-components": "^5.3.10"
     }
 }
