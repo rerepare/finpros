@@ -23,7 +23,7 @@ export default function Login() {
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
 
-    const login = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const user = allUser.filter(
@@ -40,10 +40,18 @@ export default function Login() {
             if (user.length > 0) {
                 window.location.href = "/dashboard";
             } else {
+                //failed message
                 console.log("FAILED :(");
             }
         });
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          handleSubmit(event);
+        }
+      };
 
     const LoginContainer = styled.div`
         display: grid;
@@ -87,54 +95,6 @@ export default function Login() {
         background-color: #ff6d28;
     `;
 
-    // return (
-    //     <LoginContainer>
-    //         <div className="image-container">
-    //             <img src="/school.jpg" alt="logo mostrans" />
-    //         </div>
-    //         <div className="login-content">
-    //             <h3 className="mb-1">Login</h3>
-    //             <Grid item xs={12}>
-    //                 <div className="pb-2">
-    //                     <label>User Name</label>
-    //                     <input
-    //                         fullWidth={true}
-    //                         value={userName}
-    //                         onChange={(event) => {
-    //                             setUserName(event.target.value);
-    //                         }}
-    //                         className="form-control"
-    //                         aria-describedby="emailHelp"
-    //                         placeholder="Enter username"
-    //                     />
-    //                 </div>
-    //                 <div>
-    //                     <label>Password</label>
-    //                     <input
-    //                         placeholder="Password"
-    //                         // fullWidth={true}
-    //                         value={password}
-    //                         onChange={(event) => {
-    //                             setPassword(event.target.value);
-    //                         }}
-    //                         className="form-control"
-    //                     />
-    //                 </div>
-    //             </Grid>
-    //             <form method="post" onSubmit={login}>
-    //                 <Button
-    //                     type="submit"
-    //                     variant="contained"
-    //                     className="mt-2"
-    //                     color="primary"
-    //                 >
-    //                     Login
-    //                 </Button>
-    //             </form>
-    //         </div>
-    //     </LoginContainer>
-    // );
-
     return (
         <div>
             <Grid
@@ -159,47 +119,46 @@ export default function Login() {
                     />
                 </Grid>
                 <Grid item xs={12} md={4} style={{ padding: "30px" }}>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        <Card>
-                            <CardContent>
-                                <Grid>
-                                    <Typography variant="h6" className="pb-2">
-                                        Log In
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} className="pb-2">
-                                    <label className="pb-1">User Name</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        size="small"
-                                        value={userName}
-                                        onChange={(event) => {
-                                            setUserName(event.target.value);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} className="pb-2">
-                                    <label className="pb-1">Password</label>
-                                    <TextField
-                                        variant="outlined"
-                                        fullWidth={true}
-                                        size="small"
-                                        value={password}
-                                        type="password"
-                                        onChange={(event) => {
-                                            setPassword(event.target.value);
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <form method="post" onSubmit={login}>
+                    <Card>
+                        <CardContent>
+                            <form method="post" onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
+                                <Typography
+                                fontWeight="bold"
+                                >Log In</Typography>
+                                <Grid
+                                container
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                                spacing={1}>
+                                    <Grid item xs={12}>
+                                        <label className="pb-1">User Name</label>
+                                        <TextField
+                                            variant="outlined"
+                                            placeholder="username"
+                                            fullWidth={true}
+                                            size="small"
+                                            value={userName}
+                                            onChange={(event) => {
+                                                setUserName(event.target.value);
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <label className="pb-1">Password</label>
+                                        <TextField
+                                            variant="outlined"
+                                            placeholder="password"
+                                            fullWidth={true}
+                                            size="small"
+                                            value={password}
+                                            type="password"
+                                            onChange={(event) => {
+                                                setPassword(event.target.value);
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -208,11 +167,11 @@ export default function Login() {
                                         >
                                             login
                                         </Button>
-                                    </form>
+                                    </Grid>
                                 </Grid>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </Grid>
             </Grid>
         </div>

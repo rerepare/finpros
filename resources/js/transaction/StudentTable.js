@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -11,19 +11,13 @@ import { Paper, Grid, TextField, Typography } from "@material-ui/core";
 import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/core";
 import { Button, IconButton } from "@material-ui/core";
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
-import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
 import FirstPageIcon from "@material-ui/icons/FirstPage";
-import EditIcon from "@material-ui/icons/Edit";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import DeleteIcon from "@material-ui/icons/Delete";
+import Snackbar from '@material-ui/core/Snackbar';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-
-import FilledInput from '@material-ui/core/FilledInput';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +77,7 @@ const useStyles1 = makeStyles((theme) => ({
         maxWidth: 300,
     },
 }));
+
 function TablePaginationActions(props) {
     const classes = useStyles1();
     const theme = useTheme();
@@ -185,7 +180,7 @@ function TablePaginationActions(props) {
             </IconButton>
         </div>
     );
-}
+};
 
 var datas = [];
 
@@ -198,14 +193,15 @@ export default function StudentTable(props) {
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState(""); 
-    const [values, setValues] = React.useState({
-        amount: '',
-      });
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
   
     //GET DATABASE
     const [id, setId] = React.useState("")
     const [studentId, setStudentId] = React.useState("")
-    const [userId, setUserId] = React.useState("")
     const [amount, setAmount] = React.useState("")
     const [payMethod, setPayMethod] = React.useState("")
     const [actor, setActor] = React.useState("")
@@ -213,6 +209,8 @@ export default function StudentTable(props) {
     const [description, setDescription] = React.useState("")
     const [balance, setBalance] = React.useState(0)
     const [openDialog, setOpenDialog] = React.useState(false)
+    const [newBalance, setNewBalance] = React.useState(0);
+    const [validation, setValidation] = React.useState(false)
 
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
@@ -225,39 +223,84 @@ export default function StudentTable(props) {
 
     const handleCloseDialog = () => {
         datas = student
-        console.log(datas)
+        setStudentId("")
+        setBalance("")
+        setTransType("")
+        setDescription("")
+        setAmount(0)
+        setActor("")
+        setPayMethod("")
         setOpenDialog(false)
     }
     const handleOpenDialog = (data) => {
         // datas.push(student.filter(x => x.id == data.id))
         datas = student.filter(x => x.id == data.id)
+        setStudentId(data.student_id)
+        setBalance(data.balance)
         console.log(datas[0])
         setOpenDialog(true)
     }
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
+
+    const saving = () => {
+        setValidation(false)
+        setNewBalance(0)
+        let calculate = 0
+        calculate = parseInt(balance) + parseInt(amount)        
+        setTransType("Saving")
+        setNewBalance(calculate)
+        console.log(newBalance)
+        
+    }
+    const payments = () => {
+        setValidation(false)
+        setNewBalance(0)
+        let calculate = 0
+        calculate = parseInt(balance) - parseInt(amount)
+        if(calculate < 0)
+        {
+            setValidation(true)
+        }
+        setTransType("Payment")
+        setNewBalance(calculate)  
+        console.log(newBalance)      
+    }
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
       };
 
     //FUNCTION ADD TRANSACTION
+    
     const addTransaction = (event) => {
         event.preventDefault();
 
-        let data = {
-            id: id,
-            student_id: studentId,
-            user_id: userId,
-            amount: amount,
-            payMethod: payMethod,
-            actor: actor,
-            transType: transType,
-            description: description,
-            balance: balance,
+        if(validation == false)
+        {
+            let data = {
+                id: id,
+                student_id: studentId,
+                user_id: user.id,
+                amount: amount,
+                payMethod: payMethod,
+                actor: actor,
+                transType: transType,
+                description: description,
+                balance: balance,
+                newBalance : newBalance
+            };
 
-        };
-
-        axios.post("/addTransaction", data).then(() => {
-            window.location.href = "/transaction";
-        });
+            axios.post("/addTransaction", data).then(() => {
+                window.location.href = "/transaction";
+            });
+            setSnackbarSeverity('success');
+            setSnackbarMessage('Successfully Saved!');
+            
+        }else{
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Failed to pay :( Your balance is not enough.');
+            // handleCloseDialog();
+        }
+        setOpenSnackbar(true);
     };
     
      //OTHERS
@@ -472,7 +515,7 @@ export default function StudentTable(props) {
                                     <AccordionDetails>
                                         <Card style = {{height:'40vh'}}>
                                             <CardContent>
-                                            misalnya ini foto
+                                                misalnya ini foto
                                             </CardContent>
                                         </Card>
                                         <Typography>
@@ -521,15 +564,16 @@ export default function StudentTable(props) {
                                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1}>
                                             {/* AMOUNT */}
                                             <Grid item xs = {12}>
-                                                <FormControl fullWidth className={classes.margin} variant="filled">
-                                                    <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
-                                                    <FilledInput
-                                                        id="filled-adornment-amount"
-                                                        value={values.amount}
-                                                        onChange={handleChange('amount')}
-                                                        startAdornment={<InputAdornment position="start">Rp </InputAdornment>}
-                                                    />
-                                                </FormControl>              
+                                                <TextField
+                                                    label="Amount"
+                                                    variant="filled"
+                                                    fullWidth="true"
+                                                    InputProps={{
+                                                        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+                                                      }}
+                                                    value = {amount}
+                                                    onInput = {(event) => {setAmount(event.target.value);console.log("ini amount => " + amount)}}
+                                                />                                  
                                             </Grid>
 
                                             {/* DESCRIPTION */}
@@ -538,6 +582,8 @@ export default function StudentTable(props) {
                                                     label="Description"
                                                     variant="outlined"
                                                     fullWidth="true"
+                                                    value = {description}
+                                                    onChange = {(event) => {setDescription(event.target.value)}}
                                                 />               
                                             </Grid>
 
@@ -547,6 +593,8 @@ export default function StudentTable(props) {
                                                     label="Payer"
                                                     variant="outlined"
                                                     fullWidth="true"
+                                                    value = {actor}
+                                                    onChange = {(event) => {setActor(event.target.value)}} 
                                                 />            
                                             </Grid>  
 
@@ -556,21 +604,65 @@ export default function StudentTable(props) {
                                                     label="Payment Method"
                                                     variant="outlined"
                                                     fullWidth="true"
+                                                    value = {payMethod}
+                                                    onChange = {(event) => {setPayMethod(event.target.value)}}
                                                 />             
                                             </Grid>
 
                                             {/* ACTIONS */}
                                             <Grid item xs = {6}>
                                                 <form method="post" onSubmit={addTransaction}>
-                                                    <Button variant='contained' color='secondary' style = {{float:'center', marginLeft:'10vw'}} onClick = {()=>{setType("Payment")}}>
+                                                    <Button 
+                                                    variant='contained' 
+                                                    type = "submit"
+                                                    color='secondary' 
+                                                    style = {{float:'center', marginLeft:'10vw'}} 
+                                                    onClick = {payments}>
                                                         PAYMENT
-                                                    </Button> 
+                                                    </Button>
+                                                    <Snackbar
+                                                    open={openSnackbar}
+                                                    autoHideDuration={2500}
+                                                    onClose={handleSnackbarClose}
+                                                    message={snackbarMessage}
+                                                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                                    ContentProps={{
+                                                        style: {
+                                                        backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                                                        color: '#ffffff',
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        },
+                                                    }}
+                                                    />
                                                 </form> 
                                                 <br/>   
                                                 <form method="post" onSubmit={addTransaction}>
-                                                    <Button variant='contained' color='primary' style = {{float:"center", marginLeft:'10vw'}} onClick = {() => {setType("Saving")}}>
+                                                    <Button 
+                                                    variant='contained' 
+                                                    color='primary'
+                                                    type = "submit"
+                                                    style = {{float:"center", marginLeft:'10vw'}} 
+                                                    onClick = 
+                                                    {saving}
+                                                    >
                                                         SAVING
                                                     </Button>
+                                                    <Snackbar
+                                                    open={openSnackbar}
+                                                    autoHideDuration={2500}
+                                                    onClose={handleSnackbarClose}
+                                                    message={snackbarMessage}
+                                                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                                    ContentProps={{
+                                                        style: {
+                                                        backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                                                        color: '#ffffff',
+                                                        fontWeight: 'bold',
+                                                        textAlign: 'center',
+                                                        },
+                                                    }}
+                                                    />
                                                 </form>           
                                             </Grid>
                                         </Grid>                      

@@ -28,11 +28,17 @@ class TransactionController extends Controller{
     //         return view('CDI.CDI',  compact('cekUser','userStatus') );
     //     }
     // }
-
+        
     public function transaction(){
-        $year = Date('Y');
-        $student = DB::table('active_student')->orderBy('created_at', 'desc')->get();
-        return view('Transaction.transaction', compact('year', 'student'));
+        if (!Session::get('login')) {
+            return redirect('/login')->with('alert', 'You must login first');
+        } else {
+            $id = Session::get('id');
+            $user = DB::table('user')->where('id', $id)->first();
+            $year = Date('Y');
+            $student = DB::table('active_student')->orderBy('created_at', 'desc')->get();
+            return view('Transaction.transaction', compact('year', 'student', 'user'));
+        }
     }
 
     public function addTransaction(Request $request)
@@ -45,19 +51,32 @@ class TransactionController extends Controller{
         $payMethod = $request -> payMethod;
         $actor = $request -> actor;
         $transType = $request -> transType;
-        $description = $request -> descrption;
+        $description = $request -> description;
         $balance = $request -> balance;
+        $newBalance = $request -> newBalance;
 
-        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description, balance) values (?,?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description, $balance]);
+        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description) values (?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description]);
+
+        DB::table('active_student')->where('student_id', $student_id)->update(['balance' => $newBalance]);
     }
 
-    public function payment_h(){
-        $year = Date('Y');
-        return view('Transaction.history', compact('year'));
+    public function history(){
+        if (!Session::get('login')) {
+            return redirect('/login')->with('alert', 'You must login first');
+        } else {
+            $id = Session::get('id');
+            $user = DB::table('user')->where('id', $id)->first();
+            $allHistory = DB::table('transaction')->orderBy('created_at', 'desc')->get();
+            $historyPayment = DB::table('transaction')->where('transType', "Payment")->orderBy('created_at', 'desc')->get();
+            $historySaving = DB::table('transaction')->where('transType', "Saving")->orderBy('created_at', 'desc')->get();
+            return view('Transaction.history', compact('user', 'allHistory' ,'historyPayment', 'historySaving'));
+        }
     }
 
-    public function saving_h(){
-        $year = Date('Y');
-        return view('Transaction.history', compact('year'));
+    public function deleteHistory(Request $request)
+    {
+        $id = $request->id;
+
+        DB::table('transaction')->where('id', $id)->delete();
     }
 }

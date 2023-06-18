@@ -12,7 +12,7 @@ import { Button, IconButton } from "@material-ui/core";
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import AddIcon from '@material-ui/icons/Add';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
@@ -76,6 +76,25 @@ const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.modal + 1,
         color: "#fff",
+    },
+}));
+const useStylesUpload = makeStyles((theme) => ({
+    img: {
+        height: 100,
+        display: 'block',
+        maxWidth: 200,
+        overflow: 'hidden',
+        width: '100%',
+        borderRadius:"5px",
+        boxShadow:"0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)"
+    },
+    input: {
+        display: 'none',
+    },
+    root: {
+        '& > *': {
+        margin: theme.spacing(1),
+        },
     },
 }));
 
@@ -260,6 +279,11 @@ export default function TeacherTable(props) {
     const [classType, setClassType] = React.useState("");
     const [contact, setContact] = React.useState("");
 
+    // UPLOAD IMAGE
+    const classesUpload = useStylesUpload();
+    const [photoFiles, setPhotoFiles] = React.useState([])
+    const [photoPreview, setPhotoPreview] = React.useState([])
+
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -286,7 +310,7 @@ export default function TeacherTable(props) {
             id: id,
             teacher_id: "TCH"+(teacher[0].id),
             school_id: schoolId,
-            image: image,
+            image: photoFiles,
             fullName: teacherName,
             gender: gender,
             classType: classType,
@@ -305,7 +329,8 @@ export default function TeacherTable(props) {
         setId("");
         setTeacherId("");
         setSchoolId("");
-        setImage("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
         setTeacherName("");
         setGender("");
         setClassType("");
@@ -321,7 +346,7 @@ export default function TeacherTable(props) {
             id: id,
             teacher_id: teacherId,
             school_id: schoolId,
-            image: image,
+            image: photoFiles,
             fullName: teacherName,
             gender: gender,
             classType: classType,
@@ -347,6 +372,9 @@ export default function TeacherTable(props) {
         setId("");
         setTeacherId("");
         setSchoolId("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
+        setImage("")
         setImage("");
         setTeacherName("");
         setGender("");
@@ -376,6 +404,39 @@ export default function TeacherTable(props) {
         setId("");
         setOpenDeleteDialog(false);
     };
+
+    // Upload Image
+    const imageHandleChange = (e) => {        
+        if(e.target.files){
+            setPhotoFiles([]);
+            const fileArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setPhotoPreview(fileArray);
+            Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+            for (let index = 0; index < e.target.files.length; index++) {                
+                const reader = new FileReader();
+                const file = e.target.files[index]
+
+                reader.onload = (e) => {
+                    setPhotoFiles( previousData => previousData.concat(e.target.result))                    
+                };
+                reader.readAsDataURL(file)
+            }
+        }
+    }
+    const imageResult = (sources) => {
+        return sources.map( (data) => {
+            return (
+                <Grid item xl = {12} lg = {12} md = {12} sm = {12} xs = {12}>
+                    <img 
+                    src   = {data} 
+                    key   = {data} 
+                    style = { { width:"100%",height:"250px",objectFit:"contain", margin:'auto' } }
+                />
+                </Grid>
+                
+            )
+        })
+    }
 
     //OTHERS
     const Subheader = styled.div`
@@ -528,7 +589,7 @@ export default function TeacherTable(props) {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <UnfoldMoreIcon />
+                                                <InfoOutlinedIcon/>
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -623,10 +684,9 @@ export default function TeacherTable(props) {
                                         <Grid item = {6}>
                                             <Card>
                                                 <CardContent>
-                                                misalnya ini foto
                                                 {
                                                     datas.map((data, key) => (
-                                                        <image></image>
+                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/teacher/" + data.image} />
                                                     ))
                                                 }
                                                 </CardContent>
@@ -662,7 +722,7 @@ export default function TeacherTable(props) {
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                    </Grid>                                
+                                    </Grid>       
                                 </AccordionDetails>
                             </Accordion>
                             </div>
@@ -681,129 +741,183 @@ export default function TeacherTable(props) {
             </Dialog>
 
             {/* ================================= ADD TEACHER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseAddDialog} open={openAddDialog}>
+            <Dialog onClose={handleCloseAddDialog} open={openAddDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>ADD  TEACHER</DialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="Teacher ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={teacherId}
-                                onChange={(event) => {
-                                    setTeacherId(event.target.value);
-                                }}
-                            />
+                    <div>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
+                        >
+                            {/* ======================== STUDENT IMAGE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                    <Accordion expanded = {true} style = {{width: '100%'}}>
+                                        <AccordionSummary>TEACHER IMAGE</AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid
+                                            container direction = 'row'
+                                            alignItems='center'
+                                            justifyContent='center'
+                                            spacing={2}>
+                                                <Grid
+                                                item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <Grid 
+                                                    container direction = 'row'
+                                                    alignItems='center'
+                                                    justifyContent='center'>
+                                                        <Card style = {{height:'40vh', width:'30vh'}}>
+                                                                <Grid 
+                                                                    container direction = 'row'
+                                                                    alignItems='center'
+                                                                    justifyContent='center'>
+                                                                        {imageResult(photoPreview)}
+                                                                </Grid>
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item xs = {12}>
+                                                    <div style={{ '> *': { margin: '1vw' } }}>
+                                                        <input 
+                                                            accept = "image/*"
+                                                            className = {classesUpload.input}
+                                                            id = "contained-button-file"
+                                                            type = "file"
+                                                            onChange={(event) => {imageHandleChange(event)}}
+                                                            name = "photo[]"
+                                                        />
+                                                        <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                            <Button
+                                                                variant = "contained"
+                                                                color = "primary"
+                                                                component = "span"
+                                                                style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                            >
+                                                                CHOOSE IMAGE
+                                                            </Button>
+                                                        </label>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </div>
+                            </Grid>
+                            {/* ======================== FORM ========================== */}
+                            <Grid item xs={12} sm = {12} lg ={9}>
+                                <AccordionSummary>FORM</AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid
+                                    container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                disabled
+                                                label="Teacher ID"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={teacherId}
+                                                onChange={(event) => {
+                                                    setTeacherId(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Teacher Name"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={teacherName}
+                                                onChange={(event) => {
+                                                    setTeacherName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="contact"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={contact}
+                                                onChange={(event) => {
+                                                    setContact(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="School Placement"
+                                                value={schoolId}
+                                                onChange={(event) => {
+                                                    setSchoolId(event.target.value);
+                                                }}
+                                                helperText="Please select student placement"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {placements.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Gender"
+                                                value={gender}
+                                                onChange={(event) => {
+                                                    setGender(event.target.value);
+                                                }}
+                                                helperText="Please select student gender"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {genders.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Class Type"
+                                                value={classType}
+                                                onChange={(event) => {
+                                                    setClassType(event.target.value);
+                                                }}
+                                                helperText="Please select student class type"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {classTypes.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Teacher Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={teacherName}
-                                onChange={(event) => {
-                                    setTeacherName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="School Placement"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                                helperText="Please select student placement"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {placements.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Gender"
-                                value={gender}
-                                onChange={(event) => {
-                                    setGender(event.target.value);
-                                }}
-                                helperText="Please select student gender"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {genders.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Class Type"
-                                value={classType}
-                                onChange={(event) => {
-                                    setClassType(event.target.value);
-                                }}
-                                helperText="Please select student class type"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {classTypes.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="contact"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={contact}
-                                onChange={(event) => {
-                                    setContact(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <form method="post" onSubmit={addTeacher}>
@@ -827,7 +941,7 @@ export default function TeacherTable(props) {
             </Dialog>
 
             {/* =================================== EDIT TEACHER DIALOG =================================  */}
-            <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
+            <Dialog onClose={handleCloseEditDialog} open={openEditDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>EDIT TEACHER</DialogTitle>
                 <DialogContent dividers>
                     <Grid
@@ -837,116 +951,185 @@ export default function TeacherTable(props) {
                         justifyContent="center"
                         spacing={1}
                     >
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="Teacher ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={teacherId}
-                                onChange={(event) => {
-                                    setTeacherId(event.target.value);
-                                }}
-                            />
+                        {/* ======================== STUDENT IMAGE ======================== */}
+                        <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                    <Accordion expanded = {true} style = {{width: '100%'}}>
+                                        <AccordionSummary>TEACHER IMAGE</AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid
+                                            container direction = 'row'
+                                            alignItems='center'
+                                            justifyContent='center'
+                                            spacing={2}>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <Grid
+                                                    container direction = 'row'
+                                                    alignItems='center'
+                                                    justifyContent='center'>
+                                                        <Card style = {{height:'40vh', width:'30vh'}}>
+                                                            <Grid 
+                                                            container direction = 'row'
+                                                            alignItems='center'
+                                                            justifyContent='center'>
+                                                                {(()=>{
+                                                                    if(photoPreview < 1 || photoFiles < 1)
+                                                                    {
+                                                                        return(
+                                                                            <img style = {{width:"100%",height:"250px",objectFit:"contain", margin:'auto'}} src = {"../images/teacher/" + image} />
+                                                                        )
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        return(
+                                                                            <Grid container direction="row" justifyContent="center" alignContent="center" spacing={1}>
+                                                                                {imageResult(photoPreview)}
+                                                                            </Grid>
+                                                                        )
+                                                                    }
+                                                                })()}
+                                                            </Grid>
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <div style={{ '> *': { margin: '1vw' } }}>
+                                                        <input 
+                                                            accept = "image/*"
+                                                            className = {classesUpload.input}
+                                                            id = "contained-button-file"
+                                                            type = "file"
+                                                            onChange={(event) => {imageHandleChange(event)}}
+                                                            name = "photo[]"
+                                                        />
+                                                        <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                            <Button
+                                                                variant = "contained"
+                                                                color = "primary"
+                                                                component = "span"
+                                                                style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                            >
+                                                                CHOOSE IMAGE
+                                                            </Button>
+                                                        </label>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </div>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Teacher Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={teacherName}
-                                onChange={(event) => {
-                                    setTeacherName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="School Placement"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                                helperText="Please select student placement"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {placements.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Gender"
-                                value={gender}
-                                onChange={(event) => {
-                                    setGender(event.target.value);
-                                }}
-                                helperText="Please select student gender"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {genders.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Class Type"
-                                value={classType}
-                                onChange={(event) => {
-                                    setClassType(event.target.value);
-                                }}
-                                helperText="Please select student class type"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {classTypes.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="contact"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={contact}
-                                onChange={(event) => {
-                                    setContact(event.target.value);
-                                }}
-                            />
+
+                        {/* ======================== FORM ======================== */}
+                        <Grid item xs = {12} sm = {12} lg ={9}>
+                            <AccordionSummary>FORM</AccordionSummary>
+                            <AccordionDetails>
+                                <Grid
+                                container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            disabled
+                                            label="Teacher ID"
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={teacherId}
+                                            onChange={(event) => {
+                                                setTeacherId(event.target.value);
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            label="Teacher Name"
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={teacherName}
+                                            onChange={(event) => {
+                                                setTeacherName(event.target.value);
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            label="contact"
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={contact}
+                                            onChange={(event) => {
+                                                setContact(event.target.value);
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            select
+                                            label="School Placement"
+                                            value={schoolId}
+                                            onChange={(event) => {
+                                                setSchoolId(event.target.value);
+                                            }}
+                                            helperText="Please select student placement"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
+                                        >
+                                            {placements.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                {option.label}
+                                                </option>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            select
+                                            label="Gender"
+                                            value={gender}
+                                            onChange={(event) => {
+                                                setGender(event.target.value);
+                                            }}
+                                            helperText="Please select student gender"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
+                                        >
+                                            {genders.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                {option.label}
+                                                </option>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            select
+                                            label="Class Type"
+                                            value={classType}
+                                            onChange={(event) => {
+                                                setClassType(event.target.value);
+                                            }}
+                                            helperText="Please select student class type"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
+                                        >
+                                            {classTypes.map((option) => (
+                                                <option key={option.value} value={option.value}>
+                                                {option.label}
+                                                </option>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                </Grid>
+                            </AccordionDetails>
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -957,7 +1140,9 @@ export default function TeacherTable(props) {
                             color="primary"
                             type="submit"
                             style={{ float: "right" }}
-                        >EDIT</Button>
+                        >
+                            EDIT
+                        </Button>
                     </form>
                     <Button
                         variant="contained"

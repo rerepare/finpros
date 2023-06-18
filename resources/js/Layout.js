@@ -26,7 +26,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PersonIcon from '@material-ui/icons/Person';
@@ -34,6 +33,13 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Button } from '@material-ui/core';
+import SchoolIcon from '@material-ui/icons/School';
+import PeopleIcon from '@material-ui/icons/People';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import StorageIcon from '@material-ui/icons/Storage';
+import BookmarksIcon from '@material-ui/icons/Bookmarks';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import SwapHorizontalCircleOutlinedIcon from '@material-ui/icons/SwapHorizontalCircleOutlined';
 
 //Pages
 import Dashboard from './dashboard/Dashboard';
@@ -43,6 +49,8 @@ import Schools from './schools/Schools';
 import Teachers from './teachers/Teachers';
 import ActiveStudents from './activeStudents/ActiveStudents';
 import Transaction from './transaction/Transaction';
+import History from './history/History';
+import Report from './history/Report';
 import Payment_h from './history/Payment_h';
 import Saving_h from './history/Saving_h';
 
@@ -215,8 +223,7 @@ export default function Layout() {
                 }}
                 open={openProfile}
                 onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>                                 
+              >                               
                 <MenuItem onClick = {handleOpenDialog}>Logout</MenuItem>
               </Menu>
             </div>
@@ -236,6 +243,7 @@ export default function Layout() {
         }}
       >
         <div className={classes.toolbar}>
+          {/* tambah logo tk */}
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
@@ -251,9 +259,9 @@ export default function Layout() {
 
           <ListItem button onClick={handleClick}>
             <ListItemIcon>
-              <InboxIcon />
+              <StorageIcon />
             </ListItemIcon>
-            <ListItemText primary="Master Data" />
+            <ListItemText primary="Data Master" />
             {openList ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
 
@@ -261,28 +269,28 @@ export default function Layout() {
             <List component="div" disablePadding>
               <ListItem button className={classes.nested} onClick={() => {window.location.href="/activeStudents"}}>
                 <ListItemIcon>
-                  <PersonIcon />
+                  <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Active Students"/>
+                <ListItemText primary="Data Siswa"/>
               </ListItem>
               <ListItem button className={classes.nested} onClick={() => {window.location.href="/schools"}}>
                 <ListItemIcon>
-                  <PersonIcon />
+                  <SchoolIcon />
                 </ListItemIcon>
-                <ListItemText primary="Schools" />
+                <ListItemText primary="Data Sekolah" />
               </ListItem>
               <ListItem button className={classes.nested} onClick={() => {window.location.href="/teachers"}}>
                 <ListItemIcon>
                   <PersonIcon />
                 </ListItemIcon>
-                <ListItemText primary="Teachers" />
+                <ListItemText primary="Data Guru" />
               </ListItem>
             </List>
           </Collapse>
 
           <ListItem button onClick={() => {window.location.href="/user"}}>
             <ListItemIcon>
-              <PersonIcon />
+              <SupervisedUserCircleIcon />
             </ListItemIcon>
             <ListItemText primary={"User"}/>
           </ListItem>
@@ -293,32 +301,44 @@ export default function Layout() {
         <List>
           <ListItem button onClick={() => {window.location.href="/transaction"}}>
             <ListItemIcon>
-              <PersonIcon />
+              <SwapHorizontalCircleOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary="Transaction" />
+            <ListItemText primary="Transaksi" />
           </ListItem>
 
           <ListItem button onClick={handleClickHistory}>
             <ListItemIcon>
-              <PersonIcon />
+              <BookmarksIcon />
             </ListItemIcon>
-            <ListItemText primary="History" />          
+            <ListItemText primary="Riwayat" />          
             {openListHistory ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
 
           <Collapse in={openListHistory} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/saving_h"}}>
+              {/* <ListItem button className={classes.nested} onClick={() => {window.location.href="/saving_h"}}>
                 <ListItemIcon>
-                  <PersonIcon />
+                  <ReceiptIcon />
                 </ListItemIcon>
                 <ListItemText primary="Saving History" />
               </ListItem>     
               <ListItem button className={classes.nested} onClick={() => {window.location.href="/payment_h"}}>
                 <ListItemIcon>
-                  <PersonIcon />
+                  <ReceiptIcon />
                 </ListItemIcon>
                 <ListItemText primary="Payment History" />
+              </ListItem>   */}
+              <ListItem button className={classes.nested} onClick={() => {window.location.href="/history"}}>
+                <ListItemIcon>
+                  <ReceiptIcon />
+                </ListItemIcon>
+                <ListItemText primary="Data Transaksi" />
+              </ListItem>  
+              <ListItem button className={classes.nested} onClick={() => {window.location.href="/report"}}>
+                <ListItemIcon>
+                  <ReceiptIcon />
+                </ListItemIcon>
+                <ListItemText primary="Laporan Siswa" />
               </ListItem>  
             </List>
           </Collapse>   
@@ -336,6 +356,8 @@ export default function Layout() {
                 <Route path='/teachers' exact component={Teachers}/> 
                 <Route path='/activeStudents' exact component={ActiveStudents}/>
                 <Route path='/transaction' exact component={Transaction}/>
+                <Route path='/history' exact component={History}/>
+                <Route path='/report' exact component={Report}/>
                 <Route path='/saving_h' exact component={Saving_h}/>                       
                 <Route path='/payment_h' exact component={Payment_h}/>
             </Switch>
@@ -355,7 +377,7 @@ export default function Layout() {
           </Button>
           <form method = 'post' onSubmit={logout}>
             <Button color = "primary" type="submit">
-              YES PLEASE!
+              YES
             </Button>
           </form>
         </DialogActions>

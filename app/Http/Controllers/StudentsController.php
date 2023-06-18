@@ -32,7 +32,7 @@ class StudentsController extends Controller
 
     public function activeStudents()
     {
-        if (!Session::get('login')) {
+        if(!Session::get('login')){
             return redirect('/login')->with('alert', 'You must login first');
         } else {
             $year = Date('Y');
@@ -41,13 +41,11 @@ class StudentsController extends Controller
         }
     }
 
-    public function addStudent(Request $request)
-    {
-        
+    public function addStudent(Request $request){
         $id = $request->id;
         $student_id = $request->student_id;
         $school_id = $request->school_id;
-        $image = $request -> image;
+        $images = $request -> image;
         $fullName = $request->fullName;
         $gender = $request->gender;
         $classType = $request->classType;
@@ -55,7 +53,29 @@ class StudentsController extends Controller
         $contact = $request->contact;
         $balance = $request->balance;
 
-        DB::insert('insert into active_student (id, student_id, school_id, image, fullName, gender, classType, parentName, contact, balance) values (?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $school_id, $image, $fullName, $gender, $classType, $parentName, $contact, $balance]);
+        for ($i=0; $i < count($images); $i++) {     
+                      
+            if(str_starts_with($images[$i],'data:image/jpeg;base64,')){
+                $photo = str_replace('data:image/jpeg;base64,','',$images[$i]);
+                $photoextention = '.jpeg';
+            }else if(str_starts_with($images[$i],'data:image/jpg;base64,')){
+                $photo = str_replace('data:image/jpg;base64,','',$images[$i]);
+                $photoextention = '.jpg';
+            }else if(str_starts_with($images[$i],'data:image/png;base64,')){
+                $photo = str_replace('data:image/png;base64,','',$images[$i]);
+                $photoextention = '.png';
+            }else if(str_starts_with($images[$i],'data:image/jfif;base64,')){
+                $photo = str_replace('data:image/jfif;base64,','',$images[$i]);
+                $photoextention = '.jfif';
+            }    
+
+            $photofilename = rand(1111111,99999999999) . $photoextention;            
+            $image         = str_replace(' ','+',$photo);   
+
+            file_put_contents('images/student/'.$photofilename,base64_decode($image));
+
+            DB::insert('insert into active_student (id, student_id, school_id, image, fullName, gender, classType, parentName, contact, balance) values (?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $school_id, $photofilename, $fullName, $gender, $classType, $parentName, $contact, $balance]);
+        }        
     }
 
     public function editStudent(Request $request)
@@ -63,7 +83,7 @@ class StudentsController extends Controller
         $id = $request->id;
         $student_id = $request->student_id;
         $school_id = $request->school_id;
-        $image = $request -> image;
+        $images = $request -> image;
         $fullName = $request->fullName;
         $gender = $request->gender;
         $classType = $request->classType;
@@ -71,7 +91,34 @@ class StudentsController extends Controller
         $contact = $request->contact;
         $balance = $request->balance;
 
-        DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'image' => $image, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+        if(count($images) > 0)
+        {
+            for ($i=0; $i < count($images); $i++) {
+                if(str_starts_with($images[$i],'data:image/jpeg;base64,')){
+                    $photo = str_replace('data:image/jpeg;base64,','',$images[$i]);
+                    $photoextention = '.jpeg';
+                }else if(str_starts_with($images[$i],'data:image/jpg;base64,')){
+                    $photo = str_replace('data:image/jpg;base64,','',$images[$i]);
+                    $photoextention = '.jpg';
+                }else if(str_starts_with($images[$i],'data:image/png;base64,')){
+                    $photo = str_replace('data:image/png;base64,','',$images[$i]);
+                    $photoextention = '.png';
+                }else if(str_starts_with($images[$i],'data:image/jfif;base64,')){
+                    $photo = str_replace('data:image/jfif;base64,','',$images[$i]);
+                    $photoextention = '.jfif';
+                }    
+
+                $photofilename = rand(1111111,99999999999) . $photoextention;            
+                $image         = str_replace(' ','+',$photo);   
+
+                file_put_contents('images/student/'.$photofilename,base64_decode($image));
+
+                DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'image' => $photofilename, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+            }           
+        }
+        else{
+            DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+        }
     }
 
     public function deleteStudent(Request $request)

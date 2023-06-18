@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 //MATERIAL UI
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
@@ -15,14 +16,50 @@ import EditIcon from "@material-ui/icons/Edit";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import DeleteIcon from "@material-ui/icons/Delete";
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+
+const levels = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: '1',
+        label: 'SUPER ADMIN',
+    },
+    {
+        value: '0',
+        label: 'ADMIN',
+    },
+];
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.modal + 1,
         color: "#fff",
+    },
+}));
+
+const useStylesUpload = makeStyles((theme) => ({
+    img: {
+        height: 100,
+        display: 'block',
+        maxWidth: 200,
+        overflow: 'hidden',
+        width: '100%',
+        borderRadius:"5px",
+        boxShadow:"0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)"
+    },
+    input: {
+        display: 'none',
+    },
+    root: {
+        '& > *': {
+        margin: theme.spacing(1),
+        },
     },
 }));
 
@@ -200,11 +237,16 @@ export default function UserTable(props) {
     //GET DATABASE
     const [id, setId] = React.useState("");
     const [userId, setUserId] = React.useState("");
-    const [image, setImage] = React.useState("");
+    const [image, setImage] = React.useState([]);
     const [name, setName] = React.useState("");
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [isSuperAdmin, setIsSuperAdmin] = React.useState(true);
+
+    // UPLOAD IMAGE
+    const classesUpload = useStylesUpload();
+    const [photoFiles, setPhotoFiles] = React.useState([])
+    const [photoPreview, setPhotoPreview] = React.useState([])
 
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
@@ -223,7 +265,7 @@ export default function UserTable(props) {
         datas = user
         setOpenDetailsDialog(false);
     };
-
+    
     //FUNCTION REGIST
     const register = (event) => {
         event.preventDefault();
@@ -231,7 +273,7 @@ export default function UserTable(props) {
         let data = {
             id: id,
             user_id: "USER"+(user[0].id),
-            image: image,
+            image: photoFiles,
             name: name,
             userName: userName,
             password: password,
@@ -249,7 +291,8 @@ export default function UserTable(props) {
     const handleCloseRegistDialog = () => {
         setId("");
         setUserId("");
-        setImage("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
         setName("");
         setUserName("");
         setPassword("");
@@ -263,7 +306,7 @@ export default function UserTable(props) {
         let data = {
             id: id,
             user_id: userId,
-            image: image,
+            image: photoFiles,
             name: name,
             userName: userName,
             password: password,
@@ -287,6 +330,8 @@ export default function UserTable(props) {
     const handleCloseEditDialog = () => {
         setId("");
         setUserId("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
         setImage("");
         setName("");
         setUserName("");
@@ -315,6 +360,39 @@ export default function UserTable(props) {
         setId("");
         setOpenDeleteDialog(false);
     };
+    
+    // Upload Image
+    const imageHandleChange = (e) => {        
+        if(e.target.files){
+            setPhotoFiles([]);
+            const fileArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setPhotoPreview(fileArray);
+            Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+            for (let index = 0; index < e.target.files.length; index++) {                
+                const reader = new FileReader();
+                const file = e.target.files[index]
+
+                reader.onload = (e) => {
+                    setPhotoFiles( previousData => previousData.concat(e.target.result))                    
+                };
+                reader.readAsDataURL(file)
+            }
+        }
+    }
+    const imageResult = (sources) => {
+        return sources.map( (data) => {
+            return (
+                <Grid item xl = {12} lg = {12} md = {12} sm = {12} xs = {12}>
+                    <img 
+                    src   = {data} 
+                    key   = {data} 
+                    style = { { width:"100%",height:"250px",objectFit:"contain", margin:'auto' } }
+                />
+                </Grid>
+                
+            )
+        })
+    }
     
     //OTHERS
     const Subheader = styled.div`
@@ -472,7 +550,7 @@ export default function UserTable(props) {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <UnfoldMoreIcon />
+                                                <InfoOutlinedIcon />
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -564,19 +642,18 @@ export default function UserTable(props) {
                             <Accordion expanded = {true} style = {{width: '100%'}}>
                                 <AccordionDetails>
                                     <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {6}>
+                                        <Grid item xs = {6}>
                                             <Card>
                                                 <CardContent>
-                                                misalnya ini foto
                                                 {
                                                     datas.map((data, key) => (
-                                                        <image></image>
+                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/user/" + data.image} />
                                                     ))
                                                 }
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                        <Grid item = {6}>
+                                        <Grid item xs = {6}>
                                             <Card>
                                                 <CardContent>
                                                 {
@@ -619,7 +696,7 @@ export default function UserTable(props) {
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                    </Grid>                                
+                                    </Grid>        
                                 </AccordionDetails>
                             </Accordion>
                             </div>
@@ -638,86 +715,149 @@ export default function UserTable(props) {
             </Dialog>
 
             {/* ================================= REGIST USER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseRegistDialog} open={openRegistDialog}>
+            <Dialog onClose={handleCloseRegistDialog} open={openRegistDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>REGISTER USER</DialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="User ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={userId}
-                                onChange={(event) => {
-                                    setUserId(event.target.value);
-                                }}
-                            />
+                    <div>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
+                        >
+                            {/* ======================== USER IMAGE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionSummary>USER IMAGE</AccordionSummary>
+                                    <AccordionDetails>
+                                        <Grid 
+                                        container direction = 'row'
+                                        alignItems='center'
+                                        justifyContent='center'
+                                        spacing={2}>
+                                            <Grid item xs = {12} alignItems='center'
+                                            justifyContent='center'>                                                
+                                                <Grid 
+                                                container direction = 'row'
+                                                alignItems='center'
+                                                justifyContent='center'>
+                                                    <Card style = {{height:'40vh', width:'30vh'}}>
+                                                            <Grid 
+                                                                container direction = 'row'
+                                                                alignItems='center'
+                                                                justifyContent='center'>
+                                                                    {imageResult(photoPreview)}
+                                                            </Grid>
+                                                    </Card>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xs = {12}>
+                                                <div style={{ '> *': { margin: '1vw' } }}>
+                                                    <input 
+                                                        accept = "image/*"
+                                                        className = {classesUpload.input}
+                                                        id = "contained-button-file"
+                                                        type = "file"
+                                                        onChange={(event) => {imageHandleChange(event)}}
+                                                        name = "photo[]"
+                                                    />
+                                                    <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                        <Button
+                                                            variant = "contained"
+                                                            color = "primary"
+                                                            component = "span"
+                                                            style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                        >
+                                                            CHOOSE IMAGE
+                                                        </Button>
+                                                    </label>
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    </AccordionDetails>
+                                </Accordion>
+                                </div>
+                            </Grid>
+                            {/* ======================== FORM ========================== */}
+                            <Grid item xs={12} sm = {12} lg ={9}>
+                                <AccordionSummary>FORM</AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid 
+                                    container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                disabled
+                                                label="User ID"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={userId}
+                                                onChange={(event) => {
+                                                    setUserId(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField
+                                                label="Full Name"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={name}
+                                                onChange={(event) => {
+                                                    setName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="User Name"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={userName}
+                                                onChange={(event) => {
+                                                    setUserName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Password"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={password}
+                                                type="password"
+                                                onChange={(event) => {
+                                                    setPassword(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Level"
+                                                value={isSuperAdmin}
+                                                onChange={(event) => {
+                                                    setIsSuperAdmin(event.target.value);
+                                                }}
+                                                helperText="Please select user level"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined">
+                                                    {levels.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Full Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={name}
-                                onChange={(event) => {
-                                    setName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="User Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={userName}
-                                onChange={(event) => {
-                                    setUserName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Password"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={password}
-                                type="password"
-                                onChange={(event) => {
-                                    setPassword(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Level"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={isSuperAdmin}
-                                type="password"
-                                onChange={(event) => {
-                                    setIsSuperAdmin(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <form method="post" onSubmit={register}>
@@ -741,86 +881,166 @@ export default function UserTable(props) {
             </Dialog>
 
             {/* =================================== EDIT USER DIALOG =================================  */}
-            <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
+            <Dialog onClose={handleCloseEditDialog} open={openEditDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>EDIT USER</DialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="User ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={userId}
-                                onChange={(event) => {
-                                    setUserId(event.target.value);
-                                }}
-                            />
+                    <div>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
+                        >
+                            {/* ======================== USER IMAGE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                    <Accordion expanded = {true} style = {{width: '100%'}}>
+                                        <AccordionSummary>USER IMAGE</AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid
+                                            container direction = 'row'
+                                            alignItems='center'
+                                            justifyContent='center'
+                                            spacing={2}>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <Grid
+                                                    container direction = 'row'
+                                                    alignItems='center'
+                                                    justifyContent='center'>
+                                                        <Card style = {{height:'40vh', width:'30vh'}}>
+                                                            <Grid 
+                                                            container direction = 'row'
+                                                            alignItems='center'
+                                                            justifyContent='center'>
+                                                                {(()=>{
+                                                                    if(photoPreview < 1 || photoFiles < 1)
+                                                                    {
+                                                                        return(
+                                                                            <img style = {{width:"100%",height:"250px",objectFit:"contain", margin:'auto'}} src = {"../images/user/" + image} />
+                                                                        )
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        return(
+                                                                            <Grid container direction="row" justifyContent="center" alignContent="center" spacing={1}>
+                                                                                {imageResult(photoPreview)}
+                                                                            </Grid>
+                                                                        )
+                                                                    }
+                                                                })()}
+                                                            </Grid>
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <div style={{ '> *': { margin: '1vw' } }}>
+                                                        <input 
+                                                            accept = "image/*"
+                                                            className = {classesUpload.input}
+                                                            id = "contained-button-file"
+                                                            type = "file"
+                                                            onChange={(event) => {imageHandleChange(event)}}
+                                                            name = "photo[]"
+                                                        />
+                                                        <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                            <Button
+                                                                variant = "contained"
+                                                                color = "primary"
+                                                                component = "span"
+                                                                style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                            >
+                                                                CHOOSE IMAGE
+                                                            </Button>
+                                                        </label>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </div>
+                            </Grid>
+
+                            {/* ======================== FORM ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={9}>
+                                <AccordionSummary>FORM</AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid
+                                    container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                disabled
+                                                label="User ID"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={userId}
+                                                onChange={(event) => {
+                                                    setUserId(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Name"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={name}
+                                                onChange={(event) => {
+                                                    setName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="User Name"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={userName}
+                                                onChange={(event) => {
+                                                    setUserName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Password"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={password}
+                                                type="password"
+                                                onChange={(event) => {
+                                                    setPassword(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                        <TextField
+                                                select
+                                                label="Level"
+                                                value={isSuperAdmin}
+                                                onChange={(event) => {
+                                                    setIsSuperAdmin(event.target.value);
+                                                }}
+                                                helperText="Please select user level"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined">
+                                                    {levels.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={name}
-                                onChange={(event) => {
-                                    setName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="User Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={userName}
-                                onChange={(event) => {
-                                    setUserName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Password"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={password}
-                                type="password"
-                                onChange={(event) => {
-                                    setPassword(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="isSuperAdmin"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={isSuperAdmin}
-                                type="password"
-                                onChange={(event) => {
-                                    setIsSuperAdmin(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <form method="post" onSubmit={editUser}>

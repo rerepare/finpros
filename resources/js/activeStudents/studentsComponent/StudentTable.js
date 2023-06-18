@@ -12,7 +12,7 @@ import { Button, IconButton } from "@material-ui/core";
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import AddIcon from '@material-ui/icons/Add';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
@@ -79,6 +79,25 @@ const useStyles = makeStyles((theme) => ({
     },
     dialogTitle: {
         textAlign: 'center',
+    },
+}));
+const useStylesUpload = makeStyles((theme) => ({
+    img: {
+        height: 100,
+        display: 'block',
+        maxWidth: 200,
+        overflow: 'hidden',
+        width: '100%',
+        borderRadius:"5px",
+        boxShadow:"0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)"
+    },
+    input: {
+        display: 'none',
+    },
+    root: {
+        '& > *': {
+        margin: theme.spacing(1),
+        },
     },
 }));
 
@@ -266,6 +285,12 @@ export default function StudentTable(props) {
     const [contact, setContact] = React.useState("");
     const [balance, setBalance] = React.useState("");
 
+    // UPLOAD IMAGE
+    const classesUpload = useStylesUpload();
+    const [photoFiles, setPhotoFiles] = React.useState([])
+    const [photoPreview, setPhotoPreview] = React.useState([])
+
+
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -275,8 +300,7 @@ export default function StudentTable(props) {
         setPage(0);
     };
     const handleOpenDetailsDialog = (data) => {
-        datas = student.filter(x => x.id == data.id)
-        console.log(datas[0])
+        datas = student.filter(x => x.id == data.id)        
         setOpenDetailsDialog(true);
     };
     const handleCloseDetailsDialog = () => {
@@ -292,7 +316,7 @@ export default function StudentTable(props) {
             id: id,
             student_id:"STD"+(student[0].id),
             school_id: schoolId,
-            image: image,
+            image: photoFiles,
             fullName: studentName,
             gender: gender,
             classType: classType,
@@ -314,7 +338,8 @@ export default function StudentTable(props) {
         setId("");
         setStudentId("");
         setSchoolId("");
-        setImage("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
         setStudentName("");
         setGender("");
         setClassType("");
@@ -332,7 +357,7 @@ export default function StudentTable(props) {
             id: id,
             student_id : studentId,
             school_id: schoolId,
-            image: image,
+            image: photoFiles,
             fullName: studentName,
             gender: gender,
             classType: classType,
@@ -345,7 +370,7 @@ export default function StudentTable(props) {
             window.location.href = "/activeStudents";
         });
     };
-    const handleOpenEditDialog = (data) => {
+    const handleOpenEditDialog = (data) => {        
         setId(data.id);
         setStudentId(data.student_id);
         setSchoolId(data.school_id);
@@ -362,7 +387,9 @@ export default function StudentTable(props) {
         setId("");
         setStudentId("");
         setSchoolId("");
-        setImage("");
+        setPhotoFiles([]);
+        setPhotoPreview([]);
+        setImage("")
         setStudentName("");
         setGender("");
         setClassType("");
@@ -394,6 +421,39 @@ export default function StudentTable(props) {
         setOpenDeleteDialog(false);
     };
 
+    // Upload Image
+    const imageHandleChange = (e) => {        
+        if(e.target.files){
+            setPhotoFiles([]);
+            const fileArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file));
+            setPhotoPreview(fileArray);
+            Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+            for (let index = 0; index < e.target.files.length; index++) {                
+                const reader = new FileReader();
+                const file = e.target.files[index]
+
+                reader.onload = (e) => {
+                    setPhotoFiles( previousData => previousData.concat(e.target.result))                    
+                };
+                reader.readAsDataURL(file)
+            }
+        }
+    }
+    const imageResult = (sources) => {
+        return sources.map( (data) => {
+            return (
+                <Grid item xl = {12} lg = {12} md = {12} sm = {12} xs = {12}>
+                    <img 
+                    src   = {data} 
+                    key   = {data} 
+                    style = { { width:"100%",height:"250px",objectFit:"contain", margin:'auto' } }
+                />
+                </Grid>
+                
+            )
+        })
+    }
+
     //OTHERS
     const Subheader = styled.div`
         display: flex;
@@ -402,7 +462,7 @@ export default function StudentTable(props) {
 
     return (
         <div>
-            <Typography variant="h4">Student Data</Typography>
+            <Typography variant="h4">DATA SISWA</Typography>
             <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
@@ -450,31 +510,31 @@ export default function StudentTable(props) {
                                         align="center"
                                         style={{ borderTopLeftRadius: "1vw" }}
                                     >
-                                        Student ID
+                                        ID Siswa
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word", width: 350}}
                                     >
-                                        Full Name
+                                        Nama
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        School Placement
+                                        Cabang Sekolah
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Balance
+                                        Saldo
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ borderTopRightRadius: "1vw" }}
                                     >
-                                        Actions
+                                        Action
                                     </StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
@@ -546,7 +606,7 @@ export default function StudentTable(props) {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <UnfoldMoreIcon />
+                                                <InfoOutlinedIcon />
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -629,7 +689,7 @@ export default function StudentTable(props) {
             {/* ================================= DETAILS STUDENT DIALOG ===============================  */}
             <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
                 <DialogTitle className={classes.dialogTitle }>
-                    DETAILS STUDENT
+                    DETAIL SISWA
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing ={1}>
@@ -641,10 +701,9 @@ export default function StudentTable(props) {
                                         <Grid item = {6}>
                                             <Card>
                                                 <CardContent>
-                                                misalnya ini foto
                                                 {
                                                     datas.map((data, key) => (
-                                                        <image></image>
+                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
                                                     ))
                                                 }
                                                 </CardContent>
@@ -652,33 +711,33 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item = {6}>
                                             <Card>
-                                                <CardContent>
+                                                <CardContent >
                                                 {
                                                     datas.map((data, key) => (
                                                         <div>
                                                             <Typography>
-                                                                Student ID : {data.student_id}
+                                                                ID Siswa : {data.student_id}
                                                             </Typography>
                                                             <Typography>
-                                                                School ID : {data.school_id}
+                                                                Cabang Sekolah : {data.school_id}
                                                             </Typography>
                                                             <Typography>
-                                                                Name : {data.fullName}
+                                                                Nama : {data.fullName}
                                                             </Typography>
                                                             <Typography>
-                                                                Gender : {data.gender}
+                                                                Jenis Kelamin : {data.gender}
                                                             </Typography>
                                                             <Typography>
-                                                                Class Type : {data.classType}
+                                                                Kelas : {data.classType}
                                                             </Typography>
                                                             <Typography>
-                                                                Parent : {data.parentName}
+                                                                Orang Tua : {data.parentName}
                                                             </Typography>
                                                             <Typography>
-                                                                Contact : {data.contact}
+                                                                Kontak : {data.contact}
                                                             </Typography>
                                                             <Typography>
-                                                                Balance : {data.balance}
+                                                                Saldo : {data.balance}
                                                             </Typography>
                                                         </div>
                                                     ))
@@ -705,150 +764,206 @@ export default function StudentTable(props) {
             </Dialog>
 
             {/* ================================= ADD STUDENT DIALOG ===============================  */}
-            <Dialog onClose={handleCloseAddDialog} open={openAddDialog}>
-                <DialogTitle>ADD  STUDENT</DialogTitle>
+            <Dialog onClose={handleCloseAddDialog} open={openAddDialog} fullWidth={true} maxWidth={false} keepMounted>
+                <DialogTitle>TAMBAH SISWA</DialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="Student ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={studentId}
-                                onChange={(event) => {
-                                    setStudentId(event.target.value);
-                                }}
-                            />
+                    <div>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
+                        >
+                            {/* ======================== STUDENT IMAGE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionSummary>FOTO SISWA</AccordionSummary>
+                                    <AccordionDetails>
+                                        <Grid 
+                                        container direction = 'row'
+                                        alignItems='center'
+                                        justifyContent='center'
+                                        spacing={2}>
+                                            <Grid item xs = {12} alignItems='center'
+                                            justifyContent='center'>                                                
+                                                <Grid 
+                                                container direction = 'row'
+                                                alignItems='center'
+                                                justifyContent='center'>
+                                                    <Card style = {{height:'40vh', width:'30vh'}}>
+                                                            <Grid 
+                                                                container direction = 'row'
+                                                                alignItems='center'
+                                                                justifyContent='center'>
+                                                                    {imageResult(photoPreview)}
+                                                            </Grid>
+                                                    </Card>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item xs = {12}>
+                                                <div style={{ '> *': { margin: '1vw' } }}>
+                                                    <input 
+                                                        accept = "image/*"
+                                                        className = {classesUpload.input}
+                                                        id = "contained-button-file"
+                                                        type = "file"
+                                                        onChange={(event) => {imageHandleChange(event)}}
+                                                        name = "photo[]"
+                                                    />
+                                                    <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                        <Button
+                                                            variant = "contained"
+                                                            color = "primary"
+                                                            component = "span"
+                                                            style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                        >
+                                                            PILIH FOTO
+                                                        </Button>
+                                                    </label>
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    </AccordionDetails>
+                                </Accordion>
+                                </div>
+                            </Grid>
+                            {/* ======================== FORM ========================== */}
+                            <Grid item xs={12} sm = {12} lg ={9}>
+                                <AccordionSummary>
+                                    FORM
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid 
+                                    container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                disabled
+                                                label="ID Siswa"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={studentId}
+                                                onChange={(event) => {
+                                                    setStudentId(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField
+                                                label="Nama Siswa"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={studentName}
+                                                onChange={(event) => {
+                                                    setStudentName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Cabang"
+                                                value={schoolId}
+                                                onChange={(event) => {
+                                                    setSchoolId(event.target.value);
+                                                }}
+                                                helperText="Please select student placement"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {placements.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Jenis Kelamin"
+                                                value={gender}
+                                                onChange={(event) => {
+                                                    setGender(event.target.value);
+                                                }}
+                                                helperText="Please select student gender"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {genders.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Kelas"
+                                                value={classType}
+                                                onChange={(event) => {
+                                                    setClassType(event.target.value);
+                                                }}
+                                                helperText="Please select student class type"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {classTypes.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Orang Tua/Wali"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={parentName}
+                                                onChange={(event) => {
+                                                    setParentName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Kontak"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={contact}
+                                                onChange={(event) => {
+                                                    setContact(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Saldo Tabungan"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={balance}
+                                                onChange={(event) => {
+                                                    setBalance(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Student Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={studentName}
-                                onChange={(event) => {
-                                    setStudentName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="School Placement"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                                helperText="Please select student placement"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {placements.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Gender"
-                                value={gender}
-                                onChange={(event) => {
-                                    setGender(event.target.value);
-                                }}
-                                helperText="Please select student gender"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {genders.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Class Type"
-                                value={classType}
-                                onChange={(event) => {
-                                    setClassType(event.target.value);
-                                }}
-                                helperText="Please select student class type"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {classTypes.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Parent Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={parentName}
-                                onChange={(event) => {
-                                    setParentName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Contact"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={contact}
-                                onChange={(event) => {
-                                    setContact(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Balance"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={balance}
-                                onChange={(event) => {
-                                    setBalance(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <form method="post" onSubmit={addStudent}>
@@ -872,150 +987,221 @@ export default function StudentTable(props) {
             </Dialog>
 
             {/* ================================== EDIT STUDENT DIALOG =================================  */}
-            <Dialog onClose={handleCloseEditDialog} open={openEditDialog}>
-                <DialogTitle>EDIT STUDENT</DialogTitle>
+            <Dialog onClose={handleCloseEditDialog} open={openEditDialog} fullWidth={true} maxWidth={false} keepMounted>
+                <DialogTitle>EDIT SISWA</DialogTitle>
                 <DialogContent dividers>
-                    <Grid
-                        container
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        spacing={1}
-                    >
-                        <Grid item xs={12}>
-                            <TextField
-                                disabled
-                                label="Student ID"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={studentId}
-                                onChange={(event) => {
-                                    setStudentId(event.target.value);
-                                }}
-                            />
+                    <div>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={1}
+                        >
+                            {/* ======================== STUDENT IMAGE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={3}>
+                                <div>
+                                    <Accordion expanded = {true} style = {{width: '100%'}}>
+                                        <AccordionSummary>FOTO SISWA</AccordionSummary>
+                                        <AccordionDetails>
+                                            <Grid
+                                            container direction = 'row'
+                                            alignItems='center'
+                                            justifyContent='center'
+                                            spacing={2}>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <Grid
+                                                    container direction = 'row'
+                                                    alignItems='center'
+                                                    justifyContent='center'>
+                                                        <Card style = {{height:'40vh', width:'30vh'}}>
+                                                            <Grid 
+                                                            container direction = 'row'
+                                                            alignItems='center'
+                                                            justifyContent='center'>
+                                                                {(()=>{
+                                                                    if(photoPreview < 1 || photoFiles < 1)
+                                                                    {
+                                                                        return(
+                                                                            <img style = {{width:"100%",height:"250px",objectFit:"contain", margin:'auto'}} src = {"../images/student/" + image} />
+                                                                        )
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        return(
+                                                                            <Grid container direction="row" justifyContent="center" alignContent="center" spacing={1}>
+                                                                                {imageResult(photoPreview)}
+                                                                            </Grid>
+                                                                        )
+                                                                    }
+                                                                })()}
+                                                            </Grid>
+                                                        </Card>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item xs = {12} alignItems='center'
+                                                justifyContent='center'>
+                                                    <div style={{ '> *': { margin: '1vw' } }}>
+                                                        <input 
+                                                            accept = "image/*"
+                                                            className = {classesUpload.input}
+                                                            id = "contained-button-file"
+                                                            type = "file"
+                                                            onChange={(event) => {imageHandleChange(event)}}
+                                                            name = "photo[]"
+                                                        />
+                                                        <label htmlFor="contained-button-file" style = {{width : "100%"}}>
+                                                            <Button
+                                                                variant = "contained"
+                                                                color = "primary"
+                                                                component = "span"
+                                                                style = {{ width : "100%", marginTop : "15px", float:'center'}}
+                                                            >
+                                                                PILIH FOTO
+                                                            </Button>
+                                                        </label>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </div>
+                            </Grid>
+
+                            {/* ======================== FORM ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={9}>
+                                <AccordionSummary>FORM</AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid
+                                    container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                disabled
+                                                label="ID Siswa"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={studentId}
+                                                onChange={(event) => {
+                                                    setStudentId(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <TextField
+                                                label="Nama"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={studentName}
+                                                onChange={(event) => {
+                                                    setStudentName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Cabang Sekolah"
+                                                value={schoolId}
+                                                onChange={(event) => {
+                                                    setSchoolId(event.target.value);
+                                                }}
+                                                helperText="Please select student placement"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {placements.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Jenis Kelamin"
+                                                value={gender}
+                                                onChange={(event) => {
+                                                    setGender(event.target.value);
+                                                }}
+                                                helperText="Please select student gender"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {genders.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                select
+                                                label="Kelas"
+                                                value={classType}
+                                                onChange={(event) => {
+                                                    setClassType(event.target.value);
+                                                }}
+                                                helperText="Please select student class type"
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                                fullWidth="true"
+                                                variant="outlined"
+                                            >
+                                                {classTypes.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                    {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Orang Tua/Wali"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={parentName}
+                                                onChange={(event) => {
+                                                    setParentName(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Kontak"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={contact}
+                                                onChange={(event) => {
+                                                    setContact(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Saldo"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={balance}
+                                                onChange={(event) => {
+                                                    setBalance(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </AccordionDetails>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Student Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={studentName}
-                                onChange={(event) => {
-                                    setStudentName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="image"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={image}
-                                onChange={(event) => {
-                                    setImage(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="School Placement"
-                                value={schoolId}
-                                onChange={(event) => {
-                                    setSchoolId(event.target.value);
-                                }}
-                                helperText="Please select student placement"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {placements.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Gender"
-                                value={gender}
-                                onChange={(event) => {
-                                    setGender(event.target.value);
-                                }}
-                                helperText="Please select student gender"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {genders.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                select
-                                label="Class Type"
-                                value={classType}
-                                onChange={(event) => {
-                                    setClassType(event.target.value);
-                                }}
-                                helperText="Please select student class type"
-                                SelectProps={{
-                                    native: true,
-                                  }}
-                                fullWidth="true"
-                                variant="outlined"
-                            >
-                                {classTypes.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Parent Name"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={parentName}
-                                onChange={(event) => {
-                                    setParentName(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Contact"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={contact}
-                                onChange={(event) => {
-                                    setContact(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="balance"
-                                fullWidth="true"
-                                variant="outlined"
-                                value={balance}
-                                onChange={(event) => {
-                                    setBalance(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <form method="post" onSubmit={editStudent}>
@@ -1040,7 +1226,7 @@ export default function StudentTable(props) {
 
             {/* ================================= DELETE STUDENT DIALOG ================================  */}
             <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
-                <DialogTitle>DELETE STUDENT</DialogTitle>
+                <DialogTitle>HAPUS SISWA</DialogTitle>
                 <DialogContent dividers>
                     <Grid
                         container
@@ -1051,7 +1237,7 @@ export default function StudentTable(props) {
                     >
                         <Grid item xs={12}>
                             <Typography>
-                                Are you sure you want to delete this student?
+                                Anda yakin ingin menghapus siswa ini?
                             </Typography>
                         </Grid>
                     </Grid>
@@ -1064,7 +1250,7 @@ export default function StudentTable(props) {
                             type="submit"
                             style={{ float: "right" }}
                         >
-                            YES
+                            Ya
                         </Button>
                     </form>
                     <Button
@@ -1072,7 +1258,7 @@ export default function StudentTable(props) {
                         color="secondary"
                         onClick={handleCloseDeleteDialog}
                     >
-                        NO
+                        Tidak
                     </Button>
                 </DialogActions>
             </Dialog>

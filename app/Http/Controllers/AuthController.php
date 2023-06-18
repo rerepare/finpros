@@ -52,6 +52,7 @@ class AuthController extends Controller{
 
         if($cekUser){
             Session::flush();
+            Session::put('id', $cekUser -> id);
             Session::put('userName' , $cekUser->userName);
             Session::put('name' , $cekUser->name);            
             Session::put('login' , TRUE);
@@ -68,7 +69,10 @@ class AuthController extends Controller{
             return redirect('/login')->with('alert', 'You must login first');
         }else{
             $year = Date('Y');
-            return view('User.dashboard',  compact('year') );
+            $totalUser = DB::table('user')->get()->count();
+            $totalStudent = DB::table('active_student')->get()->count();
+            $student = DB::table('active_student')->get();
+            return view('User.dashboard',  compact('year', 'totalUser', 'totalStudent','student') );
         }
     }
 
@@ -95,26 +99,74 @@ class AuthController extends Controller{
     public function registration(Request $request){
         $id = $request -> id;
         $user_id = $request -> user_id;
-        $image = $request -> image;
+        $images = $request -> image;
         $name = $request -> name;
         $userName = $request -> userName;
         $password = md5($request -> password);
         $isSuperAdmin = $request -> isSuperAdmin;
 
-        DB::insert('insert into user (id, user_id, image, name, userName, password, isSuperAdmin) values (?,?,?,?,?,?,?)', [$id, $user_id, $image, $name, $userName, $password, $isSuperAdmin]);
-        
+        for ($i=0; $i < count($images); $i++) {
+
+            if(str_starts_with($images[$i],'data:image/jpeg;base64,')){
+                $photo = str_replace('data:image/jpeg;base64,','',$images[$i]);
+                $photoextention = '.jpeg';
+            }else if(str_starts_with($images[$i],'data:image/jpg;base64,')){
+                $photo = str_replace('data:image/jpg;base64,','',$images[$i]);
+                $photoextention = '.jpg';
+            }else if(str_starts_with($images[$i],'data:image/png;base64,')){
+                $photo = str_replace('data:image/png;base64,','',$images[$i]);
+                $photoextention = '.png';
+            }else if(str_starts_with($images[$i],'data:image/jfif;base64,')){
+                $photo = str_replace('data:image/jfif;base64,','',$images[$i]);
+                $photoextention = '.jfif';
+            }    
+
+            $photofilename = rand(1111111,99999999999) . $photoextention;            
+            $image         = str_replace(' ','+',$photo);   
+
+            file_put_contents('images/user/'.$photofilename,base64_decode($image));
+
+            DB::insert('insert into user (id, user_id, image, name, userName, password, isSuperAdmin) values (?,?,?,?,?,?,?)', [$id, $user_id, $photofilename, $name, $userName, $password, $isSuperAdmin]);
+        }
     }
 
     public function editUser(Request $request){       
         $id = $request -> id;
         $user_id = $request -> user_id;
-        $image = $request -> image;
+        $images = $request -> image;
         $name = $request -> name;
         $userName = $request -> userName;
         $password = md5($request -> password);
         $isSuperAdmin = $request -> isSuperAdmin;
 
-        DB::table('user')->where('id', $id)->update(['user_id' => $user_id, 'image' => $image, 'name' => $name, 'userName' => $userName, 'password' => $password, 'isSuperAdmin' => $isSuperAdmin]);
+        if(count($images) > 0)
+        {
+            for ($i=0; $i < count($images); $i++) {
+                if(str_starts_with($images[$i],'data:image/jpeg;base64,')){
+                    $photo = str_replace('data:image/jpeg;base64,','',$images[$i]);
+                    $photoextention = '.jpeg';
+                }else if(str_starts_with($images[$i],'data:image/jpg;base64,')){
+                    $photo = str_replace('data:image/jpg;base64,','',$images[$i]);
+                    $photoextention = '.jpg';
+                }else if(str_starts_with($images[$i],'data:image/png;base64,')){
+                    $photo = str_replace('data:image/png;base64,','',$images[$i]);
+                    $photoextention = '.png';
+                }else if(str_starts_with($images[$i],'data:image/jfif;base64,')){
+                    $photo = str_replace('data:image/jfif;base64,','',$images[$i]);
+                    $photoextention = '.jfif';
+                }    
+    
+                $photofilename = rand(1111111,99999999999) . $photoextention;            
+                $image         = str_replace(' ','+',$photo);   
+    
+                file_put_contents('images/user/'.$photofilename,base64_decode($image));
+    
+                DB::table('user')->where('id', $id)->update(['user_id' => $user_id, 'image' => $photofilename, 'name' => $name, 'userName' => $userName, 'password' => $password, 'isSuperAdmin' => $isSuperAdmin]);
+            }
+        }
+        else{
+            DB::table('user')->where('id', $id)->update(['user_id' => $user_id, 'name' => $name, 'userName' => $userName, 'password' => $password, 'isSuperAdmin' => $isSuperAdmin]);
+        }
     }
 
     public function deleteUser(Request $request){       
@@ -122,4 +174,5 @@ class AuthController extends Controller{
 
         DB::table('user')->where('id', $id)->delete();
     }
+   
 }

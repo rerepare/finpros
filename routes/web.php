@@ -17,11 +17,11 @@ Route::get('/homes', function () {
     return view('layouts.app');
 });
 
-Route::get('/', function () {
-    return view('layouts.apps');
-});
+// Route::get('/', function () {
+//     return view('layouts.apps');
+// });
 
-Auth::routes();
+// Auth::routes();
 
 //user
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -38,7 +38,11 @@ Route::get('/register', [App\Http\Controllers\AuthController::class,'register'])
 
 Route::post('/registration', [App\Http\Controllers\AuthController::class,'registration']);
 
+Route::post('/uploadImage', [App\Http\Controllers\AuthController::class,'uploadImage']);
+
 Route::post('/editUser', [App\Http\Controllers\AuthController::class,'editUser']);
+
+Route::post('/editUser2', [App\Http\Controllers\AuthController::class,'editUser2']);
 
 Route::post('/deleteUser', [App\Http\Controllers\AuthController::class,'deleteUser']);
 
@@ -79,8 +83,12 @@ Route::post('/addTransaction', [App\Http\Controllers\TransactionController::clas
 
 Route::get('/history', [App\Http\Controllers\TransactionController::class,'history']);
 
-Route::get('/payment_h', [App\Http\Controllers\TransactionController::class,'payment_h']);
+Route::get('/report', [App\Http\Controllers\TransactionController::class,'transaction']);
 
-Route::get('/saving_h', [App\Http\Controllers\TransactionController::class,'saving_h']);
+Route::post('/deleteHistory', [App\Http\Controllers\TransactionController::class,'history']);
+
+Route::get('/payment_h', [App\Http\Controllers\TransactionController::class,'history']);
+
+Route::get('/saving_h', [App\Http\Controllers\TransactionController::class,'history']);
 
 Route::get('/dataSavings', [App\Http\Controllers\TransactionController::class,'dataSavings']);
