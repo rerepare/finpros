@@ -284,6 +284,7 @@ export default function StudentTable(props) {
     const [parentName, setParentName] = React.useState("");
     const [contact, setContact] = React.useState("");
     const [balance, setBalance] = React.useState("");
+    const [email, setEmail] = React.useState("");
 
     // UPLOAD IMAGE
     const classesUpload = useStylesUpload();
@@ -322,6 +323,7 @@ export default function StudentTable(props) {
             classType: classType,
             parentName: parentName,
             contact: contact,
+            email: email,
             balance: balance,
         };
         console.log(studentId)
@@ -345,6 +347,7 @@ export default function StudentTable(props) {
         setClassType("");
         setParentName("");
         setContact("");
+        setEmail("");
         setBalance("");
         setOpenAddDialog(false);
     };
@@ -363,6 +366,7 @@ export default function StudentTable(props) {
             classType: classType,
             parentName: parentName,
             contact: contact,
+            email: email,
             balance: balance,
         };
         axios.post("/editStudent", data).then(() => {
@@ -380,6 +384,7 @@ export default function StudentTable(props) {
         setClassType(data.classType);
         setParentName(data.parentName);
         setContact(data.contact);
+        setEmail(data.email);
         setBalance(data.balance);
         setOpenEditDialog(true);
     };
@@ -395,6 +400,7 @@ export default function StudentTable(props) {
         setClassType("");
         setParentName("");
         setContact("");
+        setEmail("");
         setBalance("");
         setOpenEditDialog(false);
     };
@@ -737,6 +743,9 @@ export default function StudentTable(props) {
                                                                 Kontak : {data.contact}
                                                             </Typography>
                                                             <Typography>
+                                                                Email : {data.email}
+                                                            </Typography>
+                                                            <Typography>
                                                                 Saldo : {data.balance}
                                                             </Typography>
                                                         </div>
@@ -926,7 +935,7 @@ export default function StudentTable(props) {
                                                 ))}
                                             </TextField>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={4}>
                                             <TextField
                                                 label="Orang Tua/Wali"
                                                 fullWidth="true"
@@ -937,7 +946,7 @@ export default function StudentTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={4}>
                                             <TextField
                                                 label="Kontak"
                                                 fullWidth="true"
@@ -945,6 +954,17 @@ export default function StudentTable(props) {
                                                 value={contact}
                                                 onChange={(event) => {
                                                     setContact(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Email"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={email}
+                                                onChange={(event) => {
+                                                    setEmail(event.target.value);
                                                 }}
                                             />
                                         </Grid>
@@ -1164,7 +1184,7 @@ export default function StudentTable(props) {
                                                 ))}
                                             </TextField>
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={4}>
                                             <TextField
                                                 label="Orang Tua/Wali"
                                                 fullWidth="true"
@@ -1175,7 +1195,7 @@ export default function StudentTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={4}>
                                             <TextField
                                                 label="Kontak"
                                                 fullWidth="true"
@@ -1183,6 +1203,17 @@ export default function StudentTable(props) {
                                                 value={contact}
                                                 onChange={(event) => {
                                                     setContact(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Email"
+                                                fullWidth="true"
+                                                variant="outlined"
+                                                value={email}
+                                                onChange={(event) => {
+                                                    setEmail(event.target.value);
                                                 }}
                                             />
                                         </Grid>

@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 //Illuminate
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 Use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 use App\Account;
-
 Use Auth;
 Use Validator;
+use App\Mail\TransactionNotification;
 
 class TransactionController extends Controller{
     // public function auth(){
@@ -37,7 +37,8 @@ class TransactionController extends Controller{
             $user = DB::table('user')->where('id', $id)->first();
             $year = Date('Y');
             $student = DB::table('active_student')->orderBy('created_at', 'desc')->get();
-            return view('Transaction.transaction', compact('year', 'student', 'user'));
+            $allHistory = DB::table('transaction')->orderBy('created_at', 'desc')->get();
+            return view('Transaction.transaction', compact('year', 'student', 'user', 'allHistory'));
         }
     }
 
@@ -54,10 +55,23 @@ class TransactionController extends Controller{
         $description = $request -> description;
         $balance = $request -> balance;
         $newBalance = $request -> newBalance;
+        $email = $request -> email;
 
-        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description) values (?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description]);
+        DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description, newBalance) values (?,?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description, $newBalance]);
 
         DB::table('active_student')->where('student_id', $student_id)->update(['balance' => $newBalance]);
+
+        // Retrieve recipient's email from the active_student table
+        $student = DB::table('active_student')->where('student_id', $student_id)->first();
+        $recipientEmail = $student->email;
+
+        // Send email notification
+        $transactionData = [
+            'id' => $id,
+            'student_id' => $student_id,
+            // Add other transaction data as needed
+        ];
+        Mail::to($recipientEmail)->send(new TransactionNotification($transactionData));
     }
 
     public function history(){

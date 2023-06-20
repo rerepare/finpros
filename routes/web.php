@@ -1,5 +1,8 @@
 <?php
 
+use App\Mail\TransactionNotification;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/homes', function () {
     return view('layouts.app');
+});
+
+Route::get('/', function () {
+    $transactionData = [];
+    Mail::send(new App\Mail\TransactionNotification($transactionData));
+    dd("Email is Sent.");
 });
 
 // Route::get('/', function () {

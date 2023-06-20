@@ -186,6 +186,7 @@ var datas = [];
 
 export default function StudentTable(props) {
     const { student } = props;
+    const { allHistory } = props;
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
@@ -273,6 +274,7 @@ export default function StudentTable(props) {
     
     const addTransaction = (event) => {
         event.preventDefault();
+        let emails = student.find(x => x.student_id == studentId);
 
         if(validation == false)
         {
@@ -286,7 +288,8 @@ export default function StudentTable(props) {
                 transType: transType,
                 description: description,
                 balance: balance,
-                newBalance : newBalance
+                newBalance : newBalance,
+                email: emails.email,
             };
 
             axios.post("/addTransaction", data).then(() => {

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
+import ReactToPrint from "react-to-print";
 import styled from "styled-components";
 
 //MATERIAL UI
@@ -205,8 +205,11 @@ function TablePaginationActions(props) {
 
 var datas = [];
 
+var print = [];
+
 export default function ReportTable(props) {
-    const { student } = props;
+    const { student, allHistory } = props;
+    console.log(allHistory)
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
@@ -215,6 +218,7 @@ export default function ReportTable(props) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
+    const [printData, setPrintData] = React.useState([])
 
     //GET DATABASE
     const [id, setId] = React.useState("");
@@ -246,7 +250,81 @@ export default function ReportTable(props) {
         setOpenDetailsDialog(false);
     };
 
-    //OTHERS
+    const filterData = (data) => {
+        console.log(data)
+        
+        print = transaction.filter(x => x.id == data.id)
+        console.log("inii =====> " , print)
+    }
+
+    //PRINT
+    class ComponentToPrint extends React.Component {    
+        render() {            
+            // console.log(this.props.detailData)
+            // const { print } = this.props;
+            // console.log(print)
+          return (
+            <div className='print-source'>
+                <Grid container direction = 'row' alignItems={'center'} justifyContent={'center'} spacing = {1}>
+                    <Grid item xs = {11} style = {{margin:'auto', padding : '20px'}}>
+                        <Grid container direction = 'row' alignItems="center" justifyContent={'center'} spacing = {1}>
+                            <Grid item xs = {3}>
+                                <Typography variant = "h4" style={{fontWeight:'bolder'}}>
+                                    LOGO TK
+                                </Typography>
+                            </Grid>
+                            <Grid item xs = {9}>
+                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                    LAPORAN TABUNGAN SISWA 
+                                </Typography>
+                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                    TKIT AL MANSHURIYYAH
+                                </Typography>
+                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                    TAHUN PELAJARAN 2022-2023
+                                </Typography>
+                                <hr />
+                            </Grid>                       
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </div>
+          );
+        }
+    }
+    class Example extends React.Component {
+        render() {
+        const { data } = this.props;
+        // print = student.filter(x => x.student_id == data.student_id)
+        
+          return (
+            <div>
+              <ReactToPrint
+                trigger={() => 
+                <Button 
+                variant="contained"
+                onClick = {() => {filterData(data)}}
+                style={{
+                    backgroundColor: "#FFD93D",
+                    marginBottom:'5px',
+                    height:"5vh",
+                    width:"2vw",                                                    
+                }}>
+                    <PrintIcon />
+                </Button> }
+                content={() => this.componentRef}
+              />
+                  <div style = {{display : "none"}}>
+                      <ComponentToPrint ref={el => (this.componentRef = el)} />
+                  </div>
+            </div>
+          );
+        }
+    }
+
+
+   // OTHERS
+    
     const Subheader = styled.div`
         display: flex;
         flex-direction: row;
@@ -374,7 +452,7 @@ export default function ReportTable(props) {
                                             scope="row"
                                         >
                                             <Button
-                                            variant="contained"                                                
+                                            variant="contained"
                                             style={{
                                                 backgroundColor: "#FFD93D",
                                                 marginBottom:'5px',
@@ -387,19 +465,7 @@ export default function ReportTable(props) {
                                             >
                                                 <InfoOutlinedIcon />
                                             </Button>
-                                            <Button
-                                            variant="contained"                                                
-                                                style={{
-                                                    backgroundColor: "#9BA4B5",
-                                                    marginBottom:'5px',
-                                                    height:"5vh",
-                                                    width:"2vw",                                                    
-                                                }}
-                                                onClick={() => {
-                                                    handleOpenDetailsDialog(data);
-                                                }}>
-                                                <PrintIcon />
-                                            </Button>
+                                            <Example data = {data} />
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 ))}
@@ -528,11 +594,6 @@ export default function ReportTable(props) {
                         CLOSE
                     </Button>
                 </DialogActions>
-            </Dialog>
-
-            {/* ================================= PRINT RIWAYAT TRANSAKSI DIALOG ===============================  */}
-            <Dialog>
-
             </Dialog>
         </div>
     );

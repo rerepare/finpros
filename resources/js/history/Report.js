@@ -5,7 +5,10 @@ import ReportTable from './historyComponent/ReportTable'
 export default function Report() {
   return (
     <div>
-        <ReportTable student = {student}/>
+        <ReportTable 
+        student = {student} 
+        allHistory = {allHistory}
+        />
     </div>
   )
 }

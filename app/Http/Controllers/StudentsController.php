@@ -51,6 +51,7 @@ class StudentsController extends Controller
         $classType = $request->classType;
         $parentName = $request->parentName;
         $contact = $request->contact;
+        $email = $request->email;
         $balance = $request->balance;
 
         for ($i=0; $i < count($images); $i++) {     
@@ -74,7 +75,7 @@ class StudentsController extends Controller
 
             file_put_contents('images/student/'.$photofilename,base64_decode($image));
 
-            DB::insert('insert into active_student (id, student_id, school_id, image, fullName, gender, classType, parentName, contact, balance) values (?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $school_id, $photofilename, $fullName, $gender, $classType, $parentName, $contact, $balance]);
+            DB::insert('insert into active_student (id, student_id, school_id, image, fullName, gender, classType, parentName, contact, email, balance) values (?,?,?,?,?,?,?,?,?,?,?)', [$id, $student_id, $school_id, $photofilename, $fullName, $gender, $classType, $parentName, $contact, $email, $balance]);
         }        
     }
 
@@ -89,6 +90,7 @@ class StudentsController extends Controller
         $classType = $request->classType;
         $parentName = $request->parentName;
         $contact = $request->contact;
+        $email = $request->email;
         $balance = $request->balance;
 
         if(count($images) > 0)
@@ -113,11 +115,11 @@ class StudentsController extends Controller
 
                 file_put_contents('images/student/'.$photofilename,base64_decode($image));
 
-                DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'image' => $photofilename, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+                DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'image' => $photofilename, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'email' => $email, 'balance' => $balance,]);
             }           
         }
         else{
-            DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'balance' => $balance,]);
+            DB::table('active_student')->where('id', $id)->update(['student_id' => $student_id, 'school_id' => $school_id, 'fullName' => $fullName, 'gender' => $gender, 'classType' => $classType, 'parentName' => $parentName, 'contact' => $contact, 'email' => $email, 'balance' => $balance,]);
         }
     }
 
