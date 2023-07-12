@@ -5,7 +5,7 @@ export default function User() {
 
   return (
     <div>
-      <UserTable user = {user}/>
+      <UserTable userTable = {userTable}/>
     </div>
   );
 }

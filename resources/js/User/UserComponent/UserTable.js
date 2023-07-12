@@ -221,12 +221,12 @@ function TablePaginationActions(props) {
 var datas = [];
 
 export default function UserTable(props) {
-    const { user } = props;
+    const { userTable } = props;
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
-        rowsPerPage - Math.min(rowsPerPage, user.length - page * rowsPerPage);
+        rowsPerPage - Math.min(rowsPerPage, userTable.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
@@ -257,12 +257,12 @@ export default function UserTable(props) {
         setPage(0);
     };
     const handleOpenDetailsDialog = (data) => {
-        datas = user.filter(x => x.id == data.id)
+        datas = userTable.filter(x => x.id == data.id)
         console.log(datas[0])
         setOpenDetailsDialog(true);
     };
     const handleCloseDetailsDialog = () => {
-        datas = user
+        datas = userTable
         setOpenDetailsDialog(false);
     };
     
@@ -272,7 +272,7 @@ export default function UserTable(props) {
 
         let data = {
             id: id,
-            user_id: "USER"+(user[0].id),
+            user_id: "USER"+(userTable[0].id),
             image: photoFiles,
             name: name,
             userName: userName,
@@ -285,7 +285,7 @@ export default function UserTable(props) {
         });
     };
     const handleOpenRegistDialog = () => {
-        setUserId("USER"+(user[0].id));
+        setUserId("USER"+(userTable[0].id));
         setOpenRegistDialog(true);
     };
     const handleCloseRegistDialog = () => {
@@ -475,7 +475,7 @@ export default function UserTable(props) {
                             </TableHead>
                             <TableBody>
                                 {(rowsPerPage > 0
-                                    ? user
+                                    ? userTable
                                           .filter((data) => {
                                               if (searchName == "") {
                                                   return data;
@@ -493,7 +493,7 @@ export default function UserTable(props) {
                                               page * rowsPerPage,
                                               page * rowsPerPage + rowsPerPage
                                           )
-                                    : user
+                                    : userTable
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>
                                         <StyledTableCell
@@ -606,7 +606,7 @@ export default function UserTable(props) {
                                         }}
                                         rowsPerPageOptions={[]}
                                         colSpan={9}
-                                        count={user.length}
+                                        count={userTable.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
                                         SelectProps={{

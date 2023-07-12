@@ -208,8 +208,7 @@ var datas = [];
 var print = [];
 
 export default function ReportTable(props) {
-    const { student, allHistory } = props;
-    console.log(allHistory)
+    const { student, allHistory } = props;    
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
@@ -242,20 +241,15 @@ export default function ReportTable(props) {
         setPage(0);
     };
     const handleOpenDetailsDialog = (data) => {
-        datas = student.filter(x => x.id == data.id)        
+        datas = student.filter(x => x.id == data.id)  
+        print = allHistory.filter(x => x.studentId == data.studentId)
+                
         setOpenDetailsDialog(true);
     };
     const handleCloseDetailsDialog = () => {
         datas = student
         setOpenDetailsDialog(false);
-    };
-
-    const filterData = (data) => {
-        console.log(data)
-        
-        print = transaction.filter(x => x.id == data.id)
-        console.log("inii =====> " , print)
-    }
+    };    
 
     //PRINT
     class ComponentToPrint extends React.Component {    
@@ -270,7 +264,7 @@ export default function ReportTable(props) {
                         <Grid container direction = 'row' alignItems="center" justifyContent={'center'} spacing = {1}>
                             <Grid item xs = {3}>
                                 <Typography variant = "h4" style={{fontWeight:'bolder'}}>
-                                    LOGO TK
+                                    <img style = {{width:'100%', height:"150px", objectFit:'contain', margin:'auto' }}src="../images/app/logo.png" />
                                 </Typography>
                             </Grid>
                             <Grid item xs = {9}>
@@ -282,9 +276,91 @@ export default function ReportTable(props) {
                                 </Typography>
                                 <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
                                     TAHUN PELAJARAN 2022-2023
-                                </Typography>
-                                <hr />
-                            </Grid>                       
+                                </Typography>                                
+                            </Grid> 
+                            <hr />  
+                            <Grid item xs = {12}>
+                                <Table
+                                className={classes.table}
+                                aria-label="customized table">
+                                    <TableHead>
+                                        <StyledTableRow
+                                            style={{
+                                                borderTopLeftRadius: "1vw",
+                                                borderTopRightRadius: "1vw",
+                                            }}
+                                        >                                   
+                                            <StyledTableCell
+                                                align="center"
+                                                style={{ borderTopLeftRadius: "1vw" }}
+                                            >
+                                                ID Siswa
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                align="center"
+                                                style={{ wordBreak: "break-word"}}
+                                            >
+                                                Nama
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                align="center"
+                                                style={{ wordBreak: "break-word" }}
+                                            >
+                                                Pembayaran
+                                            </StyledTableCell>
+                                            <StyledTableCell
+                                                align="center"
+                                                style={{ wordBreak: "break-word",  borderTopRightRadius: "1vw" }}
+                                            >
+                                                Tipe Transaksi
+                                            </StyledTableCell>
+                                           
+                                        </StyledTableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {print.map((data, key) => (
+                                            <StyledTableRow key={key}>                                        
+                                                <StyledTableCell
+                                                    component="th"
+                                                    align="center"
+                                                    scope="row"
+                                                >
+                                                    {data.student_id}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    component="th"
+                                                    align="center"
+                                                    scope="row"
+                                                >
+                                                    {data.actor}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    component="th"
+                                                    align="center"
+                                                    scope="row"
+                                                >
+                                                    {data.payMethod}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    component="th"
+                                                    align="center"
+                                                    scope="row"
+                                                >
+                                                    {data.transType}
+                                                </StyledTableCell>                                              
+                                            </StyledTableRow>
+                                        ))}
+
+                                        {emptyRows > 0 && (
+                                            <TableRow
+                                                style= {{height: 33 * emptyRows}}
+                                            >
+                                                <TableCell colSpan={6} />
+                                            </TableRow>
+                                        )}
+                                    </TableBody>                                   
+                                </Table>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -464,8 +540,7 @@ export default function ReportTable(props) {
                                             }}
                                             >
                                                 <InfoOutlinedIcon />
-                                            </Button>
-                                            <Example data = {data} />
+                                            </Button>                                            
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 ))}
@@ -593,6 +668,7 @@ export default function ReportTable(props) {
                     >
                         CLOSE
                     </Button>
+                    <Example />
                 </DialogActions>
             </Dialog>
         </div>

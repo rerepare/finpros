@@ -68,11 +68,13 @@ class AuthController extends Controller{
         if(!Session::get('login')){
             return redirect('/login')->with('alert', 'You must login first');
         }else{
+            $userId = Session::get('id');
+            $user = DB::table('user')->where('id', $userId)->first();
             $year = Date('Y');
             $totalUser = DB::table('user')->get()->count();
             $totalStudent = DB::table('active_student')->get()->count();
             $student = DB::table('active_student')->get();
-            return view('User.dashboard',  compact('year', 'totalUser', 'totalStudent','student') );
+            return view('User.dashboard',  compact('year', 'totalUser', 'totalStudent','student', 'user') );
         }
     }
 
@@ -80,9 +82,11 @@ class AuthController extends Controller{
         if(!Session::get('login')){
             return redirect('/login')->with('alert', 'You must login first');
         }else{
+            $userId = Session::get('id');
+            $user = DB::table('user')->where('id', $userId)->first();
             $year = Date('Y');
-            $user = DB::table('user')->orderBy('created_at', 'desc')->get();
-        return view('User.user',  compact('year','user') );
+            $userTable = DB::table('user')->orderBy('created_at', 'desc')->get();
+        return view('User.user',  compact('year','user','userTable') );
         }
     }
 
@@ -90,9 +94,11 @@ class AuthController extends Controller{
         if(!Session::get('login')){
             return redirect('/login')->with('alert', 'You must login first');
         }else{
+            $userId = Session::get('id');
+            $user = DB::table('user')->where('id', $userId)->first();
             $year = Date('Y');
-            $user = DB::table('user')->orderBy('created_at', 'desc')->get();
-        return view('User.register',  compact('year', 'user') );
+            $userTable = DB::table('user')->orderBy('created_at', 'desc')->get();
+        return view('User.register',  compact('year', 'user', 'userTable') );
         }
     }
 

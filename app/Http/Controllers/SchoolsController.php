@@ -33,9 +33,11 @@ class SchoolsController extends Controller{
         if(!Session::get('login')){
             return redirect('/login')->with('alert', 'You must login first');
         }else{
+            $userId = Session::get('id');
+            $user = DB::table('user')->where('id', $userId)->first();
             $year = Date('Y');
             $school = DB::table('school')->orderBy('created_at', 'desc')->get();
-            return view('Schools.schools', compact('year','school'));
+            return view('Schools.schools', compact('year','school', 'user'));
         }
     }
 

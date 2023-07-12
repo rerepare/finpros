@@ -35,8 +35,10 @@ class TeachersController extends Controller{
             return redirect('/login')->with('alert', 'You must login first');
         }else{
             $year = Date('Y');
+            $userId = Session::get('id');
+            $user = DB::table('user')->where('id', $userId)->first();
             $teacher = DB::table('teacher')->orderBy('created_at', 'desc')->get();
-            return view('Teachers.teachers', compact('year','teacher'));
+            return view('Teachers.teachers', compact('year','teacher', 'user'));
         }
     }
 

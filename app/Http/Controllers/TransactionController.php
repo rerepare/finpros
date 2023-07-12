@@ -16,6 +16,7 @@ use App\Account;
 Use Auth;
 Use Validator;
 use App\Mail\TransactionNotification;
+use Dompdf\Dompdf;
 
 class TransactionController extends Controller{
     // public function auth(){
@@ -44,18 +45,18 @@ class TransactionController extends Controller{
 
     public function addTransaction(Request $request)
     {
-
+        // $untuk_laravel = $lemparan_dari_front-end -> nama_variable_dari_front-end
         $id = $request -> id;
         $student_id = $request -> student_id;
+        $studentName = $request -> studentName;
         $user_id = $request -> user_id;
         $amount = $request -> amount;
         $payMethod = $request -> payMethod;
         $actor = $request -> actor;
         $transType = $request -> transType;
         $description = $request -> description;
-        $balance = $request -> balance;
         $newBalance = $request -> newBalance;
-        $email = $request -> email;
+        $images = $request -> image;
 
         DB::insert('insert into transaction (id, student_id, user_id, amount, payMethod, actor, transType, description, newBalance) values (?,?,?,?,?,?,?,?,?)', [$id, $student_id, $user_id, $amount, $payMethod, $actor, $transType, $description, $newBalance]);
 
@@ -69,6 +70,11 @@ class TransactionController extends Controller{
         $transactionData = [
             'id' => $id,
             'student_id' => $student_id,
+            'amount' => $amount,
+            'studentName' => $studentName,
+            'description' => $description,
+            'payMethod' => $payMethod,
+            'newBalance' => $newBalance,
             // Add other transaction data as needed
         ];
         Mail::to($recipientEmail)->send(new TransactionNotification($transactionData));
@@ -93,4 +99,6 @@ class TransactionController extends Controller{
 
         DB::table('transaction')->where('id', $id)->delete();
     }
+
+    public
 }

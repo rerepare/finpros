@@ -203,6 +203,7 @@ export default function StudentTable(props) {
     //GET DATABASE
     const [id, setId] = React.useState("")
     const [studentId, setStudentId] = React.useState("")
+    const [studentName, setStudentName] = React.useState("")
     const [amount, setAmount] = React.useState("")
     const [payMethod, setPayMethod] = React.useState("")
     const [actor, setActor] = React.useState("")
@@ -212,6 +213,7 @@ export default function StudentTable(props) {
     const [openDialog, setOpenDialog] = React.useState(false)
     const [newBalance, setNewBalance] = React.useState(0);
     const [validation, setValidation] = React.useState(false)
+    const [image, setImage] = React.useState("");
 
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
@@ -237,10 +239,20 @@ export default function StudentTable(props) {
         // datas.push(student.filter(x => x.id == data.id))
         datas = student.filter(x => x.id == data.id)
         setStudentId(data.student_id)
+        setStudentName(data.fullName)
         setBalance(data.balance)
         console.log(datas[0])
         setOpenDialog(true)
     }
+
+    const handleAmountChange = (event) => {
+        const input = event.target.value;
+        const regex = /^[0-9]*$/; // Regular expression to match only numbers
+    
+        if (regex.test(input) || input === '') {
+          setAmount(input);
+        }
+    };
 
     const saving = () => {
         setValidation(false)
@@ -248,8 +260,7 @@ export default function StudentTable(props) {
         let calculate = 0
         calculate = parseInt(balance) + parseInt(amount)        
         setTransType("Saving")
-        setNewBalance(calculate)
-        console.log(newBalance)
+        setNewBalance(calculate)        
         
     }
     const payments = () => {
@@ -262,8 +273,7 @@ export default function StudentTable(props) {
             setValidation(true)
         }
         setTransType("Payment")
-        setNewBalance(calculate)  
-        console.log(newBalance)      
+        setNewBalance(calculate)                
     }
 
     const handleSnackbarClose = () => {
@@ -279,6 +289,7 @@ export default function StudentTable(props) {
         if(validation == false)
         {
             let data = {
+                // controller = js
                 id: id,
                 student_id: studentId,
                 user_id: user.id,
@@ -289,7 +300,8 @@ export default function StudentTable(props) {
                 description: description,
                 balance: balance,
                 newBalance : newBalance,
-                email: emails.email,
+                email: emails.email,     
+                studentName: studentName,           
             };
 
             axios.post("/addTransaction", data).then(() => {
@@ -510,55 +522,88 @@ export default function StudentTable(props) {
                     <div>
                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={2}>
                             {/* ======================== STUDENT PROFILE ======================== */}
-                            <Grid item xs = {12} sm = {12} lg ={4}>
+                            <Grid item xs = {12} sm = {12} lg ={5}>
                                 <Accordion expanded = {true}>
                                     <AccordionSummary>
                                     STUDENT PROFILE
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Card style = {{height:'40vh'}}>
-                                            <CardContent>
-                                                misalnya ini foto
-                                            </CardContent>
-                                        </Card>
-                                        <Typography>
-                                            {
-                                                datas.map((data, key) => (
-                                                    <div>
-                                                            <Typography>
-                                                                Student ID : {data.student_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                School ID : {data.school_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Name : {data.fullName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Gender : {data.gender}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Class Type : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Parent : {data.parentName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Contact : {data.contact}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Balance : {data.balance}
-                                                            </Typography>
-                                                        </div>
-                                                ))
-                                            }
-                                        </Typography>
+                                        <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={1}>
+                                            <Grid item xs = {4}>
+                                                <Card style = {{height:'40vh'}}>
+                                                    <CardContent>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                        ))
+                                                    }
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {8}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                            {/* <Typography>
+                                                                                Student ID : {data.student_id}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                School ID : {data.school_id}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Name : {data.fullName}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Gender : {data.gender}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Class Type : {data.classType}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Parent : {data.parentName}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Contact : {data.contact}
+                                                                            </Typography>
+                                                                            <Typography>
+                                                                                Balance : {data.balance}
+                                                                            </Typography> */}
+                                                                            <Table>
+                                                                                <TableRow>
+                                                                                    <TableCell>
+                                                                                        Student Id :
+                                                                                    </TableCell>
+                                                                                    <TableCell>
+                                                                                        {data.student_id}
+                                                                                    </TableCell>
+                                                                                </TableRow>
+                                                                                <TableRow>
+                                                                                    <TableCell>
+                                                                                        School Id :
+                                                                                    </TableCell>
+                                                                                    <TableCell>
+                                                                                        {data.school_id}
+                                                                                    </TableCell>
+                                                                                </TableRow>
+
+                                                                            </Table>
+                                                                        </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>
                                     </AccordionDetails>
                                 </Accordion>
                             </Grid>
 
                             {/* ======================== FORM ========================== */}
-                            <Grid item xs = {12} sm = {12} lg ={8}>
+                            <Grid item xs = {12} sm = {12} lg ={7}>
                                 <Accordion expanded = {true}>
                                     <AccordionSummary>
                                         FORM
@@ -575,7 +620,7 @@ export default function StudentTable(props) {
                                                         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
                                                       }}
                                                     value = {amount}
-                                                    onInput = {(event) => {setAmount(event.target.value);console.log("ini amount => " + amount)}}
+                                                    onChange={handleAmountChange}
                                                 />                                  
                                             </Grid>
 

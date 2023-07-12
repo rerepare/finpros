@@ -421,21 +421,6 @@ export default function HistoryTable(props) {
                                   </Button>
                                   <Button
                                       variant="contained"
-                                      color="secondary"                                                
-                                      style={{
-                                          backgroundColor: "#30A2FF",
-                                          marginBottom:'5px',
-                                          height:"5vh",
-                                          width:"2vw",                                                    
-                                      }}
-                                      onClick={() => {
-                                          handleOpenDetailsDialog(data);
-                                      }}
-                                  >
-                                      <SendIcon />
-                                  </Button>
-                                  <Button
-                                      variant="contained"
                                       color="secondary"                                               
                                       style={{marginBottom:'5px',height:"5vh",
                                       width:"2vw"}}

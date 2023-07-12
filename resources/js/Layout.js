@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import clsx from 'clsx';
@@ -132,6 +132,7 @@ export default function Layout() {
     const openProfile = Boolean(anchorEl);
     const [openList, setOpenList] = React.useState(false);
     const [openListHistory, setOpenListHistory] = React.useState(false);
+    const [userLevel, setUserLevel] = useState('admin'); //Default user level is admin
     
   
     const handleDrawerOpen = () => {
@@ -171,6 +172,7 @@ export default function Layout() {
     const handleClickHistory = () => {
       setOpenListHistory(!openListHistory);
     };
+    
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -197,6 +199,7 @@ export default function Layout() {
           <Typography variant="h6" noWrap>
             STUDENT SAVING MANAGEMENT SYSTEM
           </Typography>
+              
           
           <div style={{marginLeft:'auto'}}>
               <IconButton
@@ -240,16 +243,23 @@ export default function Layout() {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
           }),
-        }}
-      >
+        }}>
+
         <div className={classes.toolbar}>
           {/* tambah logo tk */}
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </div>
+
         <Divider />
-        <List>
+
+        {(()=>{
+          if(user.isSuperAdmin == true)
+          {
+            return(
+              <div>
+                <List>
           <ListItem button onClick={() => {window.location.href="/dashboard"}}>
             <ListItemIcon>
               <DashboardIcon />
@@ -297,6 +307,10 @@ export default function Layout() {
         </List>
 
         <Divider />
+              </div>
+            )
+          }
+        })()}
 
         <List>
           <ListItem button onClick={() => {window.location.href="/transaction"}}>
@@ -316,18 +330,6 @@ export default function Layout() {
 
           <Collapse in={openListHistory} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {/* <ListItem button className={classes.nested} onClick={() => {window.location.href="/saving_h"}}>
-                <ListItemIcon>
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary="Saving History" />
-              </ListItem>     
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/payment_h"}}>
-                <ListItemIcon>
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary="Payment History" />
-              </ListItem>   */}
               <ListItem button className={classes.nested} onClick={() => {window.location.href="/history"}}>
                 <ListItemIcon>
                   <ReceiptIcon />
