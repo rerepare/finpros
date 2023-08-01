@@ -11,7 +11,6 @@ import { DialogTitle, Dialog, DialogContent, DialogActions } from "@material-ui/
 import { Button, IconButton } from "@material-ui/core";
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
@@ -366,13 +365,13 @@ export default function StudentTable(props) {
                                                     backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
-                                                    width:"2vw",                                                    
+                                                    width:"6vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <InfoOutlinedIcon />
+                                                More
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -428,71 +427,134 @@ export default function StudentTable(props) {
             </Paper>
 
             {/* ================================= DETAILS STUDENT DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL SISWA
                 </DialogTitle>
+
                 <DialogContent dividers>
-                    <Grid container spacing ={1}>
-                        <Grid item xs = {12}>
-                            <div>
-                            <Accordion expanded = {true} style = {{width: '100%'}}>
-                                <AccordionDetails>
-                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent>
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent >
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <div>
-                                                            <Typography>
-                                                                ID Siswa : {data.student_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Cabang Sekolah : {data.school_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Nama : {data.fullName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Jenis Kelamin : {data.gender}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kelas : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Orang Tua : {data.parentName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kontak : {data.contact}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Saldo : {data.balance}
-                                                            </Typography>
-                                                        </div>
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>                                
-                                </AccordionDetails>
-                            </Accordion>
-                            </div>
+                    <div>
+                        <Grid container spacing ={1}>
+                            <Grid item xs = {12}>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionDetails>
+                                        <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                            <Grid item = {2}>
+                                                <Card style = {{height:'40vh'}}>
+                                                    <CardContent>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                        ))
+                                                    }
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Sekolah :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.school_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Nama :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.fullName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jenis Kelamin :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.gender}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kelas :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.classType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Orang Tua/Wali :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.parentName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kontak :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.contact}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.balance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>                                
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
+                    
                 </DialogContent>
+
                 <DialogActions>
                     <Button
                         variant="contained"

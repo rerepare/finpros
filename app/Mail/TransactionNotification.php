@@ -12,16 +12,19 @@ class TransactionNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $transactionData;
+    public $pdfContent;
 
     /**
      * Create a new message instance.
      *
      * @param  array  $transactionData
+     * @param  string  $pdfContent
      * @return void
      */
-    public function __construct($transactionData)
+    public function __construct($transactionData, $pdfContent)
     {
         $this->transactionData = $transactionData;
+        $this->pdfContent = $pdfContent;
     }
 
     /**
@@ -31,7 +34,8 @@ class TransactionNotification extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.transaction_success')
-                    ->subject('Pembayaran Berhasil');
+        return $this->view('emails.transaction_success', ['transactionData' => $this->transactionData])
+                    ->subject('Transaksi Berhasil')
+                    ->attachData($this->pdfContent, 'transaction.pdf', ['mime' => 'application/pdf']);
     }
 }

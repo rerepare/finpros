@@ -1,7 +1,11 @@
-import React, {useEffect} from "react";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import PropTypes from "prop-types";
-import ReactToPrint from "react-to-print";
 import styled from "styled-components";
+import ReactToPrint from 'react-to-print';
+
+//page
+import Dashboard from '../../dashboard/Dashboard';
 
 //MATERIAL UI
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
@@ -26,6 +30,18 @@ const useStyles = makeStyles((theme) => ({
     dialogTitle: {
         textAlign: 'center',
     },
+    toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+      },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+      },
 }));
 const useStylesUpload = makeStyles((theme) => ({
     img: {
@@ -215,7 +231,7 @@ export default function ReportTable(props) {
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [searchName, setSearchName] = React.useState("");
+    const [searchQuery, setSearchQuery] = useState('');
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [printData, setPrintData] = React.useState([])
 
@@ -242,12 +258,12 @@ export default function ReportTable(props) {
     };
     const handleOpenDetailsDialog = (data) => {
         datas = student.filter(x => x.id == data.id)  
-        print = allHistory.filter(x => x.studentId == data.studentId)
-                
+        print = allHistory.filter(x => x.student_id == data.student_id)        
         setOpenDetailsDialog(true);
     };
     const handleCloseDetailsDialog = () => {
         datas = student
+        print = []
         setOpenDetailsDialog(false);
     };    
 
@@ -408,7 +424,21 @@ export default function ReportTable(props) {
 
     return (
         <div>
-            <Typography variant="h4">LAPORAN TABUNGAN SISWA</Typography>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography variant="h4">LAPORAN TABUNGAN SISWA</Typography>
+                {(()=>{
+                    if(user.isSuperAdmin == false)
+                    {
+                    return(
+                        <div>
+                        <Button variant="contained" style={{ backgroundColor: "#A8A196", color: "#ffffff" }} onClick={() => {window.location.href="/dashboard"}}>
+                            Dashboard
+                        </Button>
+                        </div>
+                        )
+                    }
+                })()}
+            </div>
             <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                 container
@@ -419,11 +449,12 @@ export default function ReportTable(props) {
                     <Grid item xs={12}>
                         <TextField
                             variant="outlined"
+                            size="small"
                             onChange={(event) => {
-                                setSearchName(event.target.value);
+                            setSearchQuery(event.target.value);
                             }}
-                            value={searchName}
-                            label="search"
+                            value={searchQuery}
+                            label="Cari Siswa"
                             fullWidth={true}
                         />
                     </Grid>
@@ -474,23 +505,18 @@ export default function ReportTable(props) {
                             <TableBody>
                                 {(rowsPerPage > 0
                                     ? student
-                                          .filter((data) => {
-                                              if (searchName == "") {
-                                                  return data;
-                                              } else if (
-                                                  data.fullName
-                                                      .toLowerCase()
-                                                      .includes(
-                                                          searchName.toLowerCase()
-                                                      )
-                                              ) {
-                                                  return data;
-                                              }
-                                          })
-                                          .slice(
-                                              page * rowsPerPage,
-                                              page * rowsPerPage + rowsPerPage
-                                          )
+                                    .filter((data) => {
+                                      if (searchQuery === "") {
+                                        return data; // No search criteria provided, return all data
+                                      } else {
+                                        const query = searchQuery.toLowerCase();
+                                        return (
+                                          data.fullName.toLowerCase().includes(query) ||
+                                          data.student_id.toString().includes(query)// Assuming student_id is a number
+                                        );
+                                      }
+                                    })
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     : student
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>                                        
@@ -533,13 +559,13 @@ export default function ReportTable(props) {
                                                 backgroundColor: "#FFD93D",
                                                 marginBottom:'5px',
                                                 height:"5vh",
-                                                width:"2vw",                                                    
+                                                width:"6vw",                                                    
                                             }}
                                             onClick={() => {
                                                 handleOpenDetailsDialog(data);
                                             }}
                                             >
-                                                <InfoOutlinedIcon />
+                                                More
                                             </Button>                                            
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -595,71 +621,134 @@ export default function ReportTable(props) {
             </Paper>
 
             {/* ================================= DETAILS STUDENT DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL SISWA
                 </DialogTitle>
+
                 <DialogContent dividers>
-                    <Grid container spacing ={1}>
-                        <Grid item xs = {12}>
-                            <div>
-                            <Accordion expanded = {true} style = {{width: '100%'}}>
-                                <AccordionDetails>
-                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent>
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent >
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <div>
-                                                            <Typography>
-                                                                ID Siswa : {data.student_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Cabang Sekolah : {data.school_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Nama : {data.fullName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Jenis Kelamin : {data.gender}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kelas : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Orang Tua : {data.parentName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kontak : {data.contact}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Saldo : {data.balance}
-                                                            </Typography>
-                                                        </div>
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>                                
-                                </AccordionDetails>
-                            </Accordion>
-                            </div>
+                    <div>
+                        <Grid container spacing ={1}>
+                            <Grid item xs = {12}>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionDetails>
+                                        <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                            <Grid item = {2}>
+                                                <Card style = {{height:'40vh'}}>
+                                                    <CardContent>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                        ))
+                                                    }
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Sekolah :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.school_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Nama :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.fullName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jenis Kelamin :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.gender}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kelas :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.classType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Orang Tua/Wali :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.parentName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kontak :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.contact}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.balance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>                                
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
+                    
                 </DialogContent>
+
                 <DialogActions>
                     <Button
                         variant="contained"
@@ -668,9 +757,17 @@ export default function ReportTable(props) {
                     >
                         CLOSE
                     </Button>
-                    <Example />
+                    <Example/>
                 </DialogActions>
             </Dialog>
+            <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Router>
+                    <Switch>
+                        <Route path='/dashboard' exact component={Dashboard}/>
+                    </Switch>
+                </Router>
+            </main>  
         </div>
     );
 }

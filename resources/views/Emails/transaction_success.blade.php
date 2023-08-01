@@ -6,7 +6,7 @@
 </head>
 <body>
     <p>Assalamualaikum Wr. Wb.</p>
-    <p>Kami informasikan bahwa pembayaran Anda telah berhasil diproses.</p>
+    <p>Kami informasikan bahwa transaksi Anda telah berhasil diproses.</p>
     
     <div>Detail Transaksi:</div>
     <div>ID Siswa: {{ $transactionData['student_id'] }}</div>

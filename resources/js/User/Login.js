@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useState } from 'react';
+import PropTypes from "prop-types";
+import ReactDOM from "react-dom";
 
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 var md5 = require("md5");
 
 let renderValue = 0;
 let allUser = [];
 
-export default function Login() {
+export default function Login(props) {
     if (renderValue == 0) {
         allUser = user;
         renderValue = 1;
@@ -22,10 +29,17 @@ export default function Login() {
 
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         const user = allUser.filter(
             (data) =>
                 data.userName == userName && data.password == md5(password)
@@ -38,11 +52,16 @@ export default function Login() {
 
         axios.post("/login_check", data).then(() => {
             if (user.length > 0) {
+                // Success message
+                setSnackbarSeverity('success');
+                setSnackbarMessage('Login successful!');
                 window.location.href = "/dashboard";
             } else {
-                //failed message
-                console.log("FAILED :(");
+                // Error message
+                setSnackbarSeverity('error');
+                setSnackbarMessage('Login failed. Please check your username and password.');
             }
+            setOpenSnackbar(true);
         });
     };
 
@@ -51,7 +70,11 @@ export default function Login() {
           event.preventDefault();
           handleSubmit(event);
         }
-      };
+    };
+
+    const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+    };
 
     const LoginContainer = styled.div`
         display: grid;
@@ -119,7 +142,10 @@ export default function Login() {
                     />
                 </Grid>
                    
-                <Grid item xs={12} md={4} style={{ padding: "30px" }}>
+                <Grid item xs={12} md={4} style={{ padding: "10px" }}>
+                <Typography variant="h6"  style={{ color: "#FFFFFF", fontWeight:"bold"}}>
+                STUDENT SAVING MANAGEMENT SYSTEM
+                </Typography>
                     <Card>
                         <CardContent>
                             <form method="post" onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
@@ -153,10 +179,17 @@ export default function Login() {
                                             fullWidth={true}
                                             size="small"
                                             value={password}
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             onChange={(event) => {
                                                 setPassword(event.target.value);
                                             }}
+                                            InputProps={{
+                                                endAdornment: (
+                                                  <Button onClick={handleTogglePasswordVisibility}>
+                                                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                                  </Button>
+                                                ),
+                                              }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -168,6 +201,11 @@ export default function Login() {
                                         >
                                             login
                                         </Button>
+                                        <Snackbar open={openSnackbar} autoHideDuration={5000} onClose={handleSnackbarClose}>
+                                            <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
+                                                {snackbarMessage}
+                                            </MuiAlert>
+                                        </Snackbar>
                                     </Grid>
                                 </Grid>
                             </form>

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
-import clsx from 'clsx';
+
+//page
+import Dashboard from '../dashboard/Dashboard';
 
 //MATERIAL UI
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
@@ -19,12 +21,110 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import InputAdornment from '@material-ui/core/InputAdornment';
 
+const payMethods1 = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'Bayar dengan saldo tabungan',
+        label: 'Bayar dengan saldo tabungan',
+    },
+    {
+        value: 'Lainnya',
+        label: 'Lainnya',
+    },
+];
+
+const payMethods2 = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'CASH',
+        label: 'Cash',
+    },
+    {
+        value: 'Lainnya',
+        label: 'Lainnya',
+    },
+];
+
+const actors = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'SISWA',
+        label: 'Siswa',
+    },
+    {
+        value: 'Lainnya',
+        label: 'Lainnya',
+    },
+];
+
+const descriptions1 = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'Tabungan Harian',
+        label: 'Tabungan Harian',
+    },
+    {
+        value: 'Lainnya',
+        label: 'Lainnya',
+    },
+];
+
+const descriptions = [
+    {
+        value: '',
+        label: '',
+    },
+    {
+        value: 'Pembayaran SPP',
+        label: 'Pembayaran SPP',
+    },
+    {
+        value: 'Pembayaran SDPP',
+        label: 'Pembayaran SDPP',
+    },
+    {
+        value: 'Pembayaran LBV',
+        label: 'Pembayaran LBV',
+    },
+    {
+        value: 'Pembayaran Les',
+        label: 'Pembayaran Les',
+    },
+    {
+        value: 'Lainnya',
+        label: 'Lainnya',
+    },
+];
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.modal + 1,
         color: "#fff",
     },
+    toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+      },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+      },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -186,31 +286,32 @@ var datas = [];
 
 export default function StudentTable(props) {
     const { student } = props;
-    const { allHistory } = props;
 
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [searchName, setSearchName] = React.useState(""); 
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  
-    //GET DATABASE
     const [id, setId] = React.useState("")
     const [studentId, setStudentId] = React.useState("")
     const [studentName, setStudentName] = React.useState("")
     const [amount, setAmount] = React.useState("")
     const [payMethod, setPayMethod] = React.useState("")
+    const [otherPayMethod, setOtherPayMethod] = React.useState("")
+    const [otherDescription, setOtherDescription] = React.useState("")
+    const [otherActor, setOtherActor] = React.useState("")
     const [actor, setActor] = React.useState("")
     const [transType, setTransType] = React.useState("") 
     const [description, setDescription] = React.useState("")
     const [balance, setBalance] = React.useState(0)
     const [openDialog, setOpenDialog] = React.useState(false)
+    const [openDialogSetoran, setOpenDialogSetoran] = React.useState(false)
     const [newBalance, setNewBalance] = React.useState(0);
     const [validation, setValidation] = React.useState(false)
     const [image, setImage] = React.useState("");
@@ -235,6 +336,17 @@ export default function StudentTable(props) {
         setPayMethod("")
         setOpenDialog(false)
     }
+    const handleCloseDialogSetoran = () => {
+        datas = student
+        setStudentId("")
+        setBalance("")
+        setTransType("")
+        setDescription("")
+        setAmount(0)
+        setActor("")
+        setPayMethod("")
+        setOpenDialogSetoran(false)
+    }
     const handleOpenDialog = (data) => {
         // datas.push(student.filter(x => x.id == data.id))
         datas = student.filter(x => x.id == data.id)
@@ -243,6 +355,15 @@ export default function StudentTable(props) {
         setBalance(data.balance)
         console.log(datas[0])
         setOpenDialog(true)
+    }
+    const handleOpenDialogSetoran = (data) => {
+        // datas.push(student.filter(x => x.id == data.id))
+        datas = student.filter(x => x.id == data.id)
+        setStudentId(data.student_id)
+        setStudentName(data.fullName)
+        setBalance(data.balance)
+        console.log(datas[0])
+        setOpenDialogSetoran(true)
     }
 
     const handleAmountChange = (event) => {
@@ -254,12 +375,22 @@ export default function StudentTable(props) {
         }
     };
 
+    const handlePayMethodChange = (event) => {
+        const value = event.target.value;
+        // setPayMethod(value === 'Lainnya' ? '' : value);
+    };
+
+    const handleActorChange = (event) => {
+        const value = event.target.value;
+        setActor(value === 'Lainnya' ? '' : value);
+    };
+
     const saving = () => {
         setValidation(false)
         setNewBalance(0)
         let calculate = 0
         calculate = parseInt(balance) + parseInt(amount)        
-        setTransType("Saving")
+        setTransType("Setoran")
         setNewBalance(calculate)        
         
     }
@@ -272,16 +403,15 @@ export default function StudentTable(props) {
         {
             setValidation(true)
         }
-        setTransType("Payment")
+        setTransType("Pembayaran")
         setNewBalance(calculate)                
     }
 
     const handleSnackbarClose = () => {
         setOpenSnackbar(false);
-      };
+    };
 
     //FUNCTION ADD TRANSACTION
-    
     const addTransaction = (event) => {
         event.preventDefault();
         let emails = student.find(x => x.student_id == studentId);
@@ -293,11 +423,12 @@ export default function StudentTable(props) {
                 id: id,
                 student_id: studentId,
                 user_id: user.id,
-                amount: amount,
-                payMethod: payMethod,
-                actor: actor,
+                amount: amount,                
+                //  payMethod: condition ? true : false, (ini nama tehnik nya tennary)
+                payMethod: payMethod.toLowerCase() == "lainnya" ? otherPayMethod : payMethod,
+                actor: actor.toLowerCase() == "lainnya" ? otherActor : actor,
+                description: description.toLowerCase() == "lainnya" ? otherDescription : description,
                 transType: transType,
-                description: description,
                 balance: balance,
                 newBalance : newBalance,
                 email: emails.email,     
@@ -309,7 +440,6 @@ export default function StudentTable(props) {
             });
             setSnackbarSeverity('success');
             setSnackbarMessage('Successfully Saved!');
-            
         }else{
             setSnackbarSeverity('error');
             setSnackbarMessage('Failed to pay :( Your balance is not enough.');
@@ -326,7 +456,22 @@ export default function StudentTable(props) {
 
     return (
         <div>
-            <Typography variant="h4">TRANSACTION</Typography>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography variant="h4">TRANSAKSI</Typography>
+                {(()=>{
+                    if(user.isSuperAdmin == false)
+                    {
+                    return(
+                        <div>
+                        <Button variant="contained" style={{ backgroundColor: "#A8A196", color: "#ffffff" }} onClick={() => {window.location.href="/dashboard"}}>
+                            Dashboard
+                        </Button>
+                        </div>
+                        )
+                    }
+                })()}
+            </div>
+            
             <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
@@ -337,11 +482,12 @@ export default function StudentTable(props) {
                     <Grid item xs={12}>
                         <TextField
                             variant="outlined"
+                            size="small"
                             onChange={(event) => {
-                                setSearchName(event.target.value);
+                            setSearchQuery(event.target.value);
                             }}
-                            value={searchName}
-                            label="search"
+                            value={searchQuery}
+                            label="Cari Siswa"
                             fullWidth={true}
                         />
                     </Grid>
@@ -364,54 +510,49 @@ export default function StudentTable(props) {
                                         align="center"
                                         style={{ borderTopLeftRadius: "1vw" }}
                                     >
-                                        Student ID
+                                        ID Siswa
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Full Name
+                                        Nama
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        School Placement
+                                        Sekolah
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ wordBreak: "break-word" }}
                                     >
-                                        Balance
+                                        Saldo
                                     </StyledTableCell>
                                     <StyledTableCell
                                         align="center"
                                         style={{ borderTopRightRadius: "1vw" }}
                                     >
-                                        Actions
+                                        Action
                                     </StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
                                 {(rowsPerPage > 0
                                     ? student
-                                          .filter((data) => {
-                                              if (searchName == "") {
-                                                  return data;
-                                              } else if (
-                                                  data.fullName
-                                                      .toLowerCase()
-                                                      .includes(
-                                                          searchName.toLowerCase()
-                                                      )
-                                              ) {
-                                                  return data;
-                                              }
-                                          })
-                                          .slice(
-                                              page * rowsPerPage,
-                                              page * rowsPerPage + rowsPerPage
-                                          )
+                                    .filter((data) => {
+                                      if (searchQuery === "") {
+                                        return data; // No search criteria provided, return all data
+                                      } else {
+                                        const query = searchQuery.toLowerCase();
+                                        return (
+                                          data.fullName.toLowerCase().includes(query) ||
+                                          data.student_id.toString().includes(query)// Assuming student_id is a number
+                                        );
+                                      }
+                                    })
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     : student
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>
@@ -448,8 +589,11 @@ export default function StudentTable(props) {
                                              align="center"
                                              scope="row"
                                         >
-                                            <Button variant = 'contained' color = 'primary' onClick = {() => {handleOpenDialog(data)}}>
-                                                OPEN
+                                            <Button variant = 'contained' color = 'primary' onClick = {() => {handleOpenDialogSetoran(data)}}>
+                                                SETORAN
+                                            </Button>
+                                            <Button variant = 'contained' color = 'secondary' onClick = {() => {handleOpenDialog(data)}}>
+                                                PEMBAYARAN
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -504,10 +648,10 @@ export default function StudentTable(props) {
                 </Grid>
             </Paper>
 
-            {/* ================================ ADD TRANSACTION DIALOG ==============================  */}
+            {/* ================================ PEMBAYARAN DIALOG ==============================  */}
              <Dialog onClose={handleCloseDialog} open={openDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle>
-                    ADD  TRANSACTION
+                    PEMBAYARAN SISWA
                     <IconButton
                         variant="contained"
                         color="secondary"                        
@@ -522,75 +666,111 @@ export default function StudentTable(props) {
                     <div>
                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={2}>
                             {/* ======================== STUDENT PROFILE ======================== */}
-                            <Grid item xs = {12} sm = {12} lg ={5}>
+                            <Grid item xs = {12} sm = {12} lg ={12}>
                                 <Accordion expanded = {true}>
-                                    <AccordionSummary>
-                                    STUDENT PROFILE
-                                    </AccordionSummary>
                                     <AccordionDetails>
                                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={1}>
-                                            <Grid item xs = {4}>
+                                            <Grid item xs = {2}>
                                                 <Card style = {{height:'40vh'}}>
                                                     <CardContent>
                                                     {
                                                         datas.map((data, key) => (
-                                                            <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                            <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
                                                         ))
                                                     }
                                                     </CardContent>
                                                 </Card>
                                             </Grid>
-                                            <Grid item xs = {8}>
+                                            <Grid item xs = {5}>
                                                 <Card>
                                                     <CardContent>
                                                         <Typography>
                                                             {
                                                                 datas.map((data, key) => (
                                                                     <div>
-                                                                            {/* <Typography>
-                                                                                Student ID : {data.student_id}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                School ID : {data.school_id}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Name : {data.fullName}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Gender : {data.gender}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Class Type : {data.classType}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Parent : {data.parentName}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Contact : {data.contact}
-                                                                            </Typography>
-                                                                            <Typography>
-                                                                                Balance : {data.balance}
-                                                                            </Typography> */}
-                                                                            <Table>
-                                                                                <TableRow>
-                                                                                    <TableCell>
-                                                                                        Student Id :
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        {data.student_id}
-                                                                                    </TableCell>
-                                                                                </TableRow>
-                                                                                <TableRow>
-                                                                                    <TableCell>
-                                                                                        School Id :
-                                                                                    </TableCell>
-                                                                                    <TableCell>
-                                                                                        {data.school_id}
-                                                                                    </TableCell>
-                                                                                </TableRow>
-
-                                                                            </Table>
-                                                                        </div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Sekolah :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.school_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Nama :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.fullName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jenis Kelamin :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.gender}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kelas :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.classType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Orang Tua/Wali :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.parentName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kontak :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.contact}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.balance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
                                                                 ))
                                                             }
                                                         </Typography>
@@ -603,19 +783,20 @@ export default function StudentTable(props) {
                             </Grid>
 
                             {/* ======================== FORM ========================== */}
-                            <Grid item xs = {12} sm = {12} lg ={7}>
+                            <Grid item xs = {12} sm = {12} lg ={12}>
                                 <Accordion expanded = {true}>
                                     <AccordionSummary>
-                                        FORM
+                                        FORM TRANSAKSI
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1}>
                                             {/* AMOUNT */}
                                             <Grid item xs = {12}>
                                                 <TextField
-                                                    label="Amount"
+                                                    label="Jumlah"
                                                     variant="filled"
                                                     fullWidth="true"
+                                                    size = 'small'
                                                     InputProps={{
                                                         startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
                                                       }}
@@ -625,48 +806,140 @@ export default function StudentTable(props) {
                                             </Grid>
 
                                             {/* DESCRIPTION */}
-                                            <Grid item xs = {6}>
+                                            <Grid item xs = {12}>
                                                 <TextField
-                                                    label="Description"
+                                                    select
+                                                    label="Tujuan Pembayaran:"
                                                     variant="outlined"
                                                     fullWidth="true"
+                                                    size = 'small'
                                                     value = {description}
                                                     onChange = {(event) => {setDescription(event.target.value)}}
-                                                />               
+                                                    SelectProps={{
+                                                    native: true,
+                                                    }}
+                                                >
+                                                    {descriptions.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>
+                                                {(()=>{
+                                                    if(description.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Isi metode pembayaran"
+                                                                    value={otherDescription}
+                                                                    onChange={(event) => setOtherDescription(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                    </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}
                                             </Grid>
 
-                                            {/* ACTOR */}
+                                           {/* PAYMENT METHOD */}
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    select
+                                                    label="Metode pembayaran:"
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    size = 'small'
+                                                    value={payMethod}
+                                                    onChange = {(event) => {setPayMethod(event.target.value)}}
+                                                    SelectProps={{
+                                                    native: true,
+                                                    }}
+                                                >
+                                                    {payMethods1.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>
+                                                {(()=>{
+                                                    if(payMethod.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Isi metode pembayaran"
+                                                                    value={otherPayMethod}
+                                                                    onChange={(event) => setOtherPayMethod(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                    </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}
+                                            </Grid>     
+
+                                             {/* ACTOR */}
                                             <Grid item xs = {6}>
                                                 <TextField
-                                                    label="Payer"
+                                                    select
+                                                    label="Telah diterima dari:"
                                                     variant="outlined"
                                                     fullWidth="true"
+                                                    size = 'small'
                                                     value = {actor}
                                                     onChange = {(event) => {setActor(event.target.value)}} 
-                                                />            
-                                            </Grid>  
-
-                                            {/* PAYMENT METHOD */}
-                                            <Grid item xs = {6}>
-                                                <TextField
-                                                    label="Payment Method"
-                                                    variant="outlined"
-                                                    fullWidth="true"
-                                                    value = {payMethod}
-                                                    onChange = {(event) => {setPayMethod(event.target.value)}}
-                                                />             
-                                            </Grid>
+                                                    SelectProps={{
+                                                        native: true,
+                                                    }}
+                                                >
+                                                    {actors.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>   
+                                                {(()=>{
+                                                    if(actor.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Telah diterima dari:"
+                                                                    value={otherActor}
+                                                                    onChange={(event) => setOtherActor(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}        
+                                            </Grid>                                                                                     
+                                            
+                                             
 
                                             {/* ACTIONS */}
-                                            <Grid item xs = {6}>
+                                            <Grid item xs = {12}>
                                                 <form method="post" onSubmit={addTransaction}>
                                                     <Button 
                                                     variant='contained' 
                                                     type = "submit"
                                                     color='secondary' 
-                                                    style = {{float:'center', marginLeft:'10vw'}} 
+                                                    style = {{float:'center', marginBottom: '-2vh', width:"100%"}} 
                                                     onClick = {payments}>
-                                                        PAYMENT
+                                                        PEMBAYARAN
                                                     </Button>
                                                     <Snackbar
                                                     open={openSnackbar}
@@ -683,18 +956,308 @@ export default function StudentTable(props) {
                                                         },
                                                     }}
                                                     />
-                                                </form> 
-                                                <br/>   
+                                                </form>  
+                                            </Grid>
+                                        </Grid>                      
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>        
+                        </Grid>
+                    </div>
+                </DialogContent>                
+            </Dialog>
+
+            {/* ================================ SETORAN DIALOG ==============================  */}
+            <Dialog onClose={handleCloseDialogSetoran} open={openDialogSetoran} fullWidth={true} maxWidth={false} keepMounted>
+                <DialogTitle>
+                    SETORAN SISWA
+                    <IconButton
+                        variant="contained"
+                        color="secondary"                        
+                        style = {{float:'right'}}
+                        onClick={handleCloseDialogSetoran}
+                    >           
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+
+                <DialogContent dividers>
+                    <div>
+                        <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={2}>
+                            {/* ======================== STUDENT PROFILE ======================== */}
+                            <Grid item xs = {12} sm = {12} lg ={12}>
+                                <Accordion expanded = {true}>
+                                    <AccordionDetails>
+                                        <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={1}>
+                                            <Grid item xs = {2}>
+                                                <Card style = {{height:'40vh'}}>
+                                                    <CardContent>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                        ))
+                                                    }
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Sekolah :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.school_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Nama :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.fullName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jenis Kelamin :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.gender}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kelas :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.classType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Orang Tua/Wali :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.parentName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kontak :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.contact}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.balance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
+
+                            {/* ======================== FORM ========================== */}
+                            <Grid item xs = {12} sm = {12} lg ={12}>
+                                <Accordion expanded = {true}>
+                                    <AccordionSummary>
+                                        FORM TRANSAKSI
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1}>
+                                            {/* JUMLAH */}
+                                            <Grid item xs = {12}>
+                                                <TextField
+                                                    label="Jumlah"
+                                                    variant="filled"
+                                                    fullWidth="true"
+                                                    size = 'small'
+                                                    InputProps={{
+                                                        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+                                                      }}
+                                                    value = {amount}
+                                                    onChange={handleAmountChange}
+                                                />                                  
+                                            </Grid>
+
+                                            {/* TUJUAN */}
+                                            <Grid item xs = {12}>
+                                                <TextField
+                                                    select
+                                                    label="Tujuan Pembayaran:"
+                                                    variant="outlined"
+                                                    fullWidth="true"
+                                                    size = 'small'
+                                                    value = {description}
+                                                    onChange = {(event) => {setDescription(event.target.value)}}
+                                                    SelectProps={{
+                                                    native: true,
+                                                    }}
+                                                >
+                                                    {descriptions1.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>  
+                                                {(()=>{
+                                                    if(description.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Isi metode pembayaran"
+                                                                    value={otherDescription}
+                                                                    onChange={(event) => setOtherDescription(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                    </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}         
+                                            </Grid>
+
+                                           {/* PAYMENT METHOD */}
+                                            <Grid item xs={6}>
+                                                <TextField
+                                                    select
+                                                    label="Metode pembayaran:"
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    size = 'small'
+                                                    value={payMethod}
+                                                    onChange = {(event) => {setPayMethod(event.target.value)}}
+                                                    SelectProps={{
+                                                    native: true,
+                                                    }}
+                                                >
+                                                    {payMethods2.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>
+                                                {(()=>{
+                                                    if(payMethod.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Isi metode pembayaran"
+                                                                    value={otherPayMethod}
+                                                                    onChange={(event) => setOtherPayMethod(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                    </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}
+                                            </Grid>     
+
+                                             {/* ACTOR */}
+                                            <Grid item xs = {6}>
+                                                <TextField
+                                                    select
+                                                    label="Telah diterima dari:"
+                                                    variant="outlined"
+                                                    fullWidth="true"
+                                                    size = 'small'
+                                                    value = {actor}
+                                                    onChange = {(event) => {setActor(event.target.value)}} 
+                                                    SelectProps={{
+                                                        native: true,
+                                                    }}
+                                                >
+                                                    {actors.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                    ))}
+                                                </TextField>   
+                                                {(()=>{
+                                                    if(actor.toLowerCase() == "lainnya")
+                                                    {
+                                                        return(
+                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
+                                                                <Grid item xs={12}>
+                                                                    <TextField
+                                                                    label="Telah diterima dari:"
+                                                                    value={otherActor}
+                                                                    onChange={(event) => setOtherActor(event.target.value)}
+                                                                    fullWidth
+                                                                    size = 'small'
+                                                                    variant="outlined"
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        )   
+                                                    }
+                                                })()}        
+                                            </Grid>                                                                                     
+                                            {/* ACTIONS */}
+                                            <Grid item xs = {12}>                                                   
                                                 <form method="post" onSubmit={addTransaction}>
                                                     <Button 
                                                     variant='contained' 
                                                     color='primary'
                                                     type = "submit"
-                                                    style = {{float:"center", marginLeft:'10vw'}} 
+                                                    style = {{float:"center",width:"100%"}} 
                                                     onClick = 
                                                     {saving}
                                                     >
-                                                        SAVING
+                                                        SETORAN
                                                     </Button>
                                                     <Snackbar
                                                     open={openSnackbar}
@@ -720,7 +1283,16 @@ export default function StudentTable(props) {
                         </Grid>
                     </div>
                 </DialogContent>                
-            </Dialog>       
+            </Dialog> 
+
+            <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Router>
+                    <Switch>
+                        <Route path='/dashboard' exact component={Dashboard}/>
+                    </Switch>
+                </Router>
+            </main>      
         </div>
     );
 }

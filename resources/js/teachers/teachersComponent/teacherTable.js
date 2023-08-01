@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -264,6 +264,7 @@ export default function TeacherTable(props) {
         rowsPerPage - Math.min(rowsPerPage, teacher.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
+    const [searchQuery, setSearchQuery] = useState('');
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
@@ -446,7 +447,7 @@ export default function TeacherTable(props) {
 
     return (
         <div>
-            <Typography variant="h4">TEACHER DATA</Typography>
+            <Typography variant="h4">DATA GURU</Typography>
             <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
                 <Grid
                     container
@@ -457,12 +458,13 @@ export default function TeacherTable(props) {
                     <Grid item xs={6}>
                         <TextField
                             variant="outlined"
+                            size="small"
                             onChange={(event) => {
-                                setSearchName(event.target.value);
+                            setSearchQuery(event.target.value);
                             }}
-                            value={searchName}
-                            label="search"
-                            fullWidth={true}
+                            value={searchQuery}
+                            label="Cari Guru"
+                            style={{ width: '300px', height: '50px' }}
                         />
                     </Grid>
 
@@ -525,23 +527,18 @@ export default function TeacherTable(props) {
                             <TableBody>
                                 {(rowsPerPage > 0
                                     ? teacher
-                                          .filter((data) => {
-                                              if (searchName == "") {
-                                                  return data;
-                                              } else if (
-                                                  data.fullName
-                                                      .toLowerCase()
-                                                      .includes(
-                                                          searchName.toLowerCase()
-                                                      )
-                                              ) {
-                                                  return data;
-                                              }
-                                          })
-                                          .slice(
-                                              page * rowsPerPage,
-                                              page * rowsPerPage + rowsPerPage
-                                          )
+                                    .filter((data) => {
+                                      if (searchQuery === "") {
+                                        return data; // No search criteria provided, return all data
+                                      } else {
+                                        const query = searchQuery.toLowerCase();
+                                        return (
+                                          data.fullName.toLowerCase().includes(query) ||
+                                          data.teacher_id.toString().includes(query)// Assuming student_id is a number
+                                        );
+                                      }
+                                    })
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     : teacher
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>
@@ -583,13 +580,13 @@ export default function TeacherTable(props) {
                                                     backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
-                                                    width:"2vw",                                                    
+                                                    width:"6vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <InfoOutlinedIcon/>
+                                                More
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -670,10 +667,11 @@ export default function TeacherTable(props) {
             </Paper>
 
             {/* ================================= DETAILS TEACHER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} >
                 <DialogTitle className={classes.dialogTitle }>
-                    DETAILS TEACHER
+                    DETAIL GURU
                 </DialogTitle>
+
                 <DialogContent dividers>
                     <Grid container spacing ={1}>
                         <Grid item xs = {12}>
@@ -681,8 +679,8 @@ export default function TeacherTable(props) {
                             <Accordion expanded = {true} style = {{width: '100%'}}>
                                 <AccordionDetails>
                                     <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {6}>
-                                            <Card>
+                                        <Grid item = {4}>
+                                            <Card style = {{height:'50vh'}}>
                                                 <CardContent>
                                                 {
                                                     datas.map((data, key) => (
@@ -692,30 +690,62 @@ export default function TeacherTable(props) {
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                        <Grid item = {6}>
+                                        <Grid item = {8}>
                                             <Card>
                                                 <CardContent>
                                                 {
                                                     datas.map((data, key) => (
                                                         <div>
-                                                            <Typography>
-                                                                Teacher ID : {data.teacher_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Placement : {data.school_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Name : {data.fullName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Gender : {data.gender}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Class Type : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Contact : {data.contact}
-                                                            </Typography>
+                                                            <Table>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        ID Guru :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.teacher_id}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                       Penempatan :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.school_id}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        Nama :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.fullName}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        Jenis Kelamin :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.gender}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        Kelas :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.classType}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>
+                                                                        Kontak :
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {data.contact}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            </Table>
                                                         </div>
                                                     ))
                                                 }
@@ -816,6 +846,7 @@ export default function TeacherTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 disabled
+                                                size = 'small'
                                                 label="Teacher ID"
                                                 fullWidth="true"
                                                 variant="outlined"
@@ -828,6 +859,7 @@ export default function TeacherTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Teacher Name"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={teacherName}
@@ -839,6 +871,7 @@ export default function TeacherTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="contact"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={contact}
@@ -851,6 +884,7 @@ export default function TeacherTable(props) {
                                             <TextField
                                                 select
                                                 label="School Placement"
+                                                size = 'small'
                                                 value={schoolId}
                                                 onChange={(event) => {
                                                     setSchoolId(event.target.value);
@@ -873,6 +907,7 @@ export default function TeacherTable(props) {
                                             <TextField
                                                 select
                                                 label="Gender"
+                                                size = 'small'
                                                 value={gender}
                                                 onChange={(event) => {
                                                     setGender(event.target.value);
@@ -895,6 +930,7 @@ export default function TeacherTable(props) {
                                             <TextField
                                                 select
                                                 label="Class Type"
+                                                size = 'small'
                                                 value={classType}
                                                 onChange={(event) => {
                                                     setClassType(event.target.value);
@@ -1032,6 +1068,7 @@ export default function TeacherTable(props) {
                                         <TextField
                                             disabled
                                             label="Teacher ID"
+                                            size = 'small'
                                             fullWidth="true"
                                             variant="outlined"
                                             value={teacherId}
@@ -1043,6 +1080,7 @@ export default function TeacherTable(props) {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="Teacher Name"
+                                            size = 'small'
                                             fullWidth="true"
                                             variant="outlined"
                                             value={teacherName}
@@ -1054,6 +1092,7 @@ export default function TeacherTable(props) {
                                     <Grid item xs={4}>
                                         <TextField
                                             label="contact"
+                                            size = 'small'
                                             fullWidth="true"
                                             variant="outlined"
                                             value={contact}
@@ -1066,6 +1105,7 @@ export default function TeacherTable(props) {
                                         <TextField
                                             select
                                             label="School Placement"
+                                            size = 'small'
                                             value={schoolId}
                                             onChange={(event) => {
                                                 setSchoolId(event.target.value);
@@ -1088,6 +1128,7 @@ export default function TeacherTable(props) {
                                         <TextField
                                             select
                                             label="Gender"
+                                            size = 'small'
                                             value={gender}
                                             onChange={(event) => {
                                                 setGender(event.target.value);
@@ -1110,6 +1151,7 @@ export default function TeacherTable(props) {
                                         <TextField
                                             select
                                             label="Class Type"
+                                            size = 'small'
                                             value={classType}
                                             onChange={(event) => {
                                                 setClassType(event.target.value);

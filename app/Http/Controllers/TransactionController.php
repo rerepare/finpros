@@ -17,6 +17,7 @@ Use Auth;
 Use Validator;
 use App\Mail\TransactionNotification;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class TransactionController extends Controller{
     // public function auth(){
@@ -66,6 +67,28 @@ class TransactionController extends Controller{
         $student = DB::table('active_student')->where('student_id', $student_id)->first();
         $recipientEmail = $student->email;
 
+        // Retrieve the specific month from the request (e.g., '2023-06' for July 2023)
+        // $specificMonth = '2023-06'; // Replace this with the specific month you want to retrieve
+
+        $specificMonth = $request->input('specific_month');
+
+        $transactionHistory = DB::table('transaction')->where('student_id', $student_id)->orderBy('created_at', 'desc')->get();
+
+        // Filter transaction history based on the specific month
+        $filteredHistory = $transactionHistory->filter(function ($transaction) use ($specificMonth) {
+            if ($specificMonth) {
+                $transactionMonth = date('Y-m', strtotime($transaction->created_at));
+                return $transactionMonth === $specificMonth;
+            }
+            return true;
+        });
+
+        // Filter transaction history if the specific month already specified above
+        // $filteredHistory = $transactionHistory->filter(function ($transaction) use ($specificMonth) {
+        //     $transactionMonth = date('Y-m', strtotime($transaction->created_at));
+        //     return $transactionMonth === $specificMonth;
+        // });
+
         // Send email notification
         $transactionData = [
             'id' => $id,
@@ -75,9 +98,54 @@ class TransactionController extends Controller{
             'description' => $description,
             'payMethod' => $payMethod,
             'newBalance' => $newBalance,
+            'transactionHistory' => $filteredHistory,
             // Add other transaction data as needed
         ];
-        Mail::to($recipientEmail)->send(new TransactionNotification($transactionData));
+
+        // Generate the PDF with filtered transaction history for the specific month
+        $pdfData = $this->generatePDF($transactionData, $specificMonth);
+
+        // Send email notification with PDF attachment
+        $this->sendEmailWithPDF($recipientEmail, $transactionData);
+    }
+
+    public function generatePDF($transactionData, $specificMonth = null)
+    {
+        //if specificMont is already filtered it in the addTransaction function, don't need to filter the transaction history again
+        if ($specificMonth !== null) {
+            // Filter transaction history based on the specific month
+            $filteredHistory = $transactionData['transactionHistory']->filter(function ($transaction) use ($specificMonth) {
+                $transactionMonth = date('Y-m', strtotime($transaction->created_at));
+                return $transactionMonth === $specificMonth;
+            });
+    
+            $transactionData['transactionHistory'] = $filteredHistory;
+        }
+
+        $dompdf = new Dompdf();
+        $html = view('emails.transaction_pdf', compact('transactionData'))->render();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Save the PDF to a temporary location or send it directly to the email
+        $pdfContent = $dompdf->output();
+        // You can save the PDF to a temporary location if needed
+        // file_put_contents('path_to_save_temporary_pdf.pdf', $pdfContent);
+
+        return $pdfContent;
+    }
+
+
+    public function sendEmailWithPDF($recipientEmail, $transactionData)
+    {
+        // Generate the PDF using the 'generatePDF' method from Step 1
+        $pdfContent = $this->generatePDF($transactionData);
+
+        // Send the email with the PDF attachment
+        Mail::to($recipientEmail)->send(new TransactionNotification($transactionData, $pdfContent));
+
+        return "Email sent with PDF attachment!";
     }
 
     public function history(){
@@ -100,5 +168,33 @@ class TransactionController extends Controller{
         DB::table('transaction')->where('id', $id)->delete();
     }
 
-    public
+    // public function generateTransactionHistoryPDF($student_id)
+    // {
+    //     // Get the transaction history data for the specific student
+    //     $transactionHistory = // Retrieve the transaction history data, e.g., from a database query
+
+    //     // Convert the transaction history data to an HTML table
+    //     $table = '<table>';
+    //     foreach ($transactionHistory as $transaction) {
+    //         $table .= '<tr>';
+    //         $table .= '<td>' . $transaction->id . '</td>';
+    //         $table .= '<td>' . $transaction->amount . '</td>';
+    //         // Add other transaction data as needed
+    //         $table .= '</tr>';
+    //     }
+    //     $table .= '</table>';
+
+    //     // Use dompdf to generate the PDF
+    //     $options = new Options();
+    //     $options->set('isRemoteEnabled', true);
+    //     $dompdf = new Dompdf($options);
+    //     $dompdf->loadHtml($table);
+    //     $dompdf->render();
+
+    //     // Save the PDF on the server or return it as a response
+    //     $pdfContent = $dompdf->output();
+    //     // You can save $pdfContent to a file if you want to keep a copy on the server
+
+    //     return $pdfContent;
+    // }
 }

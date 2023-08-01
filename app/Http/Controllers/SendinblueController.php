@@ -40,10 +40,8 @@ class SendinblueController
         ])->post($url, $data);
 
         if ($response->successful()) {
-            // Email sent successfully
             return true;
         } else {
-            // Failed to send email
             return false;
         }
     }

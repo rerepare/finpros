@@ -28,7 +28,7 @@ const levels = [
     },
     {
         value: '1',
-        label: 'SUPER ADMIN',
+        label: 'HEADMASTER',
     },
     {
         value: '0',
@@ -410,19 +410,7 @@ export default function UserTable(props) {
                     alignItems="center"
                     justifyContent="center"
                     spacing={2}>
-                    <Grid item xs={6}>
-                        <TextField
-                            variant="outlined"
-                            onChange={(event) => {
-                                setSearchName(event.target.value);
-                            }}
-                            value={searchName}
-                            label="search"
-                            fullWidth={true}
-                        />
-                    </Grid>
-
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <div className="mr-auto">
                             <Button
                                 variant="contained"
@@ -520,7 +508,7 @@ export default function UserTable(props) {
                                                 {
                                                     return(
                                                         <Typography>
-                                                            Super Admin
+                                                            Headmaster
                                                         </Typography>
                                                     )
                                                 }
@@ -544,13 +532,13 @@ export default function UserTable(props) {
                                                     backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
-                                                    width:"2vw",                                                    
+                                                    width:"6vw",                                                   
                                                 }}
                                                 onClick={() => {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <InfoOutlinedIcon />
+                                                More
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -631,75 +619,103 @@ export default function UserTable(props) {
             </Paper>
 
             {/* ================================= DETAILS USER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
-                    DETAILS USER
+                    DETAIL USER
                 </DialogTitle>
+                
                 <DialogContent dividers>
-                    <Grid container spacing ={1}>
-                        <Grid item xs = {12}>
-                            <div>
+                    <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing={2}>
+                        <Grid item xs = {12} sm = {12} lg ={12}>
                             <Accordion expanded = {true} style = {{width: '100%'}}>
                                 <AccordionDetails>
                                     <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item xs = {6}>
-                                            <Card>
+                                        <Grid item xs = {3}>
+                                            <Card style = {{height:'40vh'}}>
                                                 <CardContent>
                                                 {
                                                     datas.map((data, key) => (
-                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/user/" + data.image} />
+                                                        <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/user/" + data.image} />
                                                     ))
                                                 }
                                                 </CardContent>
                                             </Card>
                                         </Grid>
-                                        <Grid item xs = {6}>
+                                        <Grid item xs = {9}>
                                             <Card>
                                                 <CardContent>
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <div>
-                                                            <Typography>
-                                                                User ID : {data.user_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Full Name : {data.name}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Username : {data.userName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Password : {data.password}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Level : {(()=>{
-                                                                    if(data.isSuperAdmin == 1)
-                                                                    {
-                                                                        return(
-                                                                            <Typography>
-                                                                                Super Admin
-                                                                            </Typography>
-                                                                        )
-                                                                    }
-                                                                    else{
-                                                                        return(
-                                                                            <Typography>
-                                                                                Admin
-                                                                            </Typography>
-                                                                        )
-                                                                    }
-                                                                })()}
-                                                            </Typography>
-                                                        </div>
-                                                    ))
-                                                }
+                                                    <Typography>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <div>
+                                                                <Table>
+                                                                    <TableRow>
+                                                                        <TableCell>
+                                                                            ID User :
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {data.user_id}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                    <TableRow>
+                                                                        <TableCell>
+                                                                            Nama User :
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {data.name}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                    <TableRow>
+                                                                        <TableCell>
+                                                                            Username :
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {data.userName}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                    <TableRow>
+                                                                        <TableCell>
+                                                                            Password :
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {data.password}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                    <TableRow>
+                                                                        <TableCell>
+                                                                            User Level :
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {(()=>{
+                                                                                if(data.isSuperAdmin == 1)
+                                                                                {
+                                                                                    return(
+                                                                                        <Typography>
+                                                                                            Headmaster
+                                                                                        </Typography>
+                                                                                    )
+                                                                                }
+                                                                                else{
+                                                                                    return(
+                                                                                        <Typography>
+                                                                                            Admin
+                                                                                        </Typography>
+                                                                                    )
+                                                                                }
+                                                                            })()}
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                </Table>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                    </Typography>
                                                 </CardContent>
                                             </Card>
                                         </Grid>
                                     </Grid>        
                                 </AccordionDetails>
                             </Accordion>
-                            </div>
                         </Grid>
                     </Grid>
                 </DialogContent>

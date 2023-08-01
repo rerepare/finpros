@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -304,18 +304,7 @@ export default function SchoolTable(props) {
                     alignItems="center"
                     justifyContent="center"
                     spacing={2}>
-                    <Grid item xs={6}>
-                        <TextField
-                            variant="outlined"
-                            onChange={(event) => {
-                                setSearchName(event.target.value);
-                            }}
-                            value={searchName}
-                            label="search"
-                            fullWidth={true}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <div className="mr-auto">
                             <Button
                                 variant="contained"

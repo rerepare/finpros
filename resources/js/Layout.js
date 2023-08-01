@@ -25,7 +25,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PersonIcon from '@material-ui/icons/Person';
@@ -176,6 +175,7 @@ export default function Layout() {
   return (
     <div className={classes.root}>
       <CssBaseline />
+
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -184,7 +184,12 @@ export default function Layout() {
         style={{backgroundColor:"#FF6D28"}}
       >
         <Toolbar>
-          <IconButton
+        {(()=>{
+        if(user.isSuperAdmin == true)
+        {
+          return(
+            <div>
+              <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -195,6 +200,10 @@ export default function Layout() {
           >
             <MenuIcon />
           </IconButton>
+            </div>
+            )
+        }
+      })()}
 
           <Typography variant="h6" noWrap>
             STUDENT SAVING MANAGEMENT SYSTEM
@@ -232,120 +241,121 @@ export default function Layout() {
             </div>
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
-        }}>
 
-        <div className={classes.toolbar}>
-          {/* tambah logo tk */}
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </div>
+      {(()=>{
+        if(user.isSuperAdmin == true)
+        {
+          return(
+            <div>
+              <Drawer
+              variant="permanent"
+              className={clsx(classes.drawer, {
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+              })}
+              classes={{
+                paper: clsx({
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+                }),
+              }}>
+                <div className={classes.toolbar}>
+                  {/* tambah logo tk */}
+                  <IconButton onClick={handleDrawerClose}>
+                    {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                  </IconButton>
+                </div>
 
-        <Divider />
+                <Divider />
 
-        {(()=>{
-          if(user.isSuperAdmin == true)
-          {
-            return(
-              <div>
                 <List>
-          <ListItem button onClick={() => {window.location.href="/dashboard"}}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Dashboard"} />
-          </ListItem>
+                        <ListItem button onClick={() => {window.location.href="/dashboard"}}>
+                          <ListItemIcon>
+                            <DashboardIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={"Dashboard"} />
+                        </ListItem>
 
-          <ListItem button onClick={handleClick}>
-            <ListItemIcon>
-              <StorageIcon />
-            </ListItemIcon>
-            <ListItemText primary="Data Master" />
-            {openList ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
+                        <ListItem button onClick={handleClick}>
+                          <ListItemIcon>
+                            <StorageIcon />
+                          </ListItemIcon>
+                          <ListItemText primary="Data Master" />
+                          {openList ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
 
-          <Collapse in={openList} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/activeStudents"}}>
-                <ListItemIcon>
-                  <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary="Data Siswa"/>
-              </ListItem>
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/schools"}}>
-                <ListItemIcon>
-                  <SchoolIcon />
-                </ListItemIcon>
-                <ListItemText primary="Data Sekolah" />
-              </ListItem>
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/teachers"}}>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-                <ListItemText primary="Data Guru" />
-              </ListItem>
-            </List>
-          </Collapse>
+                        <Collapse in={openList} timeout="auto" unmountOnExit>
+                          <List component="div" disablePadding>
+                            <ListItem button className={classes.nested} onClick={() => {window.location.href="/activeStudents"}}>
+                              <ListItemIcon>
+                                <PeopleIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="Data Siswa"/>
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => {window.location.href="/schools"}}>
+                              <ListItemIcon>
+                                <SchoolIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="Data Sekolah" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => {window.location.href="/teachers"}}>
+                              <ListItemIcon>
+                                <PersonIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="Data Guru" />
+                            </ListItem>
+                          </List>
+                        </Collapse>
 
-          <ListItem button onClick={() => {window.location.href="/user"}}>
-            <ListItemIcon>
-              <SupervisedUserCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary={"User"}/>
-          </ListItem>
-        </List>
+                        <ListItem button onClick={() => {window.location.href="/user"}}>
+                          <ListItemIcon>
+                            <SupervisedUserCircleIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={"User"}/>
+                        </ListItem>
+                </List>
 
-        <Divider />
-              </div>
-            )
-          }
-        })()}
+                <Divider />
+                <List>
+                  <ListItem button onClick={() => {window.location.href="/transaction"}}>
+                    <ListItemIcon>
+                      <SwapHorizontalCircleOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Transaksi" />
+                  </ListItem>
 
-        <List>
-          <ListItem button onClick={() => {window.location.href="/transaction"}}>
-            <ListItemIcon>
-              <SwapHorizontalCircleOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Transaksi" />
-          </ListItem>
+                  <ListItem button onClick={handleClickHistory}>
+                    <ListItemIcon>
+                      <BookmarksIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Riwayat" />          
+                    {openListHistory ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
 
-          <ListItem button onClick={handleClickHistory}>
-            <ListItemIcon>
-              <BookmarksIcon />
-            </ListItemIcon>
-            <ListItemText primary="Riwayat" />          
-            {openListHistory ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
+                  <Collapse in={openListHistory} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      <ListItem button className={classes.nested} onClick={() => {window.location.href="/history"}}>
+                        <ListItemIcon>
+                          <ReceiptIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Riwayat Transaksi" />
+                      </ListItem>  
+                      <ListItem button className={classes.nested} onClick={() => {window.location.href="/report"}}>
+                        <ListItemIcon>
+                          <ReceiptIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Laporan Siswa" />
+                      </ListItem>  
+                    </List>
+                  </Collapse>   
+                </List>
+              </Drawer>
+            </div>
+          )
+        }
+      })()}
 
-          <Collapse in={openListHistory} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/history"}}>
-                <ListItemIcon>
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary="Data Transaksi" />
-              </ListItem>  
-              <ListItem button className={classes.nested} onClick={() => {window.location.href="/report"}}>
-                <ListItemIcon>
-                  <ReceiptIcon />
-                </ListItemIcon>
-                <ListItemText primary="Laporan Siswa" />
-              </ListItem>  
-            </List>
-          </Collapse>   
-        </List>
-      </Drawer>
+      
   
       <main className={classes.content}>
         <div className={classes.toolbar} />

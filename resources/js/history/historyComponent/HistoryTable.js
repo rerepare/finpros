@@ -1,7 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
+
+//page
+import Dashboard from '../../dashboard/Dashboard';
 
 //MATERIAL UI
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
@@ -26,25 +29,18 @@ const useStyles = makeStyles((theme) => ({
   dialogTitle: {
       textAlign: 'center',
   },
-}));
-const useStylesUpload = makeStyles((theme) => ({
-  img: {
-      height: 100,
-      display: 'block',
-      maxWidth: 200,
-      overflow: 'hidden',
-      width: '100%',
-      borderRadius:"5px",
-      boxShadow:"0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)"
-  },
-  input: {
-      display: 'none',
-  },
-  root: {
-      '& > *': {
-      margin: theme.spacing(1),
+  toolbar: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+    },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
       },
-  },
 }));
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -272,8 +268,21 @@ export default function HistoryTable(props) {
 
   return (
     <div>
-      {console.log(allHistory)}
-      <Typography variant="h4">RIWAYAT TRANSAKSI</Typography>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Typography variant="h4">RIWAYAT TRANSAKSI</Typography>
+            {(()=>{
+                if(user.isSuperAdmin == false)
+                {
+                return(
+                    <div>
+                    <Button variant="contained" style={{ backgroundColor: "#A8A196", color: "#ffffff" }} onClick={() => {window.location.href="/dashboard"}}>
+                        Dashboard
+                    </Button>
+                    </div>
+                    )
+                }
+            })()}
+        </div>
       <Paper elevation={4} style={{ padding: "25px", minHeight:"80vh" }}>
         <Grid
           container
@@ -284,11 +293,12 @@ export default function HistoryTable(props) {
           <Grid item xs={12}>
               <TextField
                   variant="outlined"
+                  size="small"
                   onChange={(event) => {
                       setSearchTransType(event.target.value);
                   }}
                   value={searchTransType}
-                  label="search"
+                  label="Cari Tipe Transaksi"
                   fullWidth={true}
               />
           </Grid>
@@ -406,18 +416,18 @@ export default function HistoryTable(props) {
                                   scope="row"
                               >
                                   <Button
-                                      variant="contained"                                                
-                                      style={{
-                                          backgroundColor: "#FFD93D",
-                                          marginBottom:'5px',
-                                          height:"5vh",
-                                          width:"2vw",                                                    
-                                      }}
-                                      onClick={() => {
-                                          handleOpenDetailsDialog(data);
-                                      }}
+                                    variant="contained"                                                
+                                    style={{
+                                    backgroundColor: "#FFD93D",
+                                    marginBottom:'5px',
+                                    height:"5vh",
+                                    width:"6vw",                                                    
+                                    }}
+                                    onClick={() => {
+                                        handleOpenDetailsDialog(data);
+                                    }}
                                   >
-                                      <InfoOutlinedIcon />
+                                      More
                                   </Button>
                                   <Button
                                       variant="contained"
@@ -484,63 +494,146 @@ export default function HistoryTable(props) {
       </Paper>
 
       {/* ================================= DETAILS TRANSACTION DIALOG ===============================  */}
-      <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+      <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL TRANSAKSI
                 </DialogTitle>
+
                 <DialogContent dividers>
-                    <Grid container spacing ={1}>
-                        <Grid item xs = {12}>
-                            <div>
-                            <Accordion expanded = {true} style = {{width: '100%'}}>
-                                <AccordionDetails>
-                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {12}>
-                                            <Card>
-                                                <CardContent >
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <div>
-                                                          <Typography>
-                                                                ID Transaksi : {data.id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                ID Siswa : {data.student_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Admin : {data.user_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Tipe Transaksi : {data.transType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Amount : {data.amount}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Saldo : {data.newBalance}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Metode Pembayaran : {data.payMethod}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Payer : {data.actor}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Deskripsi : {data.description}
-                                                            </Typography>
-                                                        </div>
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>                                
-                                </AccordionDetails>
-                            </Accordion>
-                            </div>
+                    <div>
+                        <Grid container spacing ={1}>
+                            <Grid item xs = {12}>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionDetails>
+                                        <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                            <Grid item xs = {4}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Transaksi:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID User:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.user_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {4}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Tipe Transaksi:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.transType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jumlah:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.amount}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.newBalance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {4}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Metode Pembayaran:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.payMethod}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Telah diterima dari:
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.actor}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Tujuan :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.description}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>                                
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
                 </DialogContent>
+
                 <DialogActions>
                     <Button
                         variant="contained"
@@ -550,7 +643,7 @@ export default function HistoryTable(props) {
                         CLOSE
                     </Button>
                 </DialogActions>
-      </Dialog>
+            </Dialog>
 
       {/* ================================= DELETE TRANSAKSI DIALOG ================================  */}
       <Dialog onClose={handleCloseDeleteDialog} open={openDeleteDialog}>
@@ -590,6 +683,15 @@ export default function HistoryTable(props) {
             </Button>
         </DialogActions>
       </Dialog>
+
+    <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Router>
+            <Switch>
+                <Route path='/dashboard' exact component={Dashboard}/>
+            </Switch>
+        </Router>
+    </main>
     </div>
   )
 }

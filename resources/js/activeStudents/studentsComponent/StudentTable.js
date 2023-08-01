@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
@@ -12,7 +12,6 @@ import { Button, IconButton } from "@material-ui/core";
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import AddIcon from '@material-ui/icons/Add';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
@@ -268,6 +267,7 @@ export default function StudentTable(props) {
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchName, setSearchName] = React.useState("");
+    const [searchQuery, setSearchQuery] = useState('');
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
@@ -479,12 +479,13 @@ export default function StudentTable(props) {
                     <Grid item xs={6}>
                         <TextField
                             variant="outlined"
+                            size="small"
                             onChange={(event) => {
-                                setSearchName(event.target.value);
+                            setSearchQuery(event.target.value);
                             }}
-                            value={searchName}
-                            label="search"
-                            fullWidth={true}
+                            value={searchQuery}
+                            label="Cari Siswa"
+                            style={{ width: '300px', height: '50px' }}
                         />
                     </Grid>
 
@@ -545,25 +546,20 @@ export default function StudentTable(props) {
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
-                                {(rowsPerPage > 0
+                            {(rowsPerPage > 0
                                     ? student
-                                          .filter((data) => {
-                                              if (searchName == "") {
-                                                  return data;
-                                              } else if (
-                                                  data.fullName
-                                                      .toLowerCase()
-                                                      .includes(
-                                                          searchName.toLowerCase()
-                                                      )
-                                              ) {
-                                                  return data;
-                                              }
-                                          })
-                                          .slice(
-                                              page * rowsPerPage,
-                                              page * rowsPerPage + rowsPerPage
-                                          )
+                                    .filter((data) => {
+                                      if (searchQuery === "") {
+                                        return data; // No search criteria provided, return all data
+                                      } else {
+                                        const query = searchQuery.toLowerCase();
+                                        return (
+                                          data.fullName.toLowerCase().includes(query) ||
+                                          data.student_id.toString().includes(query)// Assuming student_id is a number
+                                        );
+                                      }
+                                    })
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     : student
                                 ).map((data, key) => (
                                     <StyledTableRow key={key}>                                        
@@ -606,13 +602,13 @@ export default function StudentTable(props) {
                                                     backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
-                                                    width:"2vw",                                                    
+                                                    width:"6vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                <InfoOutlinedIcon />
+                                                More
                                             </Button>
                                             <Button
                                                 variant="contained"                                                
@@ -693,74 +689,134 @@ export default function StudentTable(props) {
             </Paper>
 
             {/* ================================= DETAILS STUDENT DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true}>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL SISWA
                 </DialogTitle>
+
                 <DialogContent dividers>
-                    <Grid container spacing ={1}>
-                        <Grid item xs = {12}>
-                            <div>
-                            <Accordion expanded = {true} style = {{width: '100%'}}>
-                                <AccordionDetails>
-                                    <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent>
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <img style = {{width:'100%', height:"250px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item = {6}>
-                                            <Card>
-                                                <CardContent >
-                                                {
-                                                    datas.map((data, key) => (
-                                                        <div>
-                                                            <Typography>
-                                                                ID Siswa : {data.student_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Cabang Sekolah : {data.school_id}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Nama : {data.fullName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Jenis Kelamin : {data.gender}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kelas : {data.classType}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Orang Tua : {data.parentName}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Kontak : {data.contact}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Email : {data.email}
-                                                            </Typography>
-                                                            <Typography>
-                                                                Saldo : {data.balance}
-                                                            </Typography>
-                                                        </div>
-                                                    ))
-                                                }
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>                                
-                                </AccordionDetails>
-                            </Accordion>
-                            </div>
+                    <div>
+                        <Grid container spacing ={1}>
+                            <Grid item xs = {12}>
+                                <Accordion expanded = {true} style = {{width: '100%'}}>
+                                    <AccordionDetails>
+                                        <Grid container direction='row' alignItems='center' justifyContent="center" spacing={1}>
+                                            <Grid item = {2}>
+                                                <Card style = {{height:'40vh'}}>
+                                                    <CardContent>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <img style = {{width:'100%', height:"200px", objectFit:'contain', margin:'auto' }} src = {"../images/student/" + data.image} />
+                                                        ))
+                                                    }
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    ID Siswa :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.student_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Sekolah :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.school_id}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Nama :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.fullName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Jenis Kelamin :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.gender}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                            <Grid item xs = {5}>
+                                                <Card>
+                                                    <CardContent>
+                                                        <Typography>
+                                                            {
+                                                                datas.map((data, key) => (
+                                                                    <div>
+                                                                        <Table>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kelas :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.classType}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Orang Tua/Wali :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.parentName}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Kontak :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.contact}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                            <TableRow>
+                                                                                <TableCell>
+                                                                                    Saldo :
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {data.balance}
+                                                                                </TableCell>
+                                                                            </TableRow>
+                                                                        </Table>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        </Grid>                                
+                                    </AccordionDetails>
+                                </Accordion>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
+                    
                 </DialogContent>
+
                 <DialogActions>
                     <Button
                         variant="contained"
@@ -849,6 +905,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 disabled
+                                                size = 'small'
                                                 label="ID Siswa"
                                                 fullWidth="true"
                                                 variant="outlined"
@@ -860,6 +917,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={8}>
                                             <TextField
+                                                size = 'small'
                                                 label="Nama Siswa"
                                                 fullWidth="true"
                                                 variant="outlined"
@@ -872,6 +930,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
+                                                size = 'small'
                                                 label="Cabang"
                                                 value={schoolId}
                                                 onChange={(event) => {
@@ -894,6 +953,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
+                                                size = 'small'
                                                 label="Jenis Kelamin"
                                                 value={gender}
                                                 onChange={(event) => {
@@ -916,6 +976,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
+                                                size = 'small'
                                                 label="Kelas"
                                                 value={classType}
                                                 onChange={(event) => {
@@ -938,6 +999,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Orang Tua/Wali"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={parentName}
@@ -960,6 +1022,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Email"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={email}
@@ -971,6 +1034,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={12}>
                                             <TextField
                                                 label="Saldo Tabungan"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={balance}
@@ -1098,6 +1162,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 disabled
+                                                size = 'small'
                                                 label="ID Siswa"
                                                 fullWidth="true"
                                                 variant="outlined"
@@ -1110,6 +1175,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={8}>
                                             <TextField
                                                 label="Nama"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={studentName}
@@ -1122,6 +1188,7 @@ export default function StudentTable(props) {
                                             <TextField
                                                 select
                                                 label="Cabang Sekolah"
+                                                size = 'small'
                                                 value={schoolId}
                                                 onChange={(event) => {
                                                     setSchoolId(event.target.value);
@@ -1143,6 +1210,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
+                                                size = 'small'
                                                 label="Jenis Kelamin"
                                                 value={gender}
                                                 onChange={(event) => {
@@ -1165,6 +1233,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
+                                                size = 'small'
                                                 label="Kelas"
                                                 value={classType}
                                                 onChange={(event) => {
@@ -1187,6 +1256,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Orang Tua/Wali"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={parentName}
@@ -1198,6 +1268,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Kontak"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={contact}
@@ -1209,6 +1280,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Email"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={email}
@@ -1220,6 +1292,7 @@ export default function StudentTable(props) {
                                         <Grid item xs={12}>
                                             <TextField
                                                 label="Saldo"
+                                                 size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={balance}
