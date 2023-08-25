@@ -235,18 +235,6 @@ export default function ReportTable(props) {
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [printData, setPrintData] = React.useState([])
 
-    //GET DATABASE
-    const [id, setId] = React.useState("");
-    const [studentId, setStudentId] = React.useState("");
-    const [schoolId, setSchoolId] = React.useState("");
-    const [image, setImage] = React.useState("");
-    const [studentName, setStudentName] = React.useState("");
-    const [gender, setGender] = React.useState("");
-    const [classType, setClassType] = React.useState("");
-    const [parentName, setParentName] = React.useState("");
-    const [contact, setContact] = React.useState("");
-    const [balance, setBalance] = React.useState("");
-
 
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
@@ -269,14 +257,11 @@ export default function ReportTable(props) {
 
     //PRINT
     class ComponentToPrint extends React.Component {    
-        render() {            
-            // console.log(this.props.detailData)
-            // const { print } = this.props;
-            // console.log(print)
+        render() {
           return (
             <div className='print-source'>
                 <Grid container direction = 'row' alignItems={'center'} justifyContent={'center'} spacing = {1}>
-                    <Grid item xs = {11} style = {{margin:'auto', padding : '20px'}}>
+                    <Grid item xs = {12} style = {{margin:'auto', padding : '20px'}}>
                         <Grid container direction = 'row' alignItems="center" justifyContent={'center'} spacing = {1}>
                             <Grid item xs = {3}>
                                 <Typography variant = "h4" style={{fontWeight:'bolder'}}>
@@ -284,20 +269,61 @@ export default function ReportTable(props) {
                                 </Typography>
                             </Grid>
                             <Grid item xs = {9}>
-                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                <Typography align='center' variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
                                     LAPORAN TABUNGAN SISWA 
                                 </Typography>
-                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                <Typography align='center' variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
                                     TKIT AL MANSHURIYYAH
                                 </Typography>
-                                <Typography variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
+                                <Typography  align='center' variant = "h4" style = {{color:'#e4d96f', fontWeight:'bold'}}>
                                     TAHUN PELAJARAN 2022-2023
                                 </Typography>                                
                             </Grid> 
-                            <hr />  
+                            <hr /> 
+                            <Grid item xs = {12}>
+                                <Grid container direction='row' alignItems='center' justifyContent="center" spacing={3}>
+                                    <Grid item xs = {6}>
+                                        <Card>
+                                            <CardContent>
+                                                <Typography>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <div>
+                                                                <Typography>ID Siswa: {data.student_id}</Typography>
+                                                                <Typography>Sekolah: {data.school_id}</Typography>
+                                                                <Typography>Nama:{data.fullName}</Typography>
+                                                                <Typography>Jenis Kelamin: {data.gender}</Typography>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid item xs = {6}>
+                                        <Card>
+                                            <CardContent>
+                                                <Typography>
+                                                    {
+                                                        datas.map((data, key) => (
+                                                            <div>
+                                                                <Typography>Kelas: {data.classType}</Typography>
+                                                                <Typography>Orang Tua/Wali: {data.parentName}</Typography>
+                                                                <Typography>Kontak: {data.contact}</Typography>
+                                                                <Typography>Saldo: {data.balance}</Typography>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                             <Grid item xs = {12}>
                                 <Table
                                 className={classes.table}
+                                style={{ marginTop: '20px' }}
                                 aria-label="customized table">
                                     <TableHead>
                                         <StyledTableRow
@@ -310,59 +336,62 @@ export default function ReportTable(props) {
                                                 align="center"
                                                 style={{ borderTopLeftRadius: "1vw" }}
                                             >
-                                                ID Siswa
+                                                TANGGAL
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 align="center"
                                                 style={{ wordBreak: "break-word"}}
                                             >
-                                                Nama
+                                                KETERANGAN
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 align="center"
                                                 style={{ wordBreak: "break-word" }}
                                             >
-                                                Pembayaran
+                                                MUTASI
                                             </StyledTableCell>
                                             <StyledTableCell
                                                 align="center"
                                                 style={{ wordBreak: "break-word",  borderTopRightRadius: "1vw" }}
                                             >
-                                                Tipe Transaksi
+                                                SALDO
                                             </StyledTableCell>
                                            
                                         </StyledTableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {print.map((data, key) => (
+                                        {print
+                                        .slice()
+                                        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+                                        .map((data, key) => (
                                             <StyledTableRow key={key}>                                        
                                                 <StyledTableCell
                                                     component="th"
                                                     align="center"
                                                     scope="row"
                                                 >
-                                                    {data.student_id}
+                                                    {data.created_at}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     component="th"
                                                     align="center"
                                                     scope="row"
                                                 >
-                                                    {data.actor}
+                                                    {data.description}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     component="th"
                                                     align="center"
                                                     scope="row"
                                                 >
-                                                    {data.payMethod}
+                                                    {data.amount}
                                                 </StyledTableCell>
                                                 <StyledTableCell
                                                     component="th"
                                                     align="center"
                                                     scope="row"
                                                 >
-                                                    {data.transType}
+                                                    {data.newBalance}
                                                 </StyledTableCell>                                              
                                             </StyledTableRow>
                                         ))}
@@ -376,6 +405,17 @@ export default function ReportTable(props) {
                                         )}
                                     </TableBody>                                   
                                 </Table>
+                            </Grid>
+                            <Grid item xs = {12}>
+                            <Typography paragraph>
+                                Jika Anda memiliki pertanyaan atau masalah, jangan ragu untuk menghubungi kami. Terima kasih.
+                            </Typography>
+                            <Typography>
+                                Hormat Kami,
+                            </Typography>
+                            <Typography>
+                                TKIT AL MANSHURIYYAH
+                            </Typography>
                             </Grid>
                         </Grid>
                     </Grid>

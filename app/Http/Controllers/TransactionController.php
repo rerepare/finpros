@@ -139,7 +139,7 @@ class TransactionController extends Controller{
 
     public function sendEmailWithPDF($recipientEmail, $transactionData)
     {
-        // Generate the PDF using the 'generatePDF' method from Step 1
+        // Generate the PDF using the 'generatePDF'
         $pdfContent = $this->generatePDF($transactionData);
 
         // Send the email with the PDF attachment

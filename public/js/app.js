@@ -7782,169 +7782,6 @@ var IconButton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.forwardRef(func
 
 /***/ }),
 
-/***/ "./node_modules/@material-ui/core/esm/InputAdornment/InputAdornment.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@material-ui/core/esm/InputAdornment/InputAdornment.js ***!
-  \*****************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   styles: () => (/* binding */ styles)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.m.js");
-/* harmony import */ var _Typography__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Typography */ "./node_modules/@material-ui/core/esm/Typography/Typography.js");
-/* harmony import */ var _styles_withStyles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../styles/withStyles */ "./node_modules/@material-ui/core/esm/styles/withStyles.js");
-/* harmony import */ var _FormControl_FormControlContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FormControl/FormControlContext */ "./node_modules/@material-ui/core/esm/FormControl/FormControlContext.js");
-
-
-
-
-
-
-
-
-var styles = {
-  /* Styles applied to the root element. */
-  root: {
-    display: 'flex',
-    height: '0.01em',
-    // Fix IE 11 flexbox alignment. To remove at some point.
-    maxHeight: '2em',
-    alignItems: 'center',
-    whiteSpace: 'nowrap'
-  },
-
-  /* Styles applied to the root element if `variant="filled"`. */
-  filled: {
-    '&$positionStart:not($hiddenLabel)': {
-      marginTop: 16
-    }
-  },
-
-  /* Styles applied to the root element if `position="start"`. */
-  positionStart: {
-    marginRight: 8
-  },
-
-  /* Styles applied to the root element if `position="end"`. */
-  positionEnd: {
-    marginLeft: 8
-  },
-
-  /* Styles applied to the root element if `disablePointerEvents=true`. */
-  disablePointerEvents: {
-    pointerEvents: 'none'
-  },
-
-  /* Styles applied if the adornment is used inside <FormControl hiddenLabel />. */
-  hiddenLabel: {},
-
-  /* Styles applied if the adornment is used inside <FormControl margin="dense" />. */
-  marginDense: {}
-};
-var InputAdornment = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.forwardRef(function InputAdornment(props, ref) {
-  var children = props.children,
-      classes = props.classes,
-      className = props.className,
-      _props$component = props.component,
-      Component = _props$component === void 0 ? 'div' : _props$component,
-      _props$disablePointer = props.disablePointerEvents,
-      disablePointerEvents = _props$disablePointer === void 0 ? false : _props$disablePointer,
-      _props$disableTypogra = props.disableTypography,
-      disableTypography = _props$disableTypogra === void 0 ? false : _props$disableTypogra,
-      position = props.position,
-      variantProp = props.variant,
-      other = (0,_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(props, ["children", "classes", "className", "component", "disablePointerEvents", "disableTypography", "position", "variant"]);
-
-  var muiFormControl = (0,_FormControl_FormControlContext__WEBPACK_IMPORTED_MODULE_4__.useFormControl)() || {};
-  var variant = variantProp;
-
-  if (variantProp && muiFormControl.variant) {
-    if (true) {
-      if (variantProp === muiFormControl.variant) {
-        console.error('Material-UI: The `InputAdornment` variant infers the variant prop ' + 'you do not have to provide one.');
-      }
-    }
-  }
-
-  if (muiFormControl && !variant) {
-    variant = muiFormControl.variant;
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.createElement(_FormControl_FormControlContext__WEBPACK_IMPORTED_MODULE_4__["default"].Provider, {
-    value: null
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.createElement(Component, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_3__["default"])(classes.root, className, position === 'end' ? classes.positionEnd : classes.positionStart, disablePointerEvents && classes.disablePointerEvents, muiFormControl.hiddenLabel && classes.hiddenLabel, variant === 'filled' && classes.filled, muiFormControl.margin === 'dense' && classes.marginDense),
-    ref: ref
-  }, other), typeof children === 'string' && !disableTypography ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.createElement(_Typography__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    color: "textSecondary"
-  }, children) : children));
-});
- true ? InputAdornment.propTypes = {
-  /**
-   * The content of the component, normally an `IconButton` or string.
-   */
-  children: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().node).isRequired,
-
-  /**
-   * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
-   */
-  classes: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().object).isRequired,
-
-  /**
-   * @ignore
-   */
-  className: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().string),
-
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
-  component: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().elementType),
-
-  /**
-   * Disable pointer events on the root.
-   * This allows for the content of the adornment to focus the input on click.
-   */
-  disablePointerEvents: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().bool),
-
-  /**
-   * If children is a string then disable wrapping in a Typography component.
-   */
-  disableTypography: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().bool),
-
-  /**
-   * @ignore
-   */
-  muiFormControl: (prop_types__WEBPACK_IMPORTED_MODULE_6___default().object),
-
-  /**
-   * The position this adornment should appear relative to the `Input`.
-   */
-  position: prop_types__WEBPACK_IMPORTED_MODULE_6___default().oneOf(['start', 'end']).isRequired,
-
-  /**
-   * The variant to use.
-   * Note: If you are using the `TextField` component or the `FormControl` component
-   * you do not have to set this manually.
-   */
-  variant: prop_types__WEBPACK_IMPORTED_MODULE_6___default().oneOf(['standard', 'outlined', 'filled'])
-} : 0;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_styles_withStyles__WEBPACK_IMPORTED_MODULE_7__["default"])(styles, {
-  name: 'MuiInputAdornment'
-})(InputAdornment));
-
-/***/ }),
-
 /***/ "./node_modules/@material-ui/core/esm/InputBase/InputBase.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/@material-ui/core/esm/InputBase/InputBase.js ***!
@@ -29102,7 +28939,6 @@ function Login(props) {
                   item: true,
                   xs: 12,
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("label", {
-                    className: "pb-1",
                     children: "User Name"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], {
                     variant: "outlined",
@@ -29118,7 +28954,6 @@ function Login(props) {
                   item: true,
                   xs: 12,
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("label", {
-                    className: "pb-1",
                     children: "Password"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], {
                     variant: "outlined",
@@ -30033,7 +29868,6 @@ function UserTable(props) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_28__["default"], {
       onClose: handleCloseDetailsDialog,
       open: openDetailsDialog,
-      fullWidth: true,
       maxWidth: false,
       keepMounted: true,
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_29__["default"], {
@@ -31115,7 +30949,7 @@ function StudentTable(props) {
                       onClick: function onClick() {
                         handleOpenDetailsDialog(data);
                       },
-                      children: "More"
+                      children: "MORE"
                     })
                   })]
                 }, key);
@@ -31360,6 +31194,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/AccordionSummary/AccordionSummary.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowLeft__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowLeft */ "./node_modules/@material-ui/icons/KeyboardArrowLeft.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowRight__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowRight */ "./node_modules/@material-ui/icons/KeyboardArrowRight.js");
+/* harmony import */ var _material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @material-ui/core/Snackbar */ "./node_modules/@material-ui/core/esm/Snackbar/Snackbar.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 var _templateObject;
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
@@ -31375,6 +31210,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 //MATERIAL UI
+
 
 
 
@@ -31617,87 +31453,102 @@ function StudentTable(props) {
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     rowsPerPage = _React$useState4[0],
     setRowsPerPage = _React$useState4[1];
-  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    searchName = _React$useState6[0],
-    setSearchName = _React$useState6[1];
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState2 = _slicedToArray(_useState, 2),
     searchQuery = _useState2[0],
     setSearchQuery = _useState2[1];
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    openDetailsDialog = _React$useState6[0],
+    setOpenDetailsDialog = _React$useState6[1];
   var _React$useState7 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState8 = _slicedToArray(_React$useState7, 2),
-    openDetailsDialog = _React$useState8[0],
-    setOpenDetailsDialog = _React$useState8[1];
+    openAddDialog = _React$useState8[0],
+    setOpenAddDialog = _React$useState8[1];
   var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState10 = _slicedToArray(_React$useState9, 2),
-    openAddDialog = _React$useState10[0],
-    setOpenAddDialog = _React$useState10[1];
+    openEditDialog = _React$useState10[0],
+    setOpenEditDialog = _React$useState10[1];
   var _React$useState11 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    openEditDialog = _React$useState12[0],
-    setOpenEditDialog = _React$useState12[1];
-  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    openDeleteDialog = _React$useState14[0],
-    setOpenDeleteDialog = _React$useState14[1];
+    openDeleteDialog = _React$useState12[0],
+    setOpenDeleteDialog = _React$useState12[1];
 
   //GET DATABASE
+  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    id = _React$useState14[0],
+    setId = _React$useState14[1];
   var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    id = _React$useState16[0],
-    setId = _React$useState16[1];
+    studentId = _React$useState16[0],
+    setStudentId = _React$useState16[1];
   var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState18 = _slicedToArray(_React$useState17, 2),
-    studentId = _React$useState18[0],
-    setStudentId = _React$useState18[1];
+    schoolId = _React$useState18[0],
+    setSchoolId = _React$useState18[1];
   var _React$useState19 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState20 = _slicedToArray(_React$useState19, 2),
-    schoolId = _React$useState20[0],
-    setSchoolId = _React$useState20[1];
+    image = _React$useState20[0],
+    setImage = _React$useState20[1];
   var _React$useState21 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState22 = _slicedToArray(_React$useState21, 2),
-    image = _React$useState22[0],
-    setImage = _React$useState22[1];
+    studentName = _React$useState22[0],
+    setStudentName = _React$useState22[1];
   var _React$useState23 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState24 = _slicedToArray(_React$useState23, 2),
-    studentName = _React$useState24[0],
-    setStudentName = _React$useState24[1];
+    gender = _React$useState24[0],
+    setGender = _React$useState24[1];
   var _React$useState25 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState26 = _slicedToArray(_React$useState25, 2),
-    gender = _React$useState26[0],
-    setGender = _React$useState26[1];
+    classType = _React$useState26[0],
+    setClassType = _React$useState26[1];
   var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState28 = _slicedToArray(_React$useState27, 2),
-    classType = _React$useState28[0],
-    setClassType = _React$useState28[1];
+    parentName = _React$useState28[0],
+    setParentName = _React$useState28[1];
   var _React$useState29 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState30 = _slicedToArray(_React$useState29, 2),
-    parentName = _React$useState30[0],
-    setParentName = _React$useState30[1];
+    contact = _React$useState30[0],
+    setContact = _React$useState30[1];
   var _React$useState31 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState32 = _slicedToArray(_React$useState31, 2),
-    contact = _React$useState32[0],
-    setContact = _React$useState32[1];
+    balance = _React$useState32[0],
+    setBalance = _React$useState32[1];
   var _React$useState33 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState34 = _slicedToArray(_React$useState33, 2),
-    balance = _React$useState34[0],
-    setBalance = _React$useState34[1];
-  var _React$useState35 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState36 = _slicedToArray(_React$useState35, 2),
-    email = _React$useState36[0],
-    setEmail = _React$useState36[1];
+    email = _React$useState34[0],
+    setEmail = _React$useState34[1];
 
   // UPLOAD IMAGE
   var classesUpload = useStylesUpload();
+  var _React$useState35 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
+    _React$useState36 = _slicedToArray(_React$useState35, 2),
+    photoFiles = _React$useState36[0],
+    setPhotoFiles = _React$useState36[1];
   var _React$useState37 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
     _React$useState38 = _slicedToArray(_React$useState37, 2),
-    photoFiles = _React$useState38[0],
-    setPhotoFiles = _React$useState38[1];
-  var _React$useState39 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
+    photoPreview = _React$useState38[0],
+    setPhotoPreview = _React$useState38[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState4 = _slicedToArray(_useState3, 2),
+    openSnackbar = _useState4[0],
+    setOpenSnackbar = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('error'),
+    _useState6 = _slicedToArray(_useState5, 2),
+    snackbarSeverity = _useState6[0],
+    setSnackbarSeverity = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    _useState8 = _slicedToArray(_useState7, 2),
+    snackbarMessage = _useState8[0],
+    setSnackbarMessage = _useState8[1];
+  var _React$useState39 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState40 = _slicedToArray(_React$useState39, 2),
-    photoPreview = _React$useState40[0],
-    setPhotoPreview = _React$useState40[1];
+    validation = _React$useState40[0],
+    setValidation = _React$useState40[1];
+  var handleSnackbarClose = function handleSnackbarClose() {
+    setOpenSnackbar(false);
+  };
 
   //FUNCTION OPERATIONAL
   var handleChangePage = function handleChangePage(event, newPage) {
@@ -31721,23 +31572,40 @@ function StudentTable(props) {
   //FUNCTION ADD
   var addStudent = function addStudent(event) {
     event.preventDefault();
-    var data = {
-      id: id,
-      student_id: "STD" + student[0].id,
-      school_id: schoolId,
-      image: photoFiles,
-      fullName: studentName,
-      gender: gender,
-      classType: classType,
-      parentName: parentName,
-      contact: contact,
-      email: email,
-      balance: balance
-    };
-    console.log(studentId);
-    axios.post("/addStudent", data).then(function () {
-      window.location.href = "/activeStudents";
-    });
+    if (validation) {
+      // Show error snackbar message
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Failed to add student. Please fill in all required fields.');
+      setOpenSnackbar(true);
+    } else {
+      var data = {
+        id: id,
+        student_id: "STD" + student[0].id,
+        school_id: schoolId,
+        image: photoFiles,
+        fullName: studentName,
+        gender: gender,
+        classType: classType,
+        parentName: parentName,
+        contact: contact,
+        email: email,
+        balance: balance
+      };
+      axios.post("/addStudent", data).then(function () {
+        // Show success snackbar message
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Student added successfully!');
+        setOpenSnackbar(true);
+
+        // Reload the activeStudent page
+        window.location.href = '/activeStudents';
+      })["catch"](function () {
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Failed to add student. Please fill in all required fields.');
+        setOpenSnackbar(true);
+      });
+    }
+    setValidation(false);
   };
   var handleOpenAddDialog = function handleOpenAddDialog() {
     setStudentId("STD" + student[0].id);
@@ -31763,23 +31631,36 @@ function StudentTable(props) {
   //FUNCTION EDIT
   var editStudent = function editStudent(e) {
     e.preventDefault();
-    var data = {
-      id: id,
-      student_id: studentId,
-      school_id: schoolId,
-      image: photoFiles,
-      fullName: studentName,
-      gender: gender,
-      classType: classType,
-      parentName: parentName,
-      contact: contact,
-      email: email,
-      balance: balance
-    };
-    axios.post("/editStudent", data).then(function () {
-      handleCloseEditDialog();
-      window.location.href = "/activeStudents";
-    });
+    if (validation) {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Failed to update student data. Please fill in all required fields.');
+      setOpenSnackbar(true);
+    } else {
+      var data = {
+        id: id,
+        student_id: studentId,
+        school_id: schoolId,
+        image: photoFiles,
+        fullName: studentName,
+        gender: gender,
+        classType: classType,
+        parentName: parentName,
+        contact: contact,
+        email: email,
+        balance: balance
+      };
+      axios.post("/editStudent", data).then(function () {
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Student data edited successfully!');
+        setOpenSnackbar(true);
+        window.location.href = '/activeStudents';
+      })["catch"](function () {
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Failed to update student data. Please fill in all required fields.');
+        setOpenSnackbar(true);
+      });
+    }
+    setValidation(false);
   };
   var handleOpenEditDialog = function handleOpenEditDialog(data) {
     setId(data.id);
@@ -31819,7 +31700,7 @@ function StudentTable(props) {
       id: id
     };
     axios.post("/deleteStudent", data).then(function () {
-      handleCloseEditDialog();
+      handleCloseDeleteDialog();
       window.location.href = "/activeStudents";
     });
   };
@@ -31975,11 +31856,10 @@ function StudentTable(props) {
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_23__["default"], {
               children: [(rowsPerPage > 0 ? student.filter(function (data) {
                 if (searchQuery === "") {
-                  return data; // No search criteria provided, return all data
+                  return data;
                 } else {
                   var query = searchQuery.toLowerCase();
-                  return data.fullName.toLowerCase().includes(query) || data.student_id.toString().includes(query) // Assuming student_id is a number
-                  ;
+                  return data.fullName.toLowerCase().includes(query) || data.student_id.toString().includes(query);
                 }
               }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : student).map(function (data, key) {
                 return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(StyledTableRow, {
@@ -32367,6 +32247,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 8,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       size: "small",
                       label: "Nama Siswa",
                       fullWidth: "true",
@@ -32380,6 +32261,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       size: "small",
                       label: "Cabang",
@@ -32404,6 +32286,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       size: "small",
                       label: "Jenis Kelamin",
@@ -32428,6 +32311,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       size: "small",
                       label: "Kelas",
@@ -32452,6 +32336,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Orang Tua/Wali",
                       size: "small",
                       fullWidth: "true",
@@ -32465,7 +32350,9 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Kontak",
+                      size: "small",
                       fullWidth: "true",
                       variant: "outlined",
                       value: contact,
@@ -32477,6 +32364,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Email",
                       size: "small",
                       fullWidth: "true",
@@ -32506,10 +32394,10 @@ function StudentTable(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_35__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("form", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
           method: "post",
           onSubmit: addStudent,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
             variant: "contained",
             color: "primary",
             type: "submit",
@@ -32517,7 +32405,24 @@ function StudentTable(props) {
               "float": "right"
             },
             children: "ADD"
-          })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_37__["default"], {
+            open: openSnackbar,
+            autoHideDuration: 2500,
+            onClose: handleSnackbarClose,
+            message: snackbarMessage,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right'
+            },
+            ContentProps: {
+              style: {
+                backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                color: '#ffffff',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }
+            }
+          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
           variant: "contained",
           color: "secondary",
@@ -32682,6 +32587,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 8,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Nama",
                       size: "small",
                       fullWidth: "true",
@@ -32695,6 +32601,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       label: "Cabang Sekolah",
                       size: "small",
@@ -32719,6 +32626,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       size: "small",
                       label: "Jenis Kelamin",
@@ -32743,6 +32651,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       select: true,
                       size: "small",
                       label: "Kelas",
@@ -32767,6 +32676,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Orang Tua/Wali",
                       size: "small",
                       fullWidth: "true",
@@ -32780,6 +32690,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Kontak",
                       size: "small",
                       fullWidth: "true",
@@ -32793,6 +32704,7 @@ function StudentTable(props) {
                     item: true,
                     xs: 4,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                      required: true,
                       label: "Email",
                       size: "small",
                       fullWidth: "true",
@@ -32822,10 +32734,10 @@ function StudentTable(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_35__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("form", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
           method: "post",
           onSubmit: editStudent,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
             variant: "contained",
             color: "primary",
             type: "submit",
@@ -32833,7 +32745,24 @@ function StudentTable(props) {
               "float": "right"
             },
             children: "EDIT"
-          })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_37__["default"], {
+            open: openSnackbar,
+            autoHideDuration: 2500,
+            onClose: handleSnackbarClose,
+            message: snackbarMessage,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right'
+            },
+            ContentProps: {
+              style: {
+                backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                color: '#ffffff',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }
+            }
+          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
           variant: "contained",
           color: "secondary",
@@ -33677,35 +33606,6 @@ function HistoryTable(props) {
     _React$useState12 = _slicedToArray(_React$useState11, 2),
     id = _React$useState12[0],
     setId = _React$useState12[1];
-  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    studentId = _React$useState14[0],
-    setStudentId = _React$useState14[1];
-  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    userId = _React$useState16[0],
-    setUserId = _React$useState16[1];
-  var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    amount = _React$useState18[0],
-    setAmount = _React$useState18[1];
-  var _React$useState19 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState20 = _slicedToArray(_React$useState19, 2),
-    payMethod = _React$useState20[0],
-    setPayMethod = _React$useState20[1];
-  var _React$useState21 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState22 = _slicedToArray(_React$useState21, 2),
-    actor = _React$useState22[0],
-    setActor = _React$useState22[1];
-  var _React$useState23 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState24 = _slicedToArray(_React$useState23, 2),
-    transType = _React$useState24[0],
-    setTransType = _React$useState24[1];
-  var _React$useState25 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState26 = _slicedToArray(_React$useState25, 2),
-    description = _React$useState26[0],
-    setDescription = _React$useState26[1];
-
   //FUNCTION OPERATIONAL
   var handleChangePage = function handleChangePage(event, newPage) {
     setPage(newPage);
@@ -33732,7 +33632,7 @@ function HistoryTable(props) {
       id: id
     };
     axios.post("/deleteHistory", data).then(function () {
-      handleCloseEditDialog();
+      handleCloseDeleteDialog();
       window.location.href = "/history";
     });
   };
@@ -33892,6 +33792,7 @@ function HistoryTable(props) {
                       style: {
                         backgroundColor: "#FFD93D",
                         marginBottom: '5px',
+                        marginRight: '5px',
                         height: "5vh",
                         width: "6vw"
                       },
@@ -34179,7 +34080,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
+/* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
 /* harmony import */ var react_to_print__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-to-print */ "./node_modules/react-to-print/lib/index.js");
 /* harmony import */ var react_to_print__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_to_print__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _dashboard_Dashboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../dashboard/Dashboard */ "./resources/js/dashboard/Dashboard.js");
@@ -34188,28 +34089,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/useTheme.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableCell/TableCell.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableRow/TableRow.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Table/Table.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableHead/TableHead.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableBody/TableBody.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableFooter/TableFooter.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TablePagination/TablePagination.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Table/Table.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableHead/TableHead.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableBody/TableBody.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TableFooter/TableFooter.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TablePagination/TablePagination.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Grid/Grid.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Typography/Typography.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Paper/Paper.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TextField/TextField.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Dialog/Dialog.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/DialogTitle/DialogTitle.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/DialogContent/DialogContent.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Paper/Paper.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/TextField/TextField.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Dialog/Dialog.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/DialogTitle/DialogTitle.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/DialogContent/DialogContent.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/DialogActions/DialogActions.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/IconButton/IconButton.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Button/Button.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Button/Button.js");
 /* harmony import */ var _material_ui_icons_LastPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/icons/LastPage */ "./node_modules/@material-ui/icons/LastPage.js");
 /* harmony import */ var _material_ui_icons_FirstPage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/FirstPage */ "./node_modules/@material-ui/icons/FirstPage.js");
-/* harmony import */ var _material_ui_icons_Print__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @material-ui/icons/Print */ "./node_modules/@material-ui/icons/Print.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Accordion/Accordion.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/AccordionDetails/AccordionDetails.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Card/Card.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/CardContent/CardContent.js");
+/* harmony import */ var _material_ui_icons_Print__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @material-ui/icons/Print */ "./node_modules/@material-ui/icons/Print.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Card/Card.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/CardContent/CardContent.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/Accordion/Accordion.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/AccordionDetails/AccordionDetails.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowLeft__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowLeft */ "./node_modules/@material-ui/icons/KeyboardArrowLeft.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowRight__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowRight */ "./node_modules/@material-ui/icons/KeyboardArrowRight.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
@@ -34477,48 +34378,6 @@ function ReportTable(props) {
     printData = _React$useState8[0],
     setPrintData = _React$useState8[1];
 
-  //GET DATABASE
-  var _React$useState9 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState10 = _slicedToArray(_React$useState9, 2),
-    id = _React$useState10[0],
-    setId = _React$useState10[1];
-  var _React$useState11 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState12 = _slicedToArray(_React$useState11, 2),
-    studentId = _React$useState12[0],
-    setStudentId = _React$useState12[1];
-  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    schoolId = _React$useState14[0],
-    setSchoolId = _React$useState14[1];
-  var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    image = _React$useState16[0],
-    setImage = _React$useState16[1];
-  var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    studentName = _React$useState18[0],
-    setStudentName = _React$useState18[1];
-  var _React$useState19 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState20 = _slicedToArray(_React$useState19, 2),
-    gender = _React$useState20[0],
-    setGender = _React$useState20[1];
-  var _React$useState21 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState22 = _slicedToArray(_React$useState21, 2),
-    classType = _React$useState22[0],
-    setClassType = _React$useState22[1];
-  var _React$useState23 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState24 = _slicedToArray(_React$useState23, 2),
-    parentName = _React$useState24[0],
-    setParentName = _React$useState24[1];
-  var _React$useState25 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState26 = _slicedToArray(_React$useState25, 2),
-    contact = _React$useState26[0],
-    setContact = _React$useState26[1];
-  var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
-    _React$useState28 = _slicedToArray(_React$useState27, 2),
-    balance = _React$useState28[0],
-    setBalance = _React$useState28[1];
-
   //FUNCTION OPERATIONAL
   var handleChangePage = function handleChangePage(event, newPage) {
     setPage(newPage);
@@ -34553,9 +34412,6 @@ function ReportTable(props) {
     _createClass(ComponentToPrint, [{
       key: "render",
       value: function render() {
-        // console.log(this.props.detailData)
-        // const { print } = this.props;
-        // console.log(print)
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
           className: "print-source",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
@@ -34566,7 +34422,7 @@ function ReportTable(props) {
             spacing: 1,
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
               item: true,
-              xs: 11,
+              xs: 12,
               style: {
                 margin: 'auto',
                 padding: '20px'
@@ -34599,6 +34455,7 @@ function ReportTable(props) {
                   item: true,
                   xs: 9,
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    align: "center",
                     variant: "h4",
                     style: {
                       color: '#e4d96f',
@@ -34606,6 +34463,7 @@ function ReportTable(props) {
                     },
                     children: "LAPORAN TABUNGAN SISWA"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    align: "center",
                     variant: "h4",
                     style: {
                       color: '#e4d96f',
@@ -34613,6 +34471,7 @@ function ReportTable(props) {
                     },
                     children: "TKIT AL MANSHURIYYAH"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    align: "center",
                     variant: "h4",
                     style: {
                       color: '#e4d96f',
@@ -34623,10 +34482,68 @@ function ReportTable(props) {
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                   item: true,
                   xs: 12,
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                    container: true,
+                    direction: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    spacing: 3,
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                      item: true,
+                      xs: 6,
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                            children: datas.map(function (data, key) {
+                              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["ID Siswa: ", data.student_id]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Sekolah: ", data.school_id]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Nama:", data.fullName]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Jenis Kelamin: ", data.gender]
+                                })]
+                              });
+                            })
+                          })
+                        })
+                      })
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                      item: true,
+                      xs: 6,
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                            children: datas.map(function (data, key) {
+                              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+                                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Kelas: ", data.classType]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Orang Tua/Wali: ", data.parentName]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Kontak: ", data.contact]
+                                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                                  children: ["Saldo: ", data.balance]
+                                })]
+                              });
+                            })
+                          })
+                        })
+                      })
+                    })]
+                  })
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                  item: true,
+                  xs: 12,
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
                     className: classes.table,
+                    style: {
+                      marginTop: '20px'
+                    },
                     "aria-label": "customized table",
-                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
                       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(StyledTableRow, {
                         style: {
                           borderTopLeftRadius: "1vw",
@@ -34637,51 +34554,53 @@ function ReportTable(props) {
                           style: {
                             borderTopLeftRadius: "1vw"
                           },
-                          children: "ID Siswa"
+                          children: "TANGGAL"
                         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                           align: "center",
                           style: {
                             wordBreak: "break-word"
                           },
-                          children: "Nama"
+                          children: "KETERANGAN"
                         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                           align: "center",
                           style: {
                             wordBreak: "break-word"
                           },
-                          children: "Pembayaran"
+                          children: "MUTASI"
                         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                           align: "center",
                           style: {
                             wordBreak: "break-word",
                             borderTopRightRadius: "1vw"
                           },
-                          children: "Tipe Transaksi"
+                          children: "SALDO"
                         })]
                       })
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
-                      children: [print.map(function (data, key) {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_21__["default"], {
+                      children: [print.slice().sort(function (a, b) {
+                        return new Date(a.created_at) - new Date(b.created_at);
+                      }).map(function (data, key) {
                         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(StyledTableRow, {
                           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                             component: "th",
                             align: "center",
                             scope: "row",
-                            children: data.student_id
+                            children: data.created_at
                           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                             component: "th",
                             align: "center",
                             scope: "row",
-                            children: data.actor
+                            children: data.description
                           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                             component: "th",
                             align: "center",
                             scope: "row",
-                            children: data.payMethod
+                            children: data.amount
                           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableCell, {
                             component: "th",
                             align: "center",
                             scope: "row",
-                            children: data.transType
+                            children: data.newBalance
                           })]
                         }, key);
                       }), emptyRows > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["default"], {
@@ -34694,6 +34613,17 @@ function ReportTable(props) {
                       })]
                     })]
                   })
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                  item: true,
+                  xs: 12,
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    paragraph: true,
+                    children: "Jika Anda memiliki pertanyaan atau masalah, jangan ragu untuk menghubungi kami. Terima kasih."
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    children: "Hormat Kami,"
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
+                    children: "TKIT AL MANSHURIYYAH"
+                  })]
                 })]
               })
             })
@@ -34720,7 +34650,7 @@ function ReportTable(props) {
         return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)((react_to_print__WEBPACK_IMPORTED_MODULE_1___default()), {
             trigger: function trigger() {
-              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
+              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_22__["default"], {
                 variant: "contained",
                 onClick: function onClick() {
                   filterData(data);
@@ -34731,7 +34661,7 @@ function ReportTable(props) {
                   height: "5vh",
                   width: "2vw"
                 },
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_icons_Print__WEBPACK_IMPORTED_MODULE_21__["default"], {})
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_icons_Print__WEBPACK_IMPORTED_MODULE_23__["default"], {})
               });
             },
             content: function content() {
@@ -34752,7 +34682,7 @@ function ReportTable(props) {
     }]);
     return Example;
   }(react__WEBPACK_IMPORTED_MODULE_0__.Component); // OTHERS
-  var Subheader = styled_components__WEBPACK_IMPORTED_MODULE_22__["default"].div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n        display: flex;\n        flex-direction: row;\n    "])));
+  var Subheader = styled_components__WEBPACK_IMPORTED_MODULE_24__["default"].div(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n        display: flex;\n        flex-direction: row;\n    "])));
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
       style: {
@@ -34766,7 +34696,7 @@ function ReportTable(props) {
       }), function () {
         if (user.isSuperAdmin == false) {
           return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_22__["default"], {
               variant: "contained",
               style: {
                 backgroundColor: "#A8A196",
@@ -34780,7 +34710,7 @@ function ReportTable(props) {
           });
         }
       }()]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_23__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_25__["default"], {
       elevation: 4,
       style: {
         padding: "25px",
@@ -34795,7 +34725,7 @@ function ReportTable(props) {
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
           item: true,
           xs: 12,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_24__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_26__["default"], {
             variant: "outlined",
             size: "small",
             onChange: function onChange(event) {
@@ -34808,10 +34738,10 @@ function ReportTable(props) {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
           item: true,
           xs: 12,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
             className: classes.table,
             "aria-label": "customized table",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(StyledTableRow, {
                 style: {
                   borderTopLeftRadius: "1vw",
@@ -34850,7 +34780,7 @@ function ReportTable(props) {
                   children: "Action"
                 })]
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_21__["default"], {
               children: [(rowsPerPage > 0 ? student.filter(function (data) {
                 if (searchQuery === "") {
                   return data; // No search criteria provided, return all data
@@ -34885,7 +34815,7 @@ function ReportTable(props) {
                     component: "th",
                     align: "center",
                     scope: "row",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_22__["default"], {
                       variant: "contained",
                       style: {
                         backgroundColor: "#FFD93D",
@@ -34908,14 +34838,14 @@ function ReportTable(props) {
                   colSpan: 6
                 })
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_25__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_27__["default"], {
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(StyledTableRow, {
                 style: {
                   backgroundColor: "#212121",
                   borderBottomLeftRadius: "1vw",
                   borderBottomRightRadius: "1vw"
                 },
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_26__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_28__["default"], {
                   style: {
                     color: "white",
                     borderBottomLeftRadius: "1vw",
@@ -34942,16 +34872,16 @@ function ReportTable(props) {
           })
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_27__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_29__["default"], {
       onClose: handleCloseDetailsDialog,
       open: openDetailsDialog,
       fullWidth: true,
       maxWidth: false,
       keepMounted: true,
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_28__["default"], {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_30__["default"], {
         className: classes.dialogTitle,
         children: "DETAIL SISWA"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_29__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_31__["default"], {
         dividers: true,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
@@ -34960,12 +34890,12 @@ function ReportTable(props) {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
               item: true,
               xs: 12,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_30__["default"], {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_32__["default"], {
                 expanded: true,
                 style: {
                   width: '100%'
                 },
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_31__["default"], {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_33__["default"], {
                   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     container: true,
                     direction: "row",
@@ -34974,11 +34904,11 @@ function ReportTable(props) {
                     spacing: 1,
                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                       item: 2,
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_32__["default"], {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
                         style: {
                           height: '40vh'
                         },
-                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_33__["default"], {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
                           children: datas.map(function (data, key) {
                             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("img", {
                               style: {
@@ -34995,12 +34925,12 @@ function ReportTable(props) {
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                       item: true,
                       xs: 5,
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_32__["default"], {
-                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_33__["default"], {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
                           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
                             children: datas.map(function (data, key) {
                               return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-                                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
                                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["default"], {
                                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["default"], {
                                       children: "ID Siswa :"
@@ -35035,12 +34965,12 @@ function ReportTable(props) {
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                       item: true,
                       xs: 5,
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_32__["default"], {
-                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_33__["default"], {
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
                           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_16__["default"], {
                             children: datas.map(function (data, key) {
                               return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-                                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_17__["default"], {
+                                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
                                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["default"], {
                                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_6__["default"], {
                                       children: "Kelas :"
@@ -35080,7 +35010,7 @@ function ReportTable(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_34__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_20__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_22__["default"], {
           variant: "contained",
           color: "secondary",
           onClick: handleCloseDetailsDialog,
@@ -36502,11 +36432,10 @@ function TeacherTable(props) {
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_23__["default"], {
               children: [(rowsPerPage > 0 ? teacher.filter(function (data) {
                 if (searchQuery === "") {
-                  return data; // No search criteria provided, return all data
+                  return data;
                 } else {
                   var query = searchQuery.toLowerCase();
-                  return data.fullName.toLowerCase().includes(query) || data.teacher_id.toString().includes(query) // Assuming student_id is a number
-                  ;
+                  return data.fullName.toLowerCase().includes(query) || data.teacher_id.toString().includes(query);
                 }
               }).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : teacher).map(function (data, key) {
                 return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(StyledTableRow, {
@@ -36532,7 +36461,7 @@ function TeacherTable(props) {
                     children: data.classType
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(StyledTableCell, {
                     style: {
-                      width: 250
+                      width: 350
                     },
                     align: "center",
                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
@@ -36541,7 +36470,7 @@ function TeacherTable(props) {
                         backgroundColor: "#FFD93D",
                         marginBottom: '5px',
                         height: "5vh",
-                        width: "6vw"
+                        width: "5vw"
                       },
                       onClick: function onClick() {
                         handleOpenDetailsDialog(data);
@@ -36619,7 +36548,8 @@ function TeacherTable(props) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_28__["default"], {
       onClose: handleCloseDetailsDialog,
       open: openDetailsDialog,
-      fullWidth: true,
+      maxWidth: false,
+      keepMounted: true,
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_29__["default"], {
         className: classes.dialogTitle,
         children: "DETAIL GURU"
@@ -37316,8 +37246,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ StudentTable)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.browser.esm.js");
@@ -37349,10 +37279,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_icons_Close__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @material-ui/icons/Close */ "./node_modules/@material-ui/icons/Close.js");
 /* harmony import */ var _material_ui_icons_FirstPage__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/icons/FirstPage */ "./node_modules/@material-ui/icons/FirstPage.js");
 /* harmony import */ var _material_ui_icons_LastPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/icons/LastPage */ "./node_modules/@material-ui/icons/LastPage.js");
-/* harmony import */ var _material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @material-ui/core/Snackbar */ "./node_modules/@material-ui/core/esm/Snackbar/Snackbar.js");
+/* harmony import */ var _material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @material-ui/core/Snackbar */ "./node_modules/@material-ui/core/esm/Snackbar/Snackbar.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowLeft__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowLeft */ "./node_modules/@material-ui/icons/KeyboardArrowLeft.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowRight__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowRight */ "./node_modules/@material-ui/icons/KeyboardArrowRight.js");
-/* harmony import */ var _material_ui_core_InputAdornment__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @material-ui/core/InputAdornment */ "./node_modules/@material-ui/core/esm/InputAdornment/InputAdornment.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 var _templateObject;
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -37391,17 +37320,6 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 
 
 
-
-var payMethods1 = [{
-  value: '',
-  label: ''
-}, {
-  value: 'Bayar dengan saldo tabungan',
-  label: 'Bayar dengan saldo tabungan'
-}, {
-  value: 'Lainnya',
-  label: 'Lainnya'
-}];
 var payMethods2 = [{
   value: '',
   label: ''
@@ -37661,58 +37579,62 @@ function StudentTable(props) {
     _React$useState12 = _slicedToArray(_React$useState11, 2),
     amount = _React$useState12[0],
     setAmount = _React$useState12[1];
-  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
+  var _React$useState13 = react__WEBPACK_IMPORTED_MODULE_0__.useState(0),
     _React$useState14 = _slicedToArray(_React$useState13, 2),
-    payMethod = _React$useState14[0],
-    setPayMethod = _React$useState14[1];
+    numericAmount = _React$useState14[0],
+    setNumericAmount = _React$useState14[1];
   var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    otherPayMethod = _React$useState16[0],
-    setOtherPayMethod = _React$useState16[1];
+    payMethod = _React$useState16[0],
+    setPayMethod = _React$useState16[1];
   var _React$useState17 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState18 = _slicedToArray(_React$useState17, 2),
-    otherDescription = _React$useState18[0],
-    setOtherDescription = _React$useState18[1];
+    otherPayMethod = _React$useState18[0],
+    setOtherPayMethod = _React$useState18[1];
   var _React$useState19 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState20 = _slicedToArray(_React$useState19, 2),
-    otherActor = _React$useState20[0],
-    setOtherActor = _React$useState20[1];
+    otherDescription = _React$useState20[0],
+    setOtherDescription = _React$useState20[1];
   var _React$useState21 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState22 = _slicedToArray(_React$useState21, 2),
-    actor = _React$useState22[0],
-    setActor = _React$useState22[1];
+    otherActor = _React$useState22[0],
+    setOtherActor = _React$useState22[1];
   var _React$useState23 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState24 = _slicedToArray(_React$useState23, 2),
-    transType = _React$useState24[0],
-    setTransType = _React$useState24[1];
+    actor = _React$useState24[0],
+    setActor = _React$useState24[1];
   var _React$useState25 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState26 = _slicedToArray(_React$useState25, 2),
-    description = _React$useState26[0],
-    setDescription = _React$useState26[1];
-  var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(0),
+    transType = _React$useState26[0],
+    setTransType = _React$useState26[1];
+  var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState28 = _slicedToArray(_React$useState27, 2),
-    balance = _React$useState28[0],
-    setBalance = _React$useState28[1];
-  var _React$useState29 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+    description = _React$useState28[0],
+    setDescription = _React$useState28[1];
+  var _React$useState29 = react__WEBPACK_IMPORTED_MODULE_0__.useState(0),
     _React$useState30 = _slicedToArray(_React$useState29, 2),
-    openDialog = _React$useState30[0],
-    setOpenDialog = _React$useState30[1];
+    balance = _React$useState30[0],
+    setBalance = _React$useState30[1];
   var _React$useState31 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState32 = _slicedToArray(_React$useState31, 2),
-    openDialogSetoran = _React$useState32[0],
-    setOpenDialogSetoran = _React$useState32[1];
-  var _React$useState33 = react__WEBPACK_IMPORTED_MODULE_0__.useState(0),
+    openDialog = _React$useState32[0],
+    setOpenDialog = _React$useState32[1];
+  var _React$useState33 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState34 = _slicedToArray(_React$useState33, 2),
-    newBalance = _React$useState34[0],
-    setNewBalance = _React$useState34[1];
-  var _React$useState35 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
+    openDialogSetoran = _React$useState34[0],
+    setOpenDialogSetoran = _React$useState34[1];
+  var _React$useState35 = react__WEBPACK_IMPORTED_MODULE_0__.useState(0),
     _React$useState36 = _slicedToArray(_React$useState35, 2),
-    validation = _React$useState36[0],
-    setValidation = _React$useState36[1];
-  var _React$useState37 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
+    newBalance = _React$useState36[0],
+    setNewBalance = _React$useState36[1];
+  var _React$useState37 = react__WEBPACK_IMPORTED_MODULE_0__.useState(false),
     _React$useState38 = _slicedToArray(_React$useState37, 2),
-    image = _React$useState38[0],
-    setImage = _React$useState38[1];
+    validation = _React$useState38[0],
+    setValidation = _React$useState38[1];
+  var _React$useState39 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
+    _React$useState40 = _slicedToArray(_React$useState39, 2),
+    image = _React$useState40[0],
+    setImage = _React$useState40[1];
 
   //FUNCTION OPERATIONAL
   var handleChangePage = function handleChangePage(event, newPage) {
@@ -37752,6 +37674,7 @@ function StudentTable(props) {
     setStudentId(data.student_id);
     setStudentName(data.fullName);
     setBalance(data.balance);
+    setPayMethod("Bayar Dengan Saldo Tabungan");
     console.log(datas[0]);
     setOpenDialog(true);
   };
@@ -37766,14 +37689,6 @@ function StudentTable(props) {
     console.log(datas[0]);
     setOpenDialogSetoran(true);
   };
-  var handleAmountChange = function handleAmountChange(event) {
-    var input = event.target.value;
-    var regex = /^[0-9]*$/; // Regular expression to match only numbers
-
-    if (regex.test(input) || input === '') {
-      setAmount(input);
-    }
-  };
   var handlePayMethodChange = function handlePayMethodChange(event) {
     var value = event.target.value;
     // setPayMethod(value === 'Lainnya' ? '' : value);
@@ -37783,27 +37698,51 @@ function StudentTable(props) {
     var value = event.target.value;
     setActor(value === 'Lainnya' ? '' : value);
   };
+  var handleAmountChange = function handleAmountChange(event) {
+    // Remove any non-digit characters from the input
+    var sanitizedAmount = event.target.value.replace(/[^0-9]/g, '');
+
+    // Convert sanitized amount to an integer
+    var parsedAmount = parseInt(sanitizedAmount);
+
+    // Format the parsed amount back to currency format for display
+    var formattedAmount = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(parsedAmount);
+
+    // Set the formatted amount to state for display
+    setAmount(formattedAmount);
+
+    // Set the numeric amount (without formatting) to state for calculations
+    setNumericAmount(parsedAmount);
+  };
   var saving = function saving() {
     setValidation(false);
     setNewBalance(0);
-    var calculate = 0;
-    calculate = parseInt(balance) + parseInt(amount);
+    var numericAmount = parseInt(amount.replace(/\D/g, '')); // Extract numeric value
+    var calculate = parseInt(balance) + numericAmount; // Calculate new balance
     setTransType("Setoran");
     setNewBalance(calculate);
+
+    // Here, you should use numericAmount for saving or further processing
+    console.log("Numeric Amount:", numericAmount);
+    console.log("Saving button clicked");
   };
   var payments = function payments() {
     setValidation(false);
     setNewBalance(0);
-    var calculate = 0;
-    calculate = parseInt(balance) - parseInt(amount);
+    var numericAmount = parseInt(amount.replace(/\D/g, '')); // Extract numeric value
+    var calculate = parseInt(balance) - numericAmount; // Calculate new balance
     if (calculate < 0) {
       setValidation(true);
     }
     setTransType("Pembayaran");
     setNewBalance(calculate);
-  };
-  var handleSnackbarClose = function handleSnackbarClose() {
-    setOpenSnackbar(false);
+
+    // Here, you should use numericAmount for saving or further processing
+    console.log("Numeric Amount:", numericAmount);
   };
 
   //FUNCTION ADD TRANSACTION
@@ -37818,7 +37757,7 @@ function StudentTable(props) {
         id: id,
         student_id: studentId,
         user_id: user.id,
-        amount: amount,
+        amount: numericAmount,
         //  payMethod: condition ? true : false, (ini nama tehnik nya tennary)
         payMethod: payMethod.toLowerCase() == "lainnya" ? otherPayMethod : payMethod,
         actor: actor.toLowerCase() == "lainnya" ? otherActor : actor,
@@ -37833,14 +37772,17 @@ function StudentTable(props) {
         window.location.href = "/transaction";
       });
       setSnackbarSeverity('success');
-      setSnackbarMessage('Successfully Saved!');
+      setSnackbarMessage('Transaksi Berhasil!');
     } else {
       setSnackbarSeverity('error');
-      setSnackbarMessage('Failed to pay :( Your balance is not enough.');
+      setSnackbarMessage('Pembayaran gagal :( Saldo anda tidak cukup.');
       // handleCloseDialog();
     }
 
     setOpenSnackbar(true);
+  };
+  var handleSnackbarClose = function handleSnackbarClose() {
+    setOpenSnackbar(false);
   };
 
   //OTHERS
@@ -38203,12 +38145,6 @@ function StudentTable(props) {
                         variant: "filled",
                         fullWidth: "true",
                         size: "small",
-                        InputProps: {
-                          startAdornment: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_InputAdornment__WEBPACK_IMPORTED_MODULE_34__["default"], {
-                            position: "start",
-                            children: "Rp"
-                          })
-                        },
                         value: amount,
                         onChange: handleAmountChange
                       })
@@ -38249,7 +38185,7 @@ function StudentTable(props) {
                               item: true,
                               xs: 12,
                               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
-                                label: "Isi metode pembayaran",
+                                label: "Isi tujuan pembayaran",
                                 value: otherDescription,
                                 onChange: function onChange(event) {
                                   return setOtherDescription(event.target.value);
@@ -38262,56 +38198,17 @@ function StudentTable(props) {
                           });
                         }
                       }()]
-                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
                       item: true,
                       xs: 6,
-                      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
-                        select: true,
-                        label: "Metode pembayaran:",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+                        label: "Bayar dengan saldo tabungan",
                         variant: "outlined",
                         fullWidth: true,
                         size: "small",
-                        value: payMethod,
-                        onChange: function onChange(event) {
-                          setPayMethod(event.target.value);
-                        },
-                        SelectProps: {
-                          "native": true
-                        },
-                        children: payMethods1.map(function (option) {
-                          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
-                            value: option.value,
-                            children: option.label
-                          }, option.value);
-                        })
-                      }), function () {
-                        if (payMethod.toLowerCase() == "lainnya") {
-                          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
-                            container: true,
-                            direction: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            spacing: 1,
-                            style: {
-                              marginTop: '5px'
-                            },
-                            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
-                              item: true,
-                              xs: 12,
-                              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
-                                label: "Isi metode pembayaran",
-                                value: otherPayMethod,
-                                onChange: function onChange(event) {
-                                  return setOtherPayMethod(event.target.value);
-                                },
-                                fullWidth: true,
-                                size: "small",
-                                variant: "outlined"
-                              })
-                            })
-                          });
-                        }
-                      }()]
+                        value: setPayMethod,
+                        disabled: true
+                      })
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_18__["default"], {
                       item: true,
                       xs: 6,
@@ -38379,7 +38276,7 @@ function StudentTable(props) {
                           },
                           onClick: payments,
                           children: "PEMBAYARAN"
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_35__["default"], {
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_34__["default"], {
                           open: openSnackbar,
                           autoHideDuration: 2500,
                           onClose: handleSnackbarClose,
@@ -38574,12 +38471,6 @@ function StudentTable(props) {
                         variant: "filled",
                         fullWidth: "true",
                         size: "small",
-                        InputProps: {
-                          startAdornment: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_InputAdornment__WEBPACK_IMPORTED_MODULE_34__["default"], {
-                            position: "start",
-                            children: "Rp"
-                          })
-                        },
                         value: amount,
                         onChange: handleAmountChange
                       })
@@ -38749,7 +38640,7 @@ function StudentTable(props) {
                           },
                           onClick: saving,
                           children: "SETORAN"
-                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_35__["default"], {
+                        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_34__["default"], {
                           open: openSnackbar,
                           autoHideDuration: 2500,
                           onClose: handleSnackbarClose,
@@ -38780,9 +38671,9 @@ function StudentTable(props) {
       className: classes.content,
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: classes.toolbar
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_36__.BrowserRouter, {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_37__.Switch, {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_37__.Route, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_35__.BrowserRouter, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_36__.Switch, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_36__.Route, {
             path: "/dashboard",
             exact: true,
             component: _dashboard_Dashboard__WEBPACK_IMPORTED_MODULE_1__["default"]

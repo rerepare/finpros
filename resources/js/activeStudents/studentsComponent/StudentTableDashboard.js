@@ -371,7 +371,7 @@ export default function StudentTable(props) {
                                                     handleOpenDetailsDialog(data);
                                                 }}
                                             >
-                                                More
+                                                MORE
                                             </Button>
                                         </StyledTableCell>
                                     </StyledTableRow>
@@ -552,7 +552,6 @@ export default function StudentTable(props) {
                             </Grid>
                         </Grid>
                     </div>
-                    
                 </DialogContent>
 
                 <DialogActions>

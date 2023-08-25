@@ -94,10 +94,6 @@ Route::get('/history', [App\Http\Controllers\TransactionController::class,'histo
 
 Route::get('/report', [App\Http\Controllers\TransactionController::class,'transaction']);
 
-Route::post('/deleteHistory', [App\Http\Controllers\TransactionController::class,'history']);
-
-Route::get('/payment_h', [App\Http\Controllers\TransactionController::class,'history']);
-
-Route::get('/saving_h', [App\Http\Controllers\TransactionController::class,'history']);
+Route::post('/deleteHistory', [App\Http\Controllers\TransactionController::class,'deleteHistory']);
 
 Route::get('/dataSavings', [App\Http\Controllers\TransactionController::class,'dataSavings']);

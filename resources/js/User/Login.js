@@ -149,9 +149,7 @@ export default function Login(props) {
                     <Card>
                         <CardContent>
                             <form method="post" onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
-                                <Typography
-                                fontWeight="bold"
-                                >Log In</Typography>
+                                <Typography fontWeight="bold">Log In</Typography>
                                 <Grid
                                 container
                                 direction="row"
@@ -159,7 +157,7 @@ export default function Login(props) {
                                 justifyContent="center"
                                 spacing={1}>
                                     <Grid item xs={12}>
-                                        <label className="pb-1">User Name</label>
+                                        <label>User Name</label>
                                         <TextField
                                             variant="outlined"
                                             placeholder="username"
@@ -172,7 +170,7 @@ export default function Login(props) {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <label className="pb-1">Password</label>
+                                        <label>Password</label>
                                         <TextField
                                             variant="outlined"
                                             placeholder="password"

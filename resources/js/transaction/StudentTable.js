@@ -19,22 +19,6 @@ import LastPageIcon from "@material-ui/icons/LastPage";
 import Snackbar from '@material-ui/core/Snackbar';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import InputAdornment from '@material-ui/core/InputAdornment';
-
-const payMethods1 = [
-    {
-        value: '',
-        label: '',
-    },
-    {
-        value: 'Bayar dengan saldo tabungan',
-        label: 'Bayar dengan saldo tabungan',
-    },
-    {
-        value: 'Lainnya',
-        label: 'Lainnya',
-    },
-];
 
 const payMethods2 = [
     {
@@ -302,6 +286,7 @@ export default function StudentTable(props) {
     const [studentId, setStudentId] = React.useState("")
     const [studentName, setStudentName] = React.useState("")
     const [amount, setAmount] = React.useState("")
+    const [numericAmount, setNumericAmount] = React.useState(0)
     const [payMethod, setPayMethod] = React.useState("")
     const [otherPayMethod, setOtherPayMethod] = React.useState("")
     const [otherDescription, setOtherDescription] = React.useState("")
@@ -353,6 +338,7 @@ export default function StudentTable(props) {
         setStudentId(data.student_id)
         setStudentName(data.fullName)
         setBalance(data.balance)
+        setPayMethod("Bayar Dengan Saldo Tabungan")
         console.log(datas[0])
         setOpenDialog(true)
     }
@@ -365,15 +351,7 @@ export default function StudentTable(props) {
         console.log(datas[0])
         setOpenDialogSetoran(true)
     }
-
-    const handleAmountChange = (event) => {
-        const input = event.target.value;
-        const regex = /^[0-9]*$/; // Regular expression to match only numbers
     
-        if (regex.test(input) || input === '') {
-          setAmount(input);
-        }
-    };
 
     const handlePayMethodChange = (event) => {
         const value = event.target.value;
@@ -385,32 +363,55 @@ export default function StudentTable(props) {
         setActor(value === 'Lainnya' ? '' : value);
     };
 
+    const handleAmountChange = (event) => {
+        // Remove any non-digit characters from the input
+        const sanitizedAmount = event.target.value.replace(/[^0-9]/g, '');
+    
+        // Convert sanitized amount to an integer
+        const parsedAmount = parseInt(sanitizedAmount);
+    
+        // Format the parsed amount back to currency format for display
+        const formattedAmount = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(parsedAmount);
+    
+        // Set the formatted amount to state for display
+        setAmount(formattedAmount);
+    
+        // Set the numeric amount (without formatting) to state for calculations
+        setNumericAmount(parsedAmount);
+    };    
+
     const saving = () => {
-        setValidation(false)
-        setNewBalance(0)
-        let calculate = 0
-        calculate = parseInt(balance) + parseInt(amount)        
-        setTransType("Setoran")
-        setNewBalance(calculate)        
-        
-    }
-    const payments = () => {
-        setValidation(false)
-        setNewBalance(0)
-        let calculate = 0
-        calculate = parseInt(balance) - parseInt(amount)
-        if(calculate < 0)
-        {
-            setValidation(true)
-        }
-        setTransType("Pembayaran")
-        setNewBalance(calculate)                
-    }
-
-    const handleSnackbarClose = () => {
-        setOpenSnackbar(false);
+        setValidation(false);
+        setNewBalance(0);
+        const numericAmount = parseInt(amount.replace(/\D/g, '')); // Extract numeric value
+        const calculate = parseInt(balance) + numericAmount; // Calculate new balance
+        setTransType("Setoran");
+        setNewBalance(calculate);
+    
+        // Here, you should use numericAmount for saving or further processing
+        console.log("Numeric Amount:", numericAmount);
+        console.log("Saving button clicked");
     };
-
+    
+    const payments = () => {
+        setValidation(false);
+        setNewBalance(0);
+        const numericAmount = parseInt(amount.replace(/\D/g, '')); // Extract numeric value
+        const calculate = parseInt(balance) - numericAmount; // Calculate new balance
+        if (calculate < 0) {
+            setValidation(true);
+        }
+        setTransType("Pembayaran");
+        setNewBalance(calculate);
+    
+        // Here, you should use numericAmount for saving or further processing
+        console.log("Numeric Amount:", numericAmount);
+    };
+    
     //FUNCTION ADD TRANSACTION
     const addTransaction = (event) => {
         event.preventDefault();
@@ -423,7 +424,7 @@ export default function StudentTable(props) {
                 id: id,
                 student_id: studentId,
                 user_id: user.id,
-                amount: amount,                
+                amount: numericAmount,              
                 //  payMethod: condition ? true : false, (ini nama tehnik nya tennary)
                 payMethod: payMethod.toLowerCase() == "lainnya" ? otherPayMethod : payMethod,
                 actor: actor.toLowerCase() == "lainnya" ? otherActor : actor,
@@ -439,13 +440,17 @@ export default function StudentTable(props) {
                 window.location.href = "/transaction";
             });
             setSnackbarSeverity('success');
-            setSnackbarMessage('Successfully Saved!');
+            setSnackbarMessage('Transaksi Berhasil!');
         }else{
             setSnackbarSeverity('error');
-            setSnackbarMessage('Failed to pay :( Your balance is not enough.');
+            setSnackbarMessage('Pembayaran gagal :( Saldo anda tidak cukup.');
             // handleCloseDialog();
         }
         setOpenSnackbar(true);
+    };
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
     };
     
      //OTHERS
@@ -797,9 +802,6 @@ export default function StudentTable(props) {
                                                     variant="filled"
                                                     fullWidth="true"
                                                     size = 'small'
-                                                    InputProps={{
-                                                        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
-                                                      }}
                                                     value = {amount}
                                                     onChange={handleAmountChange}
                                                 />                                  
@@ -832,7 +834,7 @@ export default function StudentTable(props) {
                                                             <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
                                                                 <Grid item xs={12}>
                                                                     <TextField
-                                                                    label="Isi metode pembayaran"
+                                                                    label="Isi tujuan pembayaran"
                                                                     value={otherDescription}
                                                                     onChange={(event) => setOtherDescription(event.target.value)}
                                                                     fullWidth
@@ -848,43 +850,14 @@ export default function StudentTable(props) {
 
                                            {/* PAYMENT METHOD */}
                                             <Grid item xs={6}>
-                                                <TextField
-                                                    select
-                                                    label="Metode pembayaran:"
-                                                    variant="outlined"
-                                                    fullWidth
-                                                    size = 'small'
-                                                    value={payMethod}
-                                                    onChange = {(event) => {setPayMethod(event.target.value)}}
-                                                    SelectProps={{
-                                                    native: true,
-                                                    }}
-                                                >
-                                                    {payMethods1.map((option) => (
-                                                    <option key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </option>
-                                                    ))}
-                                                </TextField>
-                                                {(()=>{
-                                                    if(payMethod.toLowerCase() == "lainnya")
-                                                    {
-                                                        return(
-                                                            <Grid container direction = 'row' alignItems='center' justifyContent='center' spacing = {1} style={{ marginTop: '5px' }}>
-                                                                <Grid item xs={12}>
-                                                                    <TextField
-                                                                    label="Isi metode pembayaran"
-                                                                    value={otherPayMethod}
-                                                                    onChange={(event) => setOtherPayMethod(event.target.value)}
-                                                                    fullWidth
-                                                                    size = 'small'
-                                                                    variant="outlined"
-                                                                    />
-                                                                    </Grid>
-                                                            </Grid>
-                                                        )   
-                                                    }
-                                                })()}
+                                            <TextField
+                                                label="Bayar dengan saldo tabungan"
+                                                variant="outlined"
+                                                fullWidth={true}
+                                                size="small"
+                                                value={setPayMethod}
+                                                disabled={true}
+                                            />
                                             </Grid>     
 
                                              {/* ACTOR */}
@@ -926,10 +899,8 @@ export default function StudentTable(props) {
                                                         )   
                                                     }
                                                 })()}        
-                                            </Grid>                                                                                     
+                                            </Grid>        
                                             
-                                             
-
                                             {/* ACTIONS */}
                                             <Grid item xs = {12}>
                                                 <form method="post" onSubmit={addTransaction}>
@@ -1116,9 +1087,6 @@ export default function StudentTable(props) {
                                                     variant="filled"
                                                     fullWidth="true"
                                                     size = 'small'
-                                                    InputProps={{
-                                                        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
-                                                      }}
                                                     value = {amount}
                                                     onChange={handleAmountChange}
                                                 />                                  

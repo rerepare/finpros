@@ -17,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import Snackbar from '@material-ui/core/Snackbar';
 
 const placements = [
     {
@@ -266,7 +267,6 @@ export default function StudentTable(props) {
     const emptyRows =
         rowsPerPage - Math.min(rowsPerPage, student.length - page * rowsPerPage);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [searchName, setSearchName] = React.useState("");
     const [searchQuery, setSearchQuery] = useState('');
     const [openDetailsDialog, setOpenDetailsDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
@@ -291,6 +291,14 @@ export default function StudentTable(props) {
     const [photoFiles, setPhotoFiles] = React.useState([])
     const [photoPreview, setPhotoPreview] = React.useState([])
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('error');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [validation, setValidation] = React.useState(false);
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+    };
 
     //FUNCTION OPERATIONAL
     const handleChangePage = (event, newPage) => {
@@ -313,29 +321,51 @@ export default function StudentTable(props) {
     const addStudent = (event) => {
         event.preventDefault();
 
-        let data = {
-            id: id,
-            student_id:"STD"+(student[0].id),
-            school_id: schoolId,
-            image: photoFiles,
-            fullName: studentName,
-            gender: gender,
-            classType: classType,
-            parentName: parentName,
-            contact: contact,
-            email: email,
-            balance: balance,
-        };
-        console.log(studentId)
-        axios.post("/addStudent", data).then(() => {
-            window.location.href = "/activeStudents";
-        });
+        if (validation) {
+            // Show error snackbar message
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Failed to add student. Please fill in all required fields.');
+            setOpenSnackbar(true);
+        }else{
+            let data = {
+                id: id,
+                student_id:"STD"+(student[0].id),
+                school_id: schoolId,
+                image: photoFiles,
+                fullName: studentName,
+                gender: gender,
+                classType: classType,
+                parentName: parentName,
+                contact: contact,
+                email: email,
+                balance: balance,
+            };
+            axios.post("/addStudent", data)
+            .then(() => {
+                // Show success snackbar message
+                setSnackbarSeverity('success');
+                setSnackbarMessage('Student added successfully!');
+                setOpenSnackbar(true);
+
+                // Reload the activeStudent page
+                window.location.href = '/activeStudents';
+            })
+            .catch(() => {
+                setSnackbarSeverity('error');
+                setSnackbarMessage('Failed to add student. Please fill in all required fields.');
+                setOpenSnackbar(true);
+            });
+        }
+        setValidation(false);
     };
+
     const handleOpenAddDialog = () => {
         setStudentId("STD"+(student[0].id));
         setBalance(0);
         setOpenAddDialog(true);
     };
+
+
     const handleCloseAddDialog = () => {
         setId("");
         setStudentId("");
@@ -356,24 +386,40 @@ export default function StudentTable(props) {
     const editStudent = (e) => {
         e.preventDefault();
 
-        let data = {
-            id: id,
-            student_id : studentId,
-            school_id: schoolId,
-            image: photoFiles,
-            fullName: studentName,
-            gender: gender,
-            classType: classType,
-            parentName: parentName,
-            contact: contact,
-            email: email,
-            balance: balance,
-        };
-        axios.post("/editStudent", data).then(() => {
-            handleCloseEditDialog();
-            window.location.href = "/activeStudents";
-        });
+        if (validation) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Failed to update student data. Please fill in all required fields.');
+            setOpenSnackbar(true);
+        }else{
+            let data = {
+                id: id,
+                student_id : studentId,
+                school_id: schoolId,
+                image: photoFiles,
+                fullName: studentName,
+                gender: gender,
+                classType: classType,
+                parentName: parentName,
+                contact: contact,
+                email: email,
+                balance: balance,
+            };
+            axios.post("/editStudent", data)
+            .then(() => {
+                setSnackbarSeverity('success');
+                setSnackbarMessage('Student data edited successfully!');
+                setOpenSnackbar(true);
+                window.location.href = '/activeStudents';
+            })
+            .catch(() => {
+                setSnackbarSeverity('error');
+                setSnackbarMessage('Failed to update student data. Please fill in all required fields.');
+                setOpenSnackbar(true);
+            });
+        }
+        setValidation(false);
     };
+
     const handleOpenEditDialog = (data) => {        
         setId(data.id);
         setStudentId(data.student_id);
@@ -413,10 +459,11 @@ export default function StudentTable(props) {
             id: id,
         };
         axios.post("/deleteStudent", data).then(() => {
-            handleCloseEditDialog();
+            handleCloseDeleteDialog();
             window.location.href = "/activeStudents";
         });
     };
+
     const handleOpenDeleteDialog = (data) => {
         setId(data.id);
 
@@ -550,12 +597,12 @@ export default function StudentTable(props) {
                                     ? student
                                     .filter((data) => {
                                       if (searchQuery === "") {
-                                        return data; // No search criteria provided, return all data
+                                        return data;
                                       } else {
                                         const query = searchQuery.toLowerCase();
                                         return (
                                           data.fullName.toLowerCase().includes(query) ||
-                                          data.student_id.toString().includes(query)// Assuming student_id is a number
+                                          data.student_id.toString().includes(query)
                                         );
                                       }
                                     })
@@ -894,6 +941,7 @@ export default function StudentTable(props) {
                                 </Accordion>
                                 </div>
                             </Grid>
+                            
                             {/* ======================== FORM ========================== */}
                             <Grid item xs={12} sm = {12} lg ={9}>
                                 <AccordionSummary>
@@ -904,44 +952,46 @@ export default function StudentTable(props) {
                                     container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
                                         <Grid item xs={4}>
                                             <TextField
-                                                disabled
-                                                size = 'small'
-                                                label="ID Siswa"
-                                                fullWidth="true"
-                                                variant="outlined"
-                                                value={studentId}
-                                                onChange={(event) => {
-                                                    setStudentId(event.target.value);
-                                                }}
+                                            disabled
+                                            size = 'small'
+                                            label="ID Siswa"
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={studentId}
+                                            onChange={(event) => {
+                                                setStudentId(event.target.value);
+                                            }}
                                             />
                                         </Grid>
                                         <Grid item xs={8}>
                                             <TextField
-                                                size = 'small'
-                                                label="Nama Siswa"
-                                                fullWidth="true"
-                                                variant="outlined"
-                                                value={studentName}
-                                                onChange={(event) => {
-                                                    setStudentName(event.target.value);
-                                                }}
+                                            required
+                                            size = 'small'
+                                            label="Nama Siswa"
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={studentName}
+                                            onChange={(event) => {
+                                                setStudentName(event.target.value);
+                                            }}
                                             />
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
-                                                select
-                                                size = 'small'
-                                                label="Cabang"
-                                                value={schoolId}
-                                                onChange={(event) => {
-                                                    setSchoolId(event.target.value);
-                                                }}
-                                                helperText="Please select student placement"
-                                                SelectProps={{
-                                                    native: true,
-                                                }}
-                                                fullWidth="true"
-                                                variant="outlined"
+                                            required
+                                            select
+                                            size = 'small'
+                                            label="Cabang"
+                                            value={schoolId}
+                                            onChange={(event) => {
+                                                setSchoolId(event.target.value);
+                                            }}
+                                            helperText="Please select student placement"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
                                             >
                                                 {placements.map((option) => (
                                                     <option key={option.value} value={option.value}>
@@ -952,19 +1002,20 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
-                                                select
-                                                size = 'small'
-                                                label="Jenis Kelamin"
-                                                value={gender}
-                                                onChange={(event) => {
-                                                    setGender(event.target.value);
-                                                }}
-                                                helperText="Please select student gender"
-                                                SelectProps={{
-                                                    native: true,
-                                                }}
-                                                fullWidth="true"
-                                                variant="outlined"
+                                            required
+                                            select
+                                            size = 'small'
+                                            label="Jenis Kelamin"
+                                            value={gender}
+                                            onChange={(event) => {
+                                                setGender(event.target.value);
+                                            }}
+                                            helperText="Please select student gender"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
                                             >
                                                 {genders.map((option) => (
                                                     <option key={option.value} value={option.value}>
@@ -975,19 +1026,20 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
-                                                select
-                                                size = 'small'
-                                                label="Kelas"
-                                                value={classType}
-                                                onChange={(event) => {
-                                                    setClassType(event.target.value);
-                                                }}
-                                                helperText="Please select student class type"
-                                                SelectProps={{
-                                                    native: true,
-                                                }}
-                                                fullWidth="true"
-                                                variant="outlined"
+                                            required
+                                            select
+                                            size = 'small'
+                                            label="Kelas"
+                                            value={classType}
+                                            onChange={(event) => {
+                                                setClassType(event.target.value);
+                                            }}
+                                            helperText="Please select student class type"
+                                            SelectProps={{
+                                                native: true,
+                                            }}
+                                            fullWidth="true"
+                                            variant="outlined"
                                             >
                                                 {classTypes.map((option) => (
                                                     <option key={option.value} value={option.value}>
@@ -998,19 +1050,22 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
-                                                label="Orang Tua/Wali"
-                                                size = 'small'
-                                                fullWidth="true"
-                                                variant="outlined"
-                                                value={parentName}
-                                                onChange={(event) => {
-                                                    setParentName(event.target.value);
-                                                }}
+                                            required
+                                            label="Orang Tua/Wali"
+                                            size = 'small'
+                                            fullWidth="true"
+                                            variant="outlined"
+                                            value={parentName}
+                                            onChange={(event) => {
+                                                setParentName(event.target.value);
+                                            }}
                                             />
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 label="Kontak"
+                                                size = 'small'
                                                 fullWidth="true"
                                                 variant="outlined"
                                                 value={contact}
@@ -1021,6 +1076,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 label="Email"
                                                 size = 'small'
                                                 fullWidth="true"
@@ -1056,9 +1112,25 @@ export default function StudentTable(props) {
                             color="primary"
                             type="submit"
                             style={{ float: "right" }}
+                            
                         >
                             ADD
                         </Button>
+                        <Snackbar
+                            open={openSnackbar}
+                            autoHideDuration={2500}
+                            onClose={handleSnackbarClose}
+                            message={snackbarMessage}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            ContentProps={{
+                                style: {
+                                    backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                                    color: '#ffffff',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                },
+                            }}
+                        />
                     </form>
                     <Button
                         variant="contained"
@@ -1174,6 +1246,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={8}>
                                             <TextField
+                                            required
                                                 label="Nama"
                                                 size = 'small'
                                                 fullWidth="true"
@@ -1186,6 +1259,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 select
                                                 label="Cabang Sekolah"
                                                 size = 'small'
@@ -1209,6 +1283,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 select
                                                 size = 'small'
                                                 label="Jenis Kelamin"
@@ -1232,6 +1307,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 select
                                                 size = 'small'
                                                 label="Kelas"
@@ -1255,6 +1331,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 label="Orang Tua/Wali"
                                                 size = 'small'
                                                 fullWidth="true"
@@ -1267,6 +1344,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 label="Kontak"
                                                 size = 'small'
                                                 fullWidth="true"
@@ -1279,6 +1357,7 @@ export default function StudentTable(props) {
                                         </Grid>
                                         <Grid item xs={4}>
                                             <TextField
+                                            required
                                                 label="Email"
                                                 size = 'small'
                                                 fullWidth="true"
@@ -1317,6 +1396,21 @@ export default function StudentTable(props) {
                         >
                             EDIT
                         </Button>
+                        <Snackbar
+                            open={openSnackbar}
+                            autoHideDuration={2500}
+                            onClose={handleSnackbarClose}
+                            message={snackbarMessage}
+                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                            ContentProps={{
+                                style: {
+                                    backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                                    color: '#ffffff',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                },
+                            }}
+                        />
                     </form>
                     <Button
                         variant="contained"

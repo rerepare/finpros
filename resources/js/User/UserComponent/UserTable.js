@@ -619,7 +619,7 @@ export default function UserTable(props) {
             </Paper>
 
             {/* ================================= DETAILS USER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} maxWidth={false} keepMounted>
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL USER
                 </DialogTitle>

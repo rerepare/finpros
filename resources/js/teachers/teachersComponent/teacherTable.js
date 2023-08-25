@@ -529,12 +529,12 @@ export default function TeacherTable(props) {
                                     ? teacher
                                     .filter((data) => {
                                       if (searchQuery === "") {
-                                        return data; // No search criteria provided, return all data
+                                        return data;
                                       } else {
                                         const query = searchQuery.toLowerCase();
                                         return (
                                           data.fullName.toLowerCase().includes(query) ||
-                                          data.teacher_id.toString().includes(query)// Assuming student_id is a number
+                                          data.teacher_id.toString().includes(query)
                                         );
                                       }
                                     })
@@ -571,7 +571,7 @@ export default function TeacherTable(props) {
                                             {data.classType}
                                         </StyledTableCell>
                                         <StyledTableCell
-                                            style={{ width: 250 }}
+                                            style={{ width: 350 }}
                                             align="center"
                                         >
                                             <Button
@@ -580,7 +580,7 @@ export default function TeacherTable(props) {
                                                     backgroundColor: "#FFD93D",
                                                     marginBottom:'5px',
                                                     height:"5vh",
-                                                    width:"6vw",                                                    
+                                                    width:"5vw",                                                    
                                                 }}
                                                 onClick={() => {
                                                     handleOpenDetailsDialog(data);
@@ -667,7 +667,7 @@ export default function TeacherTable(props) {
             </Paper>
 
             {/* ================================= DETAILS TEACHER DIALOG ===============================  */}
-            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} fullWidth={true} >
+            <Dialog onClose={handleCloseDetailsDialog} open={openDetailsDialog} maxWidth={false} keepMounted>
                 <DialogTitle className={classes.dialogTitle }>
                     DETAIL GURU
                 </DialogTitle>

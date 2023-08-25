@@ -213,14 +213,6 @@ export default function HistoryTable(props) {
 
   //GET DATABASE
   const [id, setId] = React.useState("");
-  const [studentId, setStudentId] = React.useState("");
-  const [userId, setUserId] = React.useState("");
-  const [amount, setAmount] = React.useState("");
-  const [payMethod, setPayMethod] = React.useState("");
-  const [actor, setActor] = React.useState("");
-  const [transType, setTransType] = React.useState("");
-  const [description, setDescription] = React.useState("");
-
   //FUNCTION OPERATIONAL
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -241,24 +233,24 @@ export default function HistoryTable(props) {
   //FUNCTION DELETE
   const deleteHistory = (e) => {
     e.preventDefault();
-
     let data = {
         id: id,
     };
     axios.post("/deleteHistory", data).then(() => {
-        handleCloseEditDialog();
+        handleCloseDeleteDialog();
         window.location.href = "/history";
     });
   };
-  const handleOpenDeleteDialog = (data) => {
-      setId(data.id);
 
-      setOpenDeleteDialog(true);
-  };
-  const handleCloseDeleteDialog = () => {
-      setId("");
-      setOpenDeleteDialog(false);
-  };
+  const handleOpenDeleteDialog = (data) => {
+        setId(data.id);
+
+        setOpenDeleteDialog(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setId("");
+        setOpenDeleteDialog(false);
+    };
 
   //OTHERS
   const Subheader = styled.div`
@@ -420,8 +412,9 @@ export default function HistoryTable(props) {
                                     style={{
                                     backgroundColor: "#FFD93D",
                                     marginBottom:'5px',
+                                    marginRight: '5px',
                                     height:"5vh",
-                                    width:"6vw",                                                    
+                                    width:"6vw",
                                     }}
                                     onClick={() => {
                                         handleOpenDetailsDialog(data);
