@@ -29226,6 +29226,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/AccordionSummary/AccordionSummary.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowLeft__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowLeft */ "./node_modules/@material-ui/icons/KeyboardArrowLeft.js");
 /* harmony import */ var _material_ui_icons_KeyboardArrowRight__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/icons/KeyboardArrowRight */ "./node_modules/@material-ui/icons/KeyboardArrowRight.js");
+/* harmony import */ var _material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @material-ui/core/Snackbar */ "./node_modules/@material-ui/core/esm/Snackbar/Snackbar.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 var _templateObject;
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
@@ -29242,6 +29243,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 //MATERIAL UI
+
 
 
 
@@ -29477,6 +29479,21 @@ function UserTable(props) {
     _React$useState14 = _slicedToArray(_React$useState13, 2),
     openDeleteDialog = _React$useState14[0],
     setOpenDeleteDialog = _React$useState14[1];
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    openSnackbar = _useState2[0],
+    setOpenSnackbar = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('success'),
+    _useState4 = _slicedToArray(_useState3, 2),
+    snackbarSeverity = _useState4[0],
+    setSnackbarSeverity = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    _useState6 = _slicedToArray(_useState5, 2),
+    snackbarMessage = _useState6[0],
+    setSnackbarMessage = _useState6[1];
+  var handleSnackbarClose = function handleSnackbarClose() {
+    setOpenSnackbar(false);
+  };
 
   //GET DATABASE
   var _React$useState15 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
@@ -29503,21 +29520,25 @@ function UserTable(props) {
     _React$useState26 = _slicedToArray(_React$useState25, 2),
     password = _React$useState26[0],
     setPassword = _React$useState26[1];
-  var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(true),
+  var _React$useState27 = react__WEBPACK_IMPORTED_MODULE_0__.useState(""),
     _React$useState28 = _slicedToArray(_React$useState27, 2),
-    isSuperAdmin = _React$useState28[0],
-    setIsSuperAdmin = _React$useState28[1];
+    confirmPassword = _React$useState28[0],
+    setConfirmPassword = _React$useState28[1];
+  var _React$useState29 = react__WEBPACK_IMPORTED_MODULE_0__.useState(true),
+    _React$useState30 = _slicedToArray(_React$useState29, 2),
+    isSuperAdmin = _React$useState30[0],
+    setIsSuperAdmin = _React$useState30[1];
 
   // UPLOAD IMAGE
   var classesUpload = useStylesUpload();
-  var _React$useState29 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
-    _React$useState30 = _slicedToArray(_React$useState29, 2),
-    photoFiles = _React$useState30[0],
-    setPhotoFiles = _React$useState30[1];
   var _React$useState31 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
     _React$useState32 = _slicedToArray(_React$useState31, 2),
-    photoPreview = _React$useState32[0],
-    setPhotoPreview = _React$useState32[1];
+    photoFiles = _React$useState32[0],
+    setPhotoFiles = _React$useState32[1];
+  var _React$useState33 = react__WEBPACK_IMPORTED_MODULE_0__.useState([]),
+    _React$useState34 = _slicedToArray(_React$useState33, 2),
+    photoPreview = _React$useState34[0],
+    setPhotoPreview = _React$useState34[1];
 
   //FUNCTION OPERATIONAL
   var handleChangePage = function handleChangePage(event, newPage) {
@@ -29542,6 +29563,15 @@ function UserTable(props) {
   //FUNCTION REGIST
   var register = function register(event) {
     event.preventDefault();
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      // Passwords don't match, show error message
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Passwords do not match. Please make sure your passwords match.');
+      setOpenSnackbar(true);
+      return;
+    }
     var data = {
       id: id,
       user_id: "USER" + userTable[0].id,
@@ -29551,9 +29581,18 @@ function UserTable(props) {
       password: password,
       isSuperAdmin: isSuperAdmin
     };
-    console.log(userId);
+
+    // Submit the registration data
     axios__WEBPACK_IMPORTED_MODULE_2___default().post("/registration", data).then(function () {
+      handleCloseEditDialog();
+      setSnackbarSeverity('success');
+      setSnackbarMessage('User added successfully!');
+      setOpenSnackbar(true);
       window.location.href = "/user";
+    })["catch"](function () {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Failed to add user.');
+      setOpenSnackbar(true);
     });
   };
   var handleOpenRegistDialog = function handleOpenRegistDialog() {
@@ -29574,6 +29613,13 @@ function UserTable(props) {
   //FUNCTION EDIT
   var editUser = function editUser(e) {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      // Passwords don't match, show error message
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Passwords do not match. Please make sure your passwords match.');
+      setOpenSnackbar(true);
+      return;
+    }
     var data = {
       id: id,
       user_id: userId,
@@ -29583,9 +29629,18 @@ function UserTable(props) {
       password: password,
       isSuperAdmin: isSuperAdmin
     };
+
+    // Edit the user data
     axios__WEBPACK_IMPORTED_MODULE_2___default().post("/editUser", data).then(function () {
       handleCloseEditDialog();
+      setSnackbarSeverity('success');
+      setSnackbarMessage('User edited successfully!');
+      setOpenSnackbar(true);
       window.location.href = "/user";
+    })["catch"](function () {
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Failed to edit user.');
+      setOpenSnackbar(true);
     });
   };
   var handleOpenEditDialog = function handleOpenEditDialog(data) {
@@ -30107,7 +30162,7 @@ function UserTable(props) {
                   spacing: 3,
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 4,
+                    xs: 2,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       disabled: true,
                       label: "User ID",
@@ -30120,7 +30175,7 @@ function UserTable(props) {
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 8,
+                    xs: 5,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       label: "Full Name",
                       fullWidth: "true",
@@ -30132,7 +30187,7 @@ function UserTable(props) {
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 4,
+                    xs: 5,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       label: "User Name",
                       fullWidth: "true",
@@ -30153,6 +30208,19 @@ function UserTable(props) {
                       type: "password",
                       onChange: function onChange(event) {
                         setPassword(event.target.value);
+                      }
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                    item: true,
+                    xs: 4,
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
+                      label: "Confirm Password",
+                      fullWidth: "true",
+                      variant: "outlined",
+                      value: confirmPassword,
+                      type: "password",
+                      onChange: function onChange(event) {
+                        setConfirmPassword(event.target.value);
                       }
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
@@ -30185,10 +30253,10 @@ function UserTable(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_35__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("form", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
           method: "post",
           onSubmit: register,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
             variant: "contained",
             color: "primary",
             type: "submit",
@@ -30196,7 +30264,24 @@ function UserTable(props) {
               "float": "right"
             },
             children: "REGIST"
-          })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_38__["default"], {
+            open: openSnackbar,
+            autoHideDuration: 2500,
+            onClose: handleSnackbarClose,
+            message: snackbarMessage,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right'
+            },
+            ContentProps: {
+              style: {
+                backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                color: '#ffffff',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }
+            }
+          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
           variant: "contained",
           color: "secondary",
@@ -30345,7 +30430,7 @@ function UserTable(props) {
                   spacing: 3,
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 6,
+                    xs: 2,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       disabled: true,
                       label: "User ID",
@@ -30358,7 +30443,7 @@ function UserTable(props) {
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 6,
+                    xs: 5,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       label: "Name",
                       fullWidth: "true",
@@ -30370,7 +30455,7 @@ function UserTable(props) {
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
                     item: true,
-                    xs: 4,
+                    xs: 5,
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
                       label: "User Name",
                       fullWidth: "true",
@@ -30391,6 +30476,19 @@ function UserTable(props) {
                       type: "password",
                       onChange: function onChange(event) {
                         setPassword(event.target.value);
+                      }
+                    })
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
+                    item: true,
+                    xs: 4,
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_37__["default"], {
+                      label: "Confirm Password",
+                      fullWidth: true,
+                      variant: "outlined",
+                      value: confirmPassword,
+                      type: "password",
+                      onChange: function onChange(event) {
+                        setConfirmPassword(event.target.value);
                       }
                     })
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_15__["default"], {
@@ -30423,10 +30521,10 @@ function UserTable(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_material_ui_core__WEBPACK_IMPORTED_MODULE_35__["default"], {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("form", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("form", {
           method: "post",
           onSubmit: editUser,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
             variant: "contained",
             color: "primary",
             type: "submit",
@@ -30434,7 +30532,24 @@ function UserTable(props) {
               "float": "right"
             },
             children: "EDIT"
-          })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core_Snackbar__WEBPACK_IMPORTED_MODULE_38__["default"], {
+            open: openSnackbar,
+            autoHideDuration: 2500,
+            onClose: handleSnackbarClose,
+            message: snackbarMessage,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right'
+            },
+            ContentProps: {
+              style: {
+                backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                color: '#ffffff',
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }
+            }
+          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_material_ui_core__WEBPACK_IMPORTED_MODULE_19__["default"], {
           variant: "contained",
           color: "secondary",

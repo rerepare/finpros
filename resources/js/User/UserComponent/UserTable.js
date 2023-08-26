@@ -20,6 +20,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, } from '@material-ui/core';
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import Snackbar from '@material-ui/core/Snackbar';
 
 const levels = [
     {
@@ -234,6 +235,15 @@ export default function UserTable(props) {
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    const handleSnackbarClose = () => {
+        setOpenSnackbar(false);
+    };
+
+
     //GET DATABASE
     const [id, setId] = React.useState("");
     const [userId, setUserId] = React.useState("");
@@ -241,6 +251,7 @@ export default function UserTable(props) {
     const [name, setName] = React.useState("");
     const [userName, setUserName] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [confirmPassword, setConfirmPassword] = React.useState("");
     const [isSuperAdmin, setIsSuperAdmin] = React.useState(true);
 
     // UPLOAD IMAGE
@@ -269,21 +280,43 @@ export default function UserTable(props) {
     //FUNCTION REGIST
     const register = (event) => {
         event.preventDefault();
-
+    
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            // Passwords don't match, show error message
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Passwords do not match. Please make sure your passwords match.');
+            setOpenSnackbar(true);
+            return;
+        }
+    
         let data = {
             id: id,
-            user_id: "USER"+(userTable[0].id),
+            user_id: "USER" + (userTable[0].id),
             image: photoFiles,
             name: name,
             userName: userName,
             password: password,
             isSuperAdmin: isSuperAdmin,
         };
-        console.log(userId)
-        axios.post("/registration", data).then(() => {
+        
+        // Submit the registration data
+        axios.post("/registration", data)
+        .then(() => {
+            handleCloseEditDialog();
+            setSnackbarSeverity('success');
+            setSnackbarMessage('User added successfully!');
+            setOpenSnackbar(true);
             window.location.href = "/user";
+        })
+        .catch(() => {
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Failed to add user.');
+            setOpenSnackbar(true);
         });
     };
+     
+
     const handleOpenRegistDialog = () => {
         setUserId("USER"+(userTable[0].id));
         setOpenRegistDialog(true);
@@ -302,7 +335,15 @@ export default function UserTable(props) {
     //FUNCTION EDIT
     const editUser = (e) => {
         e.preventDefault();
-
+    
+        if (password !== confirmPassword) {
+            // Passwords don't match, show error message
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Passwords do not match. Please make sure your passwords match.');
+            setOpenSnackbar(true);
+            return;
+        }
+    
         let data = {
             id: id,
             user_id: userId,
@@ -312,11 +353,23 @@ export default function UserTable(props) {
             password: password,
             isSuperAdmin: isSuperAdmin,
         };
-        axios.post("/editUser", data).then(() => {
+    
+        // Edit the user data
+        axios.post("/editUser", data)
+        .then(() => {
             handleCloseEditDialog();
+            setSnackbarSeverity('success');
+            setSnackbarMessage('User edited successfully!');
+            setOpenSnackbar(true);
             window.location.href = "/user";
+        })
+        .catch(() => {
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Failed to edit user.');
+            setOpenSnackbar(true);
         });
     };
+    
     const handleOpenEditDialog = (data) => {
         setId(data.id);
         setUserId(data.user_id);
@@ -802,7 +855,7 @@ export default function UserTable(props) {
                                 <AccordionDetails>
                                     <Grid 
                                     container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
-                                        <Grid item xs={4}>
+                                        <Grid item xs={2}>
                                             <TextField
                                                 disabled
                                                 label="User ID"
@@ -814,7 +867,7 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={8}>
+                                        <Grid item xs={5}>
                                             <TextField
                                                 label="Full Name"
                                                 fullWidth="true"
@@ -825,7 +878,7 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={4}>
+                                        <Grid item xs={5}>
                                             <TextField
                                                 label="User Name"
                                                 fullWidth="true"
@@ -837,17 +890,30 @@ export default function UserTable(props) {
                                             />
                                         </Grid>
                                         <Grid item xs={4}>
-                                            <TextField
-                                                label="Password"
-                                                fullWidth="true"
-                                                variant="outlined"
-                                                value={password}
-                                                type="password"
-                                                onChange={(event) => {
-                                                    setPassword(event.target.value);
-                                                }}
-                                            />
-                                        </Grid>
+    <TextField
+        label="Password"
+        fullWidth="true"
+        variant="outlined"
+        value={password}
+        type="password"
+        onChange={(event) => {
+            setPassword(event.target.value);
+        }}
+    />
+</Grid>
+<Grid item xs={4}>
+    <TextField
+        label="Confirm Password"
+        fullWidth="true"
+        variant="outlined"
+        value={confirmPassword}
+        type="password"
+        onChange={(event) => {
+            setConfirmPassword(event.target.value);
+        }}
+    />
+</Grid>
+
                                         <Grid item xs={4}>
                                             <TextField
                                                 select
@@ -885,6 +951,21 @@ export default function UserTable(props) {
                         >
                             REGIST
                         </Button>
+                        <Snackbar
+                        open={openSnackbar}
+                        autoHideDuration={2500}
+                        onClose={handleSnackbarClose}
+                        message={snackbarMessage}
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        ContentProps={{
+                            style: {
+                            backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                            color: '#ffffff',
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            },
+                        }}
+                        />
                     </form>
                     <Button
                         variant="contained"
@@ -985,7 +1066,7 @@ export default function UserTable(props) {
                                 <AccordionDetails>
                                     <Grid
                                     container direction = 'row' alignItems='center' justifyContent='center' spacing = {3}>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={2}>
                                             <TextField
                                                 disabled
                                                 label="User ID"
@@ -997,7 +1078,7 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={5}>
                                             <TextField
                                                 label="Name"
                                                 fullWidth="true"
@@ -1008,7 +1089,7 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid item xs={4}>
+                                        <Grid item xs={5}>
                                             <TextField
                                                 label="User Name"
                                                 fullWidth="true"
@@ -1019,6 +1100,7 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
+                                        
                                         <Grid item xs={4}>
                                             <TextField
                                                 label="Password"
@@ -1031,6 +1113,19 @@ export default function UserTable(props) {
                                                 }}
                                             />
                                         </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                label="Confirm Password"
+                                                fullWidth={true}
+                                                variant="outlined"
+                                                value={confirmPassword}
+                                                type="password"
+                                                onChange={(event) => {
+                                                    setConfirmPassword(event.target.value);
+                                                }}
+                                            />
+                                        </Grid>
+
                                         <Grid item xs={4}>
                                         <TextField
                                                 select
@@ -1068,6 +1163,21 @@ export default function UserTable(props) {
                         >
                             EDIT
                         </Button>
+                        <Snackbar
+                        open={openSnackbar}
+                        autoHideDuration={2500}
+                        onClose={handleSnackbarClose}
+                        message={snackbarMessage}
+                        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        ContentProps={{
+                            style: {
+                            backgroundColor: snackbarSeverity === 'error' ? '#f44336' : '#4caf50',
+                            color: '#ffffff',
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            },
+                        }}
+                        />
                     </form>
                     <Button
                         variant="contained"
